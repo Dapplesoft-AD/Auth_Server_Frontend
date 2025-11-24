@@ -29,7 +29,7 @@ WORKDIR /app
 RUN npm install -g serve
 
 # Copy built application from builder stage
-COPY --from=builder /app/dist/dosi-bridge ./dist
+COPY --from=builder /app/dist/dosi-bridge/browser ./dist
 
 # Expose port 3000
 EXPOSE 3000
