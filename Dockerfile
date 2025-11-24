@@ -10,6 +10,9 @@ RUN corepack enable && corepack prepare pnpm@10.15.0 --activate
 # Copy package files
 COPY package.json pnpm-lock.yaml ./
 
+# Remove package-lock.json if it exists (we use pnpm-lock.yaml)
+RUN rm -f package-lock.json || true
+
 # Install dependencies (skip prepare script which requires git)
 RUN pnpm i --frozen-lockfile --ignore-scripts
 
