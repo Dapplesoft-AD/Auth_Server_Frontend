@@ -11,7 +11,7 @@ RUN corepack enable && corepack prepare pnpm@10.15.0 --activate
 COPY package.json pnpm-lock.yaml ./
 
 # Install dependencies (skip prepare script which requires git)
-RUN pnpm install --frozen-lockfile --ignore-scripts
+RUN pnpm i --frozen-lockfile --ignore-scripts
 
 # Copy source code
 COPY . .
@@ -31,9 +31,9 @@ RUN npm install -g serve
 # Copy built application from builder stage
 COPY --from=builder /app/dist/dosi-bridge/browser ./dist
 
-# Expose port 3000
-EXPOSE 3000
+# Expose port 4200 (Angular default port)
+EXPOSE 4200
 
 # Start serve
-CMD ["serve", "-s", "dist", "-l", "3000"]
+CMD ["serve", "-s", "dist", "-l", "4200"]
 
