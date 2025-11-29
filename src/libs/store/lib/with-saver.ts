@@ -1,7 +1,7 @@
 import { effect, inject } from '@angular/core'
-import { LocalStorageService } from '@mattrika/common-services'
 import { getState, signalStoreFeature, withHooks } from '@ngrx/signals'
 import { omit } from 'radash'
+import { LocalStorageService } from '../../common-service/lib/local-storage.service'
 
 export function withSaver(name: string, exclude = []) {
     return signalStoreFeature(

@@ -60,9 +60,6 @@ import {
 
 type AppRouteGroups = [
     AuthRoutes,
-    // AdminLoginRoutes,
-    // AdminSignupRoutes,
-    // AdminForgetRoutes,
     UserRoutes,
     ProfileRoutes,
     UserHistoryRoutes,

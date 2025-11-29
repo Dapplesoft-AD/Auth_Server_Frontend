@@ -1,11 +1,10 @@
 import { Component } from '@angular/core'
 import { ToastModule } from 'primeng/toast'
-import { ReusableTableComponent } from '../../../shared/reusable-table/reusable-table.component'
 
 @Component({
     selector: 'app-page-rolepermissions',
     standalone: true,
-    imports: [ReusableTableComponent, ToastModule],
+    imports: [ToastModule],
     templateUrl: './page-rolepermissions.component.html',
 })
 export class RolePermissionsRoutes {

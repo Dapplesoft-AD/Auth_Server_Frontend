@@ -8,15 +8,25 @@ export type AuthRoutes = {
     signup: Route
     verified: Route
     verifiedotp: Route
+    todo: Route
 }
 
 export const authRoutes: AuthRoutes = {
     login: {
-        path: '',
+        path: 'login',
         pathMatch: 'full',
         loadComponent: () =>
             import('./page-login/page-login.component').then(
                 (m) => m.PageLoginComponent,
+            ),
+        resolve: { layout: setLayout(PageLayout.Public) },
+    },
+    todo: {
+        path: '',
+        pathMatch: 'full',
+        loadComponent: () =>
+            import('../page-todo/page-todo.component').then(
+                (m) => m.PageTodoComponent,
             ),
         resolve: { layout: setLayout(PageLayout.Public) },
     },
