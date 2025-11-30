@@ -3,17 +3,17 @@ import { PageLayout, setLayout } from '../../../libs/common-components'
 
 export type AuthRoutes = {
     login: Route
+    todo: Route
     profile: Route
     reset: Route
     signup: Route
     verified: Route
     verifiedotp: Route
-    todo: Route
 }
 
 export const authRoutes: AuthRoutes = {
     login: {
-        path: 'login',
+        path: '',
         pathMatch: 'full',
         loadComponent: () =>
             import('./page-login/page-login.component').then(
@@ -22,8 +22,7 @@ export const authRoutes: AuthRoutes = {
         resolve: { layout: setLayout(PageLayout.Public) },
     },
     todo: {
-        path: '',
-        pathMatch: 'full',
+        path: 'todo',
         loadComponent: () =>
             import('../page-todo/page-todo.component').then(
                 (m) => m.PageTodoComponent,

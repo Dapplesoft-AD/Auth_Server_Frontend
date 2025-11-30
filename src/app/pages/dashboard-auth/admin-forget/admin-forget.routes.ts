@@ -1,5 +1,5 @@
 import { Route } from '@angular/router'
-import { PageLayout, setLayout } from '../../../libs/common-components'
+import { PageLayout, setLayout } from '../../../../libs/common-components'
 
 export type AdminForgetRoutes = {
     forget: Route
