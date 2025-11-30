@@ -43,7 +43,7 @@ export class PageLoginComponent {
                 detail: 'Welcome back!',
                 life: 1500,
             })
-            setTimeout(() => this.router.navigate(['/profile']), 1500)
+            setTimeout(() => this.router.navigate(['/admin/user']), 1500)
         } else {
             this.loginFormService.form.markAllAsTouched()
             this.messageService.add({
