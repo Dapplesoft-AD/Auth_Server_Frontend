@@ -1,24 +1,23 @@
 import { AsyncPipe, CommonModule } from '@angular/common'
 import { Component, inject } from '@angular/core'
+import { FormsModule } from '@angular/forms'
 import { RouterOutlet } from '@angular/router'
+import { NgxSonnerToaster } from 'ngx-sonner'
 import { ConfirmDialog } from 'primeng/confirmdialog'
 import { ConfirmPopup } from 'primeng/confirmpopup'
-import { FormsModule } from '@angular/forms';
-
 import {
     LayoutDashboardComponent,
     LayoutPublicComponent,
     PageLayout,
     PageLayoutService,
 } from '../libs/common-components'
-import { NgxSonnerToaster } from 'ngx-sonner'
 
 @Component({
     selector: 'app-root',
-    standalone: true, 
+    standalone: true,
     imports: [
         CommonModule,
-        FormsModule,       
+        FormsModule,
         RouterOutlet,
         AsyncPipe,
         LayoutPublicComponent,

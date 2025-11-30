@@ -1,8 +1,8 @@
 import { HttpClient, HttpParams } from '@angular/common/http'
 import { Params } from '@angular/router'
 import { Observable } from 'rxjs'
-import { AbstractApiService } from './abstract-api.service'
 import { ApiResponse } from '../../common-model'
+import { AbstractApiService } from './abstract-api.service'
 
 export class ApiService<T, DtoT> implements AbstractApiService<T> {
     protected apiUrl: string
@@ -53,6 +53,3 @@ export class ApiService<T, DtoT> implements AbstractApiService<T> {
         return this.http.post<ApiResponse<T[]>>(`${this.apiUrl}/many`, dto)
     }
 }
-
-
-

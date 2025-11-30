@@ -14,6 +14,4 @@ export const adminLoginRoutes: AdminLoginRoutes = {
             ),
         resolve: { layout: setLayout(PageLayout.Dashboard) },
     },
-} 
-
-
+}

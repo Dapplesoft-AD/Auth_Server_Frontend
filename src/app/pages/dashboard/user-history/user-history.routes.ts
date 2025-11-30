@@ -7,12 +7,11 @@ export type UserHistoryRoutes = {
 
 export const userhistoryRoutes: UserHistoryRoutes = {
     userhistory: {
-        path: 'admin/userhistory',  
+        path: 'admin/userhistory',
         loadComponent: () =>
             import('./page-user-history/page-user-history.component').then(
                 (m) => m.PageUserHistoryComponent,
             ),
         resolve: { layout: setLayout(PageLayout.Dashboard) },
     },
-    
 }

@@ -1,34 +1,33 @@
-import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
-import { User } from './user.model';
+import { HttpClient } from '@angular/common/http'
+import { Injectable } from '@angular/core'
+import { Observable } from 'rxjs'
+import { User } from './user.model'
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root',
 })
 export class UserApiService {
+    private baseUrl = 'https://your-backend-api.com/users'
 
-  private baseUrl = 'https://your-backend-api.com/users'; 
+    constructor(private http: HttpClient) {}
 
-  constructor(private http: HttpClient) {}
+    // সব users fetch করা
+    getUsers(): Observable<User[]> {
+        return this.http.get<User[]>(this.baseUrl)
+    }
 
-  // সব users fetch করা
-  getUsers(): Observable<User[]> {
-    return this.http.get<User[]>(this.baseUrl);
-  }
+    // নতুন user create করা
+    createUser(user: User): Observable<User> {
+        return this.http.post<User>(this.baseUrl, user)
+    }
 
-  // নতুন user create করা
-  createUser(user: User): Observable<User> {
-    return this.http.post<User>(this.baseUrl, user);
-  }
+    // existing user update করা
+    updateUser(id: number, userData: Partial<User>): Observable<User> {
+        return this.http.put<User>(`${this.baseUrl}/${id}`, userData)
+    }
 
-  // existing user update করা
-  updateUser(id: number, userData: Partial<User>): Observable<User> {
-    return this.http.put<User>(`${this.baseUrl}/${id}`, userData);
-  }
-
-  // user delete করা
-  deleteUser(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.baseUrl}/${id}`);
-  }
+    // user delete করা
+    deleteUser(id: number): Observable<void> {
+        return this.http.delete<void>(`${this.baseUrl}/${id}`)
+    }
 }

@@ -1,5 +1,5 @@
 export interface Permission {
-  id: bigint;
-  code: string;
-  description: string;
+    id: bigint
+    code: string
+    description: string
 }

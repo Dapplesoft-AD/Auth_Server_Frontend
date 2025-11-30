@@ -7,6 +7,3 @@ export type ConfirmDialogData = {
     cancelButtonLabel?: string
     event?: Event
 }
-
-
-

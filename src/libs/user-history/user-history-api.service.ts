@@ -1,23 +1,22 @@
-import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
-import { UserHistory } from './user-history.model';
+import { Injectable } from '@angular/core'
+import { Observable, of } from 'rxjs'
+import { UserHistory } from './user-history.model'
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root',
 })
 export class UserHistoryApiService {
+    constructor() {}
 
-  constructor() {}
+    getAll(): Observable<UserHistory[]> {
+        return of([])
+    }
 
-  getAll(): Observable<UserHistory[]> {
-    return of([]); 
-  }
+    delete(id: number): Observable<boolean> {
+        return of(true)
+    }
 
-  delete(id: number): Observable<boolean> {
-    return of(true);
-  }
-
-  update(id: number, data: Partial<UserHistory>): Observable<UserHistory> {
-    return of({} as UserHistory);
-  }
+    update(id: number, data: Partial<UserHistory>): Observable<UserHistory> {
+        return of({} as UserHistory)
+    }
 }

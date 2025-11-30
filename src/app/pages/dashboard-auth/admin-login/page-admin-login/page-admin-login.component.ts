@@ -5,4 +5,4 @@ import { Component } from '@angular/core'
     templateUrl: './page-admin-login.component.html',
     styleUrl: './page-admin-login.component.css',
 })
-export class PageAdminLoginComponent {}    
+export class PageAdminLoginComponent {}

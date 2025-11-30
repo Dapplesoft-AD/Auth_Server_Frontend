@@ -5,7 +5,7 @@ export type MemberRoutes = {
     member: Route
 }
 
-export const memberRoutes:MemberRoutes = {
+export const memberRoutes: MemberRoutes = {
     member: {
         path: 'admin/member',
         loadComponent: () =>

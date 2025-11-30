@@ -7,12 +7,11 @@ export type UserRoutes = {
 
 export const userRoutes: UserRoutes = {
     user: {
-        path: 'admin/user',  
+        path: 'admin/user',
         loadComponent: () =>
             import('./page-user/page-user.component').then(
                 (m) => m.PageUserComponent,
             ),
         resolve: { layout: setLayout(PageLayout.Dashboard) },
     },
-    
 }

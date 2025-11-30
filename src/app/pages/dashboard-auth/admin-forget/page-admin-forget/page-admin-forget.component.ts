@@ -5,4 +5,4 @@ import { Component } from '@angular/core'
     templateUrl: './page-admin-forget.component.html',
     styleUrl: './page-admin-forget.component.css',
 })
-export class PageAdminForgetComponent {}    
+export class PageAdminForgetComponent {}

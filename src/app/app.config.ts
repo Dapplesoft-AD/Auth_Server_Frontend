@@ -1,8 +1,17 @@
+import { DATE_PIPE_DEFAULT_OPTIONS } from '@angular/common'
+import {
+    provideHttpClient,
+    withInterceptors,
+    withInterceptorsFromDi,
+    withJsonpSupport,
+    withXsrfConfiguration,
+} from '@angular/common/http'
 import {
     ApplicationConfig,
     provideAppInitializer,
     provideZonelessChangeDetection,
 } from '@angular/core'
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async'
 import {
     PreloadAllModules,
     provideRouter,
@@ -11,23 +20,15 @@ import {
     withPreloading,
     withRouterConfig,
 } from '@angular/router'
-import { provideAnimationsAsync } from '@angular/platform-browser/animations/async'
-import { appInitializerFn, ENVIRONMENT } from '../libs/core'
-import { environment } from '../environment/environment.prod'
-import { ACCESS_TOKEN_KEY, AUTH_API_URL, REFRESH_TOKEN_KEY } from '../libs/auth'
-import { appRoutes } from './app.routes'
-import {
-    provideHttpClient,
-    withInterceptors,
-    withInterceptorsFromDi,
-    withJsonpSupport,
-    withXsrfConfiguration,
-} from '@angular/common/http'
-import { DATE_PIPE_DEFAULT_OPTIONS } from '@angular/common'
-import { providePrimeNG } from 'primeng/config'
+import { provideStore } from '@ngrx/store'
 import Aura from '@primeuix/themes/aura'
 import { ConfirmationService, MessageService } from 'primeng/api'
+import { providePrimeNG } from 'primeng/config'
 import { DialogService } from 'primeng/dynamicdialog'
+import { environment } from '../environment/environment.prod'
+import { ACCESS_TOKEN_KEY, AUTH_API_URL, REFRESH_TOKEN_KEY } from '../libs/auth'
+import { appInitializerFn, ENVIRONMENT } from '../libs/core'
+import { appRoutes } from './app.routes'
 
 export const appConfig: ApplicationConfig = {
     providers: [
@@ -71,5 +72,6 @@ export const appConfig: ApplicationConfig = {
         MessageService,
         ConfirmationService,
         DialogService,
+        provideStore(),
     ],
 }

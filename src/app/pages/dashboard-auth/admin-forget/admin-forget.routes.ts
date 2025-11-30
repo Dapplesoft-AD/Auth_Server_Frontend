@@ -14,6 +14,4 @@ export const adminForgetRoutes: AdminForgetRoutes = {
             ),
         resolve: { layout: setLayout(PageLayout.Dashboard) },
     },
-} 
-
-
+}

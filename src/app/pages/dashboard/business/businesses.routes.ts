@@ -5,7 +5,7 @@ export type BusinessesRoutes = {
     businesses: Route
 }
 
-export const businessesRoutes:BusinessesRoutes = {
+export const businessesRoutes: BusinessesRoutes = {
     businesses: {
         path: 'admin/businesses',
         loadComponent: () =>

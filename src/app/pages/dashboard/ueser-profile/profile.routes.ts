@@ -15,4 +15,3 @@ export const profileRoutes: ProfileRoutes = {
         resolve: { layout: setLayout(PageLayout.Dashboard) },
     },
 }
-

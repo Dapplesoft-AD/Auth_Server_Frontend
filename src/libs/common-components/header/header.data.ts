@@ -1,6 +1,4 @@
-export const HEADER_DATA: HeaderData[] = [
-
-]
+export const HEADER_DATA: HeaderData[] = []
 
 export interface HeaderData {
     id: number

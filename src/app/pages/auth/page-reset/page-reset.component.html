@@ -1,0 +1,68 @@
+<p-toast></p-toast>
+
+<div class="flex min-h-screen items-center justify-center bg-gray-100 px-4">
+    <div class="w-full max-w-md rounded-2xl bg-white p-8 shadow-xl">
+        <h2 class="mb-6 text-left text-2xl font-bold text-gray-800">
+            Reset Password
+        </h2>
+
+        <form [formGroup]="resetForm" (ngSubmit)="onSubmit()" class="space-y-4">
+            <div class="relative">
+                <input
+                    [type]="showPassword ? 'text' : 'password'"
+                    formControlName="newPassword"
+                    placeholder="New Password"
+                    class="w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none" />
+                <span
+                    class="absolute top-1/2 right-3 -translate-y-1/2 cursor-pointer"
+                    (click)="togglePassword()">
+                    <!-- {{ showPassword ? '🙈' : '👁️' }} -->
+                </span>
+                @if (
+                    newPasswordControl?.touched && newPasswordControl?.invalid
+                ) {
+                    <div class="mt-1 text-sm text-red-500">
+                        @if (newPasswordControl?.errors?.['required']) {
+                            <div>Password is required</div>
+                        }
+                        @if (newPasswordControl?.errors?.['minlength']) {
+                            <div>Password must be at least 8 characters</div>
+                        }
+                    </div>
+                }
+            </div>
+
+            <div class="relative">
+                <input
+                    [type]="showConfirmPassword ? 'text' : 'password'"
+                    formControlName="confirmPassword"
+                    placeholder="Confirm Password"
+                    class="w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none" />
+                <span
+                    class="absolute top-1/2 right-3 -translate-y-1/2 cursor-pointer"
+                    (click)="toggleConfirmPassword()">
+                    <!-- {{ showConfirmPassword ? '🙈' : '👁️' }} -->
+                </span>
+                @if (
+                    confirmPasswordControl?.touched &&
+                    confirmPasswordControl?.invalid
+                ) {
+                    <div class="mt-1 text-sm text-red-500">
+                        @if (confirmPasswordControl?.errors?.['required']) {
+                            <div>Confirm Password is required</div>
+                        }
+                        @if (confirmPasswordControl?.errors?.['mismatch']) {
+                            <div>Passwords do not match</div>
+                        }
+                    </div>
+                }
+            </div>
+
+            <button
+                type="submit"
+                class="w-full rounded-lg bg-blue-500 py-2 font-medium text-white transition duration-200 hover:bg-blue-600">
+                Reset Password
+            </button>
+        </form>
+    </div>
+</div>
