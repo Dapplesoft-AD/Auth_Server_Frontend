@@ -2,6 +2,7 @@ import { Route } from '@angular/router'
 import { PageLayout, setLayout } from '../../../libs/common-components'
 
 export type AuthRoutes = {
+    default: Route
     login: Route
     todo: Route
     profile: Route
@@ -12,8 +13,13 @@ export type AuthRoutes = {
 }
 
 export const authRoutes: AuthRoutes = {
-    login: {
+    default: {
         path: '',
+        redirectTo: 'admin/user',
+        pathMatch: 'full',
+    },
+    login: {
+        path: 'login',
         pathMatch: 'full',
         loadComponent: () =>
             import('./page-login/page-login.component').then(
@@ -24,7 +30,7 @@ export const authRoutes: AuthRoutes = {
     todo: {
         path: 'todo',
         loadComponent: () =>
-            import('../page-todo/page-todo.component').then(
+            import('../dashboard/todo/page-todo/page-todo.component').then(
                 (m) => m.PageTodoComponent,
             ),
         resolve: { layout: setLayout(PageLayout.Public) },
