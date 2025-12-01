@@ -30,7 +30,7 @@ export const authRoutes: AuthRoutes = {
     todo: {
         path: 'todo',
         loadComponent: () =>
-            import('../dashboard/todo/page-todo/page-todo.component').then(
+            import('../page-todo/page-todo.component').then(
                 (m) => m.PageTodoComponent,
             ),
         resolve: { layout: setLayout(PageLayout.Public) },
