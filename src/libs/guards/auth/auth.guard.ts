@@ -11,5 +11,5 @@ export const authGuard: CanActivateFn = (route, state) => {
     }
 
     // redirect if not logged in
-    return router.createUrlTree([''])
+    return router.createUrlTree(['/login'])
 }
