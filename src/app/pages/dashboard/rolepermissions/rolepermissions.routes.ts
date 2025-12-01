@@ -5,7 +5,7 @@ export type RolePermissionsRoutes = {
     rolepermissions: Route
 }
 
-export const RolePermissionsRoutes: RolePermissionsRoutes = {
+export const rolePermissionsRoutes: RolePermissionsRoutes = {
     rolepermissions: {
         path: 'admin/rolepermissions',
         loadComponent: () =>

@@ -1,4 +1,4 @@
-import { Route, Routes } from '@angular/router'
+import { Route } from '@angular/router'
 
 // import { adminLoginRoutes, AdminLoginRoutes } from './pages/dashboard-auth/admin-login/admin-login.routes'
 // import { adminSignupRoutes, AdminSignupRoutes } from './pages/dashboard-auth/admin-signup.routes'
@@ -37,8 +37,14 @@ import {
     PasswordResetsRoutes,
     passwordresetsRoutes,
 } from './pages/dashboard/passwordresets/passwordresets.routes'
-import { PermissionsRoutes } from './pages/dashboard/permission/permissions.routes'
-import { RolePermissionsRoutes } from './pages/dashboard/rolepermissions/rolepermissions.routes'
+import {
+    PermissionsRoutes,
+    permissionsRoutes,
+} from './pages/dashboard/permission/permissions.routes'
+import {
+    RolePermissionsRoutes,
+    rolePermissionsRoutes,
+} from './pages/dashboard/rolepermissions/rolepermissions.routes'
 import { RolesRoutes, rolesRoutes } from './pages/dashboard/roles/roles.routes'
 import {
     TokensRoutes,
@@ -89,8 +95,8 @@ const groupedRoutes: AppRouteGroups = [
     businessesRoutes,
     memberRoutes,
     rolesRoutes,
-    PermissionsRoutes,
-    RolePermissionsRoutes,
+    permissionsRoutes,
+    rolePermissionsRoutes,
     applicationsRoutes,
     tokensRoutes,
     emailVerificationssRoutes,
