@@ -20,19 +20,31 @@ export class LoginApiService {
             .pipe(
                 // tap() to handle the side effect (saving the token)
                 tap((response) => {
-                    // Ensure the response contains the token before saving
-                    if (response.token) {
-                        this.tokenStorageService.saveAccessToken(response.token)
+                    // handling both case single raw token and json object ;)
+                    if (typeof response === 'string') {
+                        // Raw token string
+                        this.tokenStorageService.saveAccessToken(response)
                         console.log(
-                            'Access token successfully saved to storage.',
+                            'Access token successfully saved (raw string).',
                         )
-                    }
-                    if (response.refreshToken) {
-                        this.tokenStorageService.saveRefreshToken(
-                            response.refreshToken,
-                        )
-                        console.log(
-                            'Refresh token successfully saved to storage.',
+                    } else if (response && typeof response === 'object') {
+                        // JSON object with tokens
+                        if (response.token) {
+                            this.tokenStorageService.saveAccessToken(
+                                response.token,
+                            )
+                            console.log('Access token successfully saved.')
+                        }
+                        if (response.refreshToken) {
+                            this.tokenStorageService.saveRefreshToken(
+                                response.refreshToken,
+                            )
+                            console.log('Refresh token successfully saved.')
+                        }
+                    } else {
+                        console.warn(
+                            'Unexpected login response format:',
+                            response,
                         )
                     }
                 }),

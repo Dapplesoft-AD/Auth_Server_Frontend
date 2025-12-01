@@ -5,7 +5,7 @@ import { Router, RouterModule } from '@angular/router'
 import { MessageService } from 'primeng/api'
 import { ButtonModule } from 'primeng/button'
 import { ToastModule } from 'primeng/toast'
-import { LoginFormService } from '../../../../libs/auth'
+import { LoginFormService, TokenStorageService } from '../../../../libs/auth'
 import { LoginApiService } from '../../../../libs/auth/login/login-api.service'
 
 @Component({
@@ -28,6 +28,7 @@ export class PageLoginComponent {
         private router: Router,
         private messageService: MessageService,
         private loginApiService: LoginApiService,
+        private tokenStorage: TokenStorageService,
     ) {}
 
     togglePassword() {
@@ -41,6 +42,14 @@ export class PageLoginComponent {
 
             this.loginApiService.login(formData).subscribe({
                 next: (response) => {
+                    // ⭐ Save tokens in localStorage
+                    if (typeof response === 'string') {
+                        // raw token
+                        this.tokenStorage.saveAccessToken(response)
+                    } else {
+                        this.tokenStorage.saveAccessToken(response.token)
+                        // this.tokenStorage.saveRefreshToken(response.refreshToken);
+                    }
                     this.messageService.add({
                         severity: 'success',
                         summary: 'Login Successful',
