@@ -24,11 +24,6 @@
         <span class="absolute right-3 pt-2 cursor-pointer" (click)="togglePassword()">
           <!-- {{ showPassword ? '🙈' : '👁️' }} -->
         </span>
-        @if(loginFormService.controls('password')?.invalid && loginFormService.controls('password')?.touched) {
-        <div class="text-red-500 text-sm mt-1">
-          Password must have at least 8 characters, including uppercase, lowercase, number, and special character.
-        </div>
-        }
       </div>
 
       <div class="flex justify-between items-center text-sm">

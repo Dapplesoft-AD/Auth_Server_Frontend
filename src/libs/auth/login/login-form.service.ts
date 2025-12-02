@@ -19,17 +19,7 @@ export class LoginFormService {
                     pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/),
                 ],
             ],
-            password: [
-                '',
-                [
-                    required,
-                    minLength(7),
-                    //pattern(/[A-Z]/),
-                    //pattern(/[a-z]/),
-                    //pattern(/[0-9]/),
-                    //pattern(/[^A-Za-z0-9]/),
-                ],
-            ],
+            password: ['', [required]],
             rememberMe: [false],
         })
     }
