@@ -1,81 +1,149 @@
-
 <p-toast></p-toast>
 
-<div class="flex justify-center items-center min-h-screen bg-gray-100 px-4">
-  <div class="bg-white shadow-xl rounded-2xl p-8 w-full max-w-md">
-    <div class="flex justify-center mb-6">
-      <img src="../../../../assets/images/image.png" alt="Logo" class="h-12" />
+<div
+    class="flex min-h-screen items-center justify-center bg-gray-100 px-6 py-10">
+    <div class="w-full max-w-md rounded bg-white p-10 shadow-2xl">
+        <div class="mb-8 flex justify-center">
+            <img src="../../../../assets/images/image.png" class="h-10" />
+        </div>
+
+        <h2 class="mb-5 text-xl font-extrabold text-gray-900">Sign up</h2>
+
+        <form
+            [formGroup]="signupForm"
+            (ngSubmit)="onSubmit()"
+            class="space-y-6">
+            <div>
+                <span class="p-float-label w-full">
+                    <input
+                        pInputText
+                        formControlName="fullName"
+                        id="fullName"
+                        placeholder="Enter your full name"
+                        class="w-full" />
+                </span>
+
+                @if (
+                    signupForm.get('fullName')?.touched &&
+                    signupForm.get('fullName')?.hasError('required')
+                ) {
+                    <p class="mt-1 text-sm text-red-500">
+                        Full Name is required
+                    </p>
+                }
+            </div>
+
+            <div>
+                <span class="p-float-label w-full">
+                    <input
+                        pInputText
+                        formControlName="number"
+                        id="number"
+                        placeholder="Enter your phone number"
+                        class="w-full" />
+                </span>
+
+                @if (
+                    signupForm.get('number')?.touched &&
+                    signupForm.get('number')?.hasError('required')
+                ) {
+                    <p class="mt-1 text-sm text-red-500">
+                        Mobile Number is required
+                    </p>
+                }
+
+                @if (
+                    signupForm.get('number')?.touched &&
+                    signupForm.get('number')?.hasError('pattern')
+                ) {
+                    <p class="mt-1 text-sm text-red-500">
+                        Enter a valid 11-digit number
+                    </p>
+                }
+            </div>
+
+            <div>
+                <p-password
+                    formControlName="password"
+                    [toggleMask]="true"
+                    [feedback]="false"
+                    class="w-full"
+                    placeholder="Enter your password"
+                    inputStyleClass="w-full"></p-password>
+
+                @if (
+                    signupForm.get('password')?.touched &&
+                    signupForm.get('password')?.hasError('required')
+                ) {
+                    <p class="mt-1 text-sm text-red-500">
+                        Password is required
+                    </p>
+                }
+            </div>
+
+            <div>
+                <p-password
+                    formControlName="confirmPassword"
+                    [toggleMask]="true"
+                    [feedback]="false"
+                    class="w-full"
+                    placeholder="Enter your confirm password"
+                    inputStyleClass="w-full"></p-password>
+
+                @if (
+                    signupForm.get('confirmPassword')?.touched &&
+                    signupForm.get('confirmPassword')?.hasError('required')
+                ) {
+                    <p class="mt-1 text-sm text-red-500">
+                        Confirm Password is required
+                    </p>
+                }
+
+                @if (
+                    signupForm.hasError('mismatch') &&
+                    signupForm.get('confirmPassword')?.touched
+                ) {
+                    <p class="mt-1 text-sm text-red-500">
+                        Passwords do not match
+                    </p>
+                }
+            </div>
+
+            <div class="flex items-center space-x-3">
+                <p-checkbox
+                    formControlName="acceptTerms"
+                    binary="true"></p-checkbox>
+                <span class="text-sm">
+                    I agree to the
+                    <a routerLink="/terms" class="text-blue-500 hover:underline"
+                        >Terms & Conditions</a
+                    >
+                </span>
+            </div>
+
+            @if (
+                signupForm.get('acceptTerms')?.touched &&
+                signupForm.get('acceptTerms')?.invalid
+            ) {
+                <p class="mt-1 text-sm text-red-500">
+                    You must accept the terms
+                </p>
+            }
+
+            <button
+                pButton
+                type="submit"
+                label="Sign Up"
+                class="w-full rounded-md bg-blue-500 py-2 font-bold text-white transition hover:bg-blue-400"></button>
+        </form>
+
+        <p class="mt-8 text-center text-sm text-gray-600">
+            Already have an account?
+            <a
+                routerLink="/"
+                class="font-semibold text-blue-500 hover:underline">
+                Login
+            </a>
+        </p>
     </div>
-
-    <h2 class="text-left text-2xl font-bold mb-6 text-gray-800">Sign Up</h2>
-
-    <form [formGroup]="signupForm" (ngSubmit)="onSubmit()" class="space-y-4">
-
-
-      <input type="text" formControlName="fullName" placeholder="Full Name"
-        class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400" />
-      @if(signupForm.get('fullName')?.touched && signupForm.get('fullName')?.hasError('required')) {
-        <div class="text-red-500 text-sm">Full Name is required</div>
-      }
-
-
-      <input type="text" formControlName="number" placeholder="Mobile Number"
-        class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400" />
-      @if(signupForm.get('number')?.touched && signupForm.get('number')?.hasError('required')) {
-        <div class="text-red-500 text-sm">Mobile Number is required</div>
-      }
-      @if(signupForm.get('number')?.touched && signupForm.get('number')?.hasError('pattern')) {
-        <div class="text-red-500 text-sm">Enter a valid number</div>
-      }
-
-
-      <div class="relative">
-        <input [type]="showPassword ? 'text' : 'password'" formControlName="password" placeholder="Password"
-          class="w-full border border-gray-300 rounded-lg px-4 py-2 pr-10 focus:outline-none focus:ring-2 focus:ring-blue-400" />
-        <span class="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer" (click)="togglePassword()">
-          <!-- {{ showPassword ? '🙈' : '👁️' }} -->
-        </span>
-        @if(signupForm.get('password')?.touched && signupForm.get('password')?.hasError('required')) {
-          <div class="text-red-500 text-sm">Password is required</div>
-        }
-      </div>
-
-
-      <div class="relative">
-        <input [type]="showConfirmPassword ? 'text' : 'password'" formControlName="confirmPassword"
-          placeholder="Confirm Password"
-          class="w-full border border-gray-300 rounded-lg px-4 py-2 pr-10 focus:outline-none focus:ring-2 focus:ring-blue-400" />
-        <span class="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer" (click)="toggleConfirmPassword()">
-          <!-- {{ showConfirmPassword ? '' : '' }} -->
-        </span>
-
-        @if(signupForm.get('confirmPassword')?.touched && signupForm.get('confirmPassword')?.hasError('required')) {
-          <div class="text-red-500 text-sm">Confirm Password is required</div>
-        }
-        @if(signupForm.hasError('mismatch') && signupForm.get('confirmPassword')?.touched) {
-          <div class="text-red-500 text-sm">Passwords do not match</div>
-        }
-      </div>
-
-
-      <div class="flex items-center text-sm">
-        <label class="flex items-center space-x-2">
-          <input type="checkbox" formControlName="acceptTerms" class="accent-blue-500" />
-          <span>I agree to the <a routerLink="/terms" class="text-blue-500 hover:underline">Terms & Conditions</a></span>
-        </label>
-        @if(signupForm.get('acceptTerms')?.touched && signupForm.get('acceptTerms')?.invalid) {
-          <div class="text-red-500 text-sm">You must accept the terms</div>
-        }
-      </div>
-
-      <button type="submit" class="w-full bg-blue-500 text-white py-2 rounded-lg font-semibold">
-        Sign Up
-      </button>
-    </form>
-
-    <p class="text-center text-sm mt-6 text-gray-600">
-      Already have an account?
-      <a routerLink="" class="text-blue-500 font-medium hover:underline">Login</a>
-    </p>
-  </div>
 </div>
