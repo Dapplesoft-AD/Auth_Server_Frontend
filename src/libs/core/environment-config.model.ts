@@ -1,5 +1,5 @@
 export interface EnvironmentConfig {
-    BaseUrl?: string
+    BaseUrl: string
     appName: string
     production: boolean
     apiUrl: string
