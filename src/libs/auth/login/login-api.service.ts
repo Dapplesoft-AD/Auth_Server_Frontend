@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http'
 import { Injectable, inject } from '@angular/core'
 import { catchError, Observable, tap, throwError } from 'rxjs'
 import { environment } from '../../../environments/environment'
+import { ContextUserStorageService } from '../service/contextUser-storage.service'
 import { TokenStorageService } from '../service/token-storage.service'
 import { LoginRequest, LoginResponse } from './login.model'
 
@@ -12,7 +13,7 @@ export class LoginApiService {
     // Modern dependency injection
     private http = inject(HttpClient)
     private tokenStorageService = inject(TokenStorageService)
-    private context = inject(TokenStorageService)
+    private contextUserIdStorageService = inject(ContextUserStorageService)
     private baseUrl = `${environment.authApiUrl}`
 
     login(payload: LoginRequest): Observable<LoginResponse | string> {
@@ -33,7 +34,7 @@ export class LoginApiService {
                             )
                         }
                         if (response.user?.id) {
-                            this.tokenStorageService.saveAccessToken(
+                            this.contextUserIdStorageService.saveContextUserId(
                                 response.user.id,
                             )
                         }
