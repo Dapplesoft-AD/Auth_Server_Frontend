@@ -26,7 +26,12 @@ import { ConfirmationService, MessageService } from 'primeng/api'
 import { providePrimeNG } from 'primeng/config'
 import { DialogService } from 'primeng/dynamicdialog'
 import { environment } from '../environments/environment.prod'
-import { ACCESS_TOKEN_KEY, AUTH_API_URL, REFRESH_TOKEN_KEY } from '../libs/auth'
+import {
+    ACCESS_TOKEN_KEY,
+    AUTH_API_URL,
+    CONTEXT_USER_ID,
+    REFRESH_TOKEN_KEY,
+} from '../libs/auth'
 import { appInitializerFn, ENVIRONMENT } from '../libs/core'
 import { appRoutes } from './app.routes'
 
@@ -34,6 +39,7 @@ export const appConfig: ApplicationConfig = {
     providers: [
         { provide: ENVIRONMENT, useValue: environment },
         { provide: AUTH_API_URL, useValue: environment.authApiUrl },
+        { provide: CONTEXT_USER_ID, useValue: 'contextUserId' },
         { provide: ACCESS_TOKEN_KEY, useValue: 'accessToken' },
         { provide: REFRESH_TOKEN_KEY, useValue: 'refreshToken' },
         provideAppInitializer(appInitializerFn),
