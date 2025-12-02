@@ -4,8 +4,11 @@
     aria-controls="default-sidebar"
     type="button"
     class="mt-2 ml-3 inline-flex items-center rounded-lg p-2 text-sm text-gray-500 hover:bg-gray-100 focus:ring-2 focus:ring-gray-200 focus:outline-none sm:hidden dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600">
+
+    <i class="pi pi-bars text-xl"></i>
     <span class="sr-only">Open sidebar</span>
 </button>
+
 <aside
     id="default-sidebar"
        class="fixed top-0 left-0 z-40 pt-14 h-screen w-80 -translate-x-full transition-transform sm:translate-x-0"
@@ -143,25 +146,17 @@
 
                 <li>
                     <a
-                        [routerLink]="['admin/mfalogs']"
+                        [routerLink]="['admin/auditlogs']"
                         class="group flex items-center rounded-lg p-2 text-base font-normal text-gray-900 transition duration-75 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">
                         <i class="pi pi-list"></i>
                         <span class="ml-3">Audit Logs</span>
-                    </a>
-                </li>
-
-                  <li>
-                    <a
-                        [routerLink]="['/admin/profile']"
-                        class="group flex items-center rounded-lg p-2 text-base font-normal text-gray-900 transition duration-75 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">
-                        <i class="pi pi-id-card"></i>
-                        <span class="ml-3">Admin Profile</span>
                     </a>
                 </li>
             </ul>
         </ul>
         <div class="pt-5">
             <button
+               [routerLink]="['/']"
                 class="flex w-full items-center justify-center gap-2 rounded-lg bg-red-500 px-4 py-2 text-white font-medium 
                        hover:bg-red-600 active:scale-95 transition-transform duration-150 ease-in-out">
                 <i class="pi pi-sign-out text-lg"></i> Logout
