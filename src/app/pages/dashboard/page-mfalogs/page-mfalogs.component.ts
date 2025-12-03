@@ -13,7 +13,7 @@ import { MfaLog } from '../../../../libs/mfalogs/mfalog.model'
 import { MfaLogsDataService } from '../../../../libs/mfalogs/mfalog-data.service'
 
 @Component({
-    selector: 'app-page-mfalogs',
+    selector: 'app-page-mfaLogs',
     standalone: true,
     imports: [
         CommonModule,
@@ -26,8 +26,8 @@ import { MfaLogsDataService } from '../../../../libs/mfalogs/mfalog-data.service
         InputTextModule,
         TagModule,
     ],
-    templateUrl: './page-mfalogs.component.html',
-    styleUrls: ['./page-mfalogs.component.css'],
+    templateUrl: './page-mfaLogs.component.html',
+    styleUrls: ['./page-mfaLogs.component.css'],
     providers: [MessageService, ConfirmationService],
 })
 export class PageMfaLogsRoutesComponent implements OnInit {
