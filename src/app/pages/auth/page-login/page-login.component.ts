@@ -1,104 +1,103 @@
 import { CommonModule } from '@angular/common'
 import { Component } from '@angular/core'
-import { ReactiveFormsModule } from '@angular/forms'
+import { FormsModule } from '@angular/forms'
 import { Router, RouterModule } from '@angular/router'
 import { MessageService } from 'primeng/api'
 import { ButtonModule } from 'primeng/button'
+import { InputTextModule } from 'primeng/inputtext'
+import { PasswordModule } from 'primeng/password'
 import { ToastModule } from 'primeng/toast'
-import { LoginFormService, TokenStorageService } from '../../../../libs/auth'
-import { LoginApiService } from '../../../../libs/auth/login/login-api.service'
 
 @Component({
     selector: 'app-login',
+    standalone: true,
     imports: [
-        ReactiveFormsModule,
-        RouterModule,
         CommonModule,
+        FormsModule,
+        RouterModule,
         ToastModule,
         ButtonModule,
+        PasswordModule,
+        InputTextModule,
     ],
-    providers: [LoginFormService, MessageService],
+    providers: [MessageService, Router],
     templateUrl: './page-login.component.html',
 })
 export class PageLoginComponent {
-    showPassword = false
-
     constructor(
-        public loginFormService: LoginFormService,
-        private router: Router,
         private messageService: MessageService,
-        private loginApiService: LoginApiService,
-        private tokenStorage: TokenStorageService,
+
+        private router: Router,
     ) {}
-
-    togglePassword() {
-        this.showPassword = !this.showPassword
+    loginData = {
+        emailOrPhone: '',
+        password: '',
+        remember: false,
     }
+    passwordError = ''
 
-    onSubmit() {
-        if (this.loginFormService.form.valid) {
-            const formData = this.loginFormService.getValue()
-            console.log('Login Data:', formData)
+    onLogin() {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+        const phoneRegex = /^\d{10,15}$/
 
-            this.loginApiService.login(formData).subscribe({
-                next: (response) => {
-                    this.messageService.add({
-                        severity: 'success',
-                        summary: 'Login Successful',
-                        detail: 'Welcome back!',
-                        life: 1500,
-                    })
-                    // navigation happens ONLY when login API succeeded
-                    setTimeout(() => {
-                        this.router.navigate(['/admin/user'])
-                    }, 500) // 0.5 sec
-                },
-
-                error: (err: { error: { message: any } }) => {
-                    this.messageService.add({
-                        severity: 'error',
-                        summary: 'Login Failed',
-                        detail:
-                            err.error?.message ?? 'Invalid email or password.',
-                        life: 2000,
-                    })
-                },
-            })
-        } else {
-            this.loginFormService.form.markAllAsTouched()
+        if (!this.loginData.emailOrPhone || !this.loginData.password) {
             this.messageService.add({
                 severity: 'error',
-                summary: 'Error',
-                detail: 'Form is invalid! Please check your input.',
-                life: 2000,
+                summary: 'Login Failed',
+                detail: 'Please fill all fields!',
             })
+            return
         }
-    }
 
-    googleLogin() {
-        this.messageService.add({
-            severity: 'info',
-            summary: 'Google Login',
-            detail: 'Redirecting to Google...',
-            life: 1200,
-        })
-    }
+        if (
+            !emailRegex.test(this.loginData.emailOrPhone) &&
+            !phoneRegex.test(this.loginData.emailOrPhone)
+        ) {
+            this.messageService.add({
+                severity: 'error',
+                summary: 'Login Failed',
+                detail: 'Enter a valid email or phone number',
+            })
+            return
+        }
 
-    githubLogin() {
-        this.messageService.add({
-            severity: 'info',
-            summary: 'GitHub Login',
-            detail: 'Redirecting to GitHub...',
-            life: 1200,
-        })
-    }
+        const password = this.loginData.password
+        this.passwordError = ''
 
-    microsoftLogin() {
+        if (password.length < 8) {
+            this.passwordError = 'Password must be at least 8 characters'
+            return
+        }
+        if (!/[A-Z]/.test(password)) {
+            this.passwordError =
+                'Password must contain at least 1 uppercase letter'
+            return
+        }
+        if (!/[a-z]/.test(password)) {
+            this.passwordError =
+                'Password must contain at least 1 lowercase letter'
+            return
+        }
+        if (!/[0-9]/.test(password)) {
+            this.passwordError = 'Password must contain at least 1 number'
+            return
+        }
+        if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+            this.passwordError =
+                'Password must contain at least 1 special character'
+            return
+        }
+
         this.messageService.add({
-            severity: 'info',
-            summary: 'Microsoft Login',
-            detail: 'Redirecting to Microsoft...',
-            life: 1200,
+            severity: 'success',
+            summary: 'Success',
+            detail: 'Login successful!',
+            life: 2000,
         })
+
+        setTimeout(() => {
+            this.router.navigate(['admin/user'])
+        }, 2000)
+        console.log('Login data:', this.loginData)
     }
 }

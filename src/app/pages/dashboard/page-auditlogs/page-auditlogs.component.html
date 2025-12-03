@@ -1,0 +1,80 @@
+<p-toast></p-toast>
+<p-confirmDialog></p-confirmDialog>
+
+<div class="min-h-screen overflow-x-auto p-5 pt-20 text-black">
+  <h2 class="text-2xl font-bold mb-6 text-gray-800">Audit Logs</h2>
+  
+  <div class="bg-white border border-gray-300 rounded shadow overflow-hidden">
+    <p-table [value]="auditLogs" [paginator]="true" [rows]="10" class="p-datatable-striped p-datatable-gridlines">
+      <ng-template pTemplate="header">
+        <tr class="bg-gray-800 text-white">
+          <th>ID</th>
+          <th>User</th>
+          <th>Business</th>
+          <th>Action</th>
+          <th>Description</th>
+          <th>Created At</th>
+          <th>Actions</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-log>
+        <tr class="hover:bg-gray-50 transition">
+          <td>{{ log.id }}</td>
+          <td>{{ log.user_name }}</td>
+          <td>{{ log.business_name }}</td>
+          <td>{{ log.action }}</td>
+          <td class="truncate max-w-xs">{{ log.description }}</td>
+          <td>{{ log.created_at }}</td>
+          <td class="flex gap-2">
+            <button pButton type="button" class="p-button-sm p-button-info" (click)="openEditDialog(log)">Edit</button>
+            <button pButton type="button" class="p-button-sm p-button-danger" (click)="deleteLog(log)">Delete</button>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+
+  <p-dialog header="{{ 'Edit Audit Log' }}" [(visible)]="dialogVisible" [modal]="true" [style]="{width: '500px'}">
+
+    <div class="p-fluid space-y-4">
+
+
+      <div class="p-field flex flex-col">
+        <label class="font-semibold text-gray-700">User Name</label>
+        <input pInputText [(ngModel)]="editingLog.user_name"
+          class="border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+      </div>
+
+
+      <div class="p-field flex flex-col">
+        <label class="font-semibold text-gray-700">Business Name</label>
+        <input pInputText [(ngModel)]="editingLog.business_name"
+          class="border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+      </div>
+
+
+      <div class="p-field flex flex-col">
+        <label class="font-semibold text-gray-700">Action</label>
+        <input pInputText [(ngModel)]="editingLog.action"
+          class="border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+      </div>
+
+
+      <div class="p-field flex flex-col">
+        <label class="font-semibold text-gray-700">Description</label>
+        <input pInputText [(ngModel)]="editingLog.description"
+          class="border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+      </div>
+
+    </div>
+
+
+    <ng-template pTemplate="footer">
+      <button pButton type="button" label="Cancel" class="p-button-text" (click)="dialogVisible=false"></button>
+      <button pButton type="button" label="{{ isAddMode ? 'Save' : 'Update' }}" class="p-button-success"
+        (click)="saveLog()"></button>
+    </ng-template>
+
+  </p-dialog>
+
+</div>
