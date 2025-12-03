@@ -8,27 +8,15 @@ import {
 } from '@angular/forms'
 import { Router, RouterModule } from '@angular/router'
 import { MessageService } from 'primeng/api'
-import { ButtonModule } from 'primeng/button'
-import { CardModule } from 'primeng/card'
-import { CheckboxModule } from 'primeng/checkbox'
-import { InputMaskModule } from 'primeng/inputmask'
 import { ToastModule } from 'primeng/toast'
 
 @Component({
     selector: 'app-verified',
     standalone: true,
-    imports: [
-        ReactiveFormsModule,
-        CommonModule,
-        RouterModule,
-        ToastModule,
-        InputMaskModule,
-        CheckboxModule,
-        ButtonModule,
-        CardModule,
-    ],
+    imports: [ReactiveFormsModule, CommonModule, RouterModule, ToastModule],
     providers: [MessageService],
     templateUrl: './page-verified.component.html',
+    styleUrls: ['./page-verified.component.css'],
 })
 export class PageVerifiedComponent {
     fb = inject(FormBuilder)
@@ -68,6 +56,12 @@ export class PageVerifiedComponent {
 
             setTimeout(() => this.router.navigate(['/verifiedotp']), 1500)
         } else {
+            console.log(
+                'Form invalid, errors:',
+                this.form.errors,
+                this.phoneControl?.errors,
+            )
+
             this.messageService.add({
                 severity: 'error',
                 summary: 'Invalid Phone',

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common'
-import { Component } from '@angular/core'
+import { Component, inject, OnInit } from '@angular/core'
 import {
     FormBuilder,
     FormGroup,
@@ -8,71 +8,82 @@ import {
 } from '@angular/forms'
 import { Router, RouterModule } from '@angular/router'
 import { MessageService } from 'primeng/api'
-import { ButtonModule } from 'primeng/button'
-import { PasswordModule } from 'primeng/password'
 import { ToastModule } from 'primeng/toast'
 
 @Component({
     selector: 'app-reset',
     standalone: true,
-    imports: [
-        CommonModule,
-        ReactiveFormsModule,
-        RouterModule,
-        ToastModule,
-        PasswordModule,
-        ButtonModule,
-    ],
+    imports: [ReactiveFormsModule, CommonModule, RouterModule, ToastModule],
     providers: [MessageService],
     templateUrl: './page-reset.component.html',
 })
-export class PageResetComponent {
-    resetForm: FormGroup
+export class PageResetComponent implements OnInit {
+    fb = inject(FormBuilder)
+    router = inject(Router)
+    messageService = inject(MessageService)
 
-    constructor(
-        private fb: FormBuilder,
-        private messageService: MessageService,
-        private router: Router,
-    ) {
+    resetForm!: FormGroup
+    showPassword = false
+    showConfirmPassword = false
+
+    ngOnInit() {
         this.resetForm = this.fb.group(
             {
-                password: ['', [Validators.required, Validators.minLength(8)]],
-                confirmPassword: ['', Validators.required],
+                newPassword: [
+                    '',
+                    [Validators.required, Validators.minLength(8)],
+                ],
+                confirmPassword: ['', [Validators.required]],
+                rememberMe: [false],
             },
             { validators: this.passwordMatchValidator },
         )
     }
 
-    passwordMatchValidator(group: FormGroup) {
-        const pass = group.get('password')?.value
-        const confirm = group.get('confirmPassword')?.value
-        return pass === confirm ? null : { mismatch: true }
+    passwordMatchValidator(form: FormGroup) {
+        const newPassword = form.get('newPassword')?.value
+        const confirmPassword = form.get('confirmPassword')?.value
+        if (newPassword !== confirmPassword) {
+            form.get('confirmPassword')?.setErrors({ mismatch: true })
+        } else {
+            form.get('confirmPassword')?.setErrors(null)
+        }
+        return null
+    }
+
+    togglePassword() {
+        this.showPassword = !this.showPassword
+    }
+
+    toggleConfirmPassword() {
+        this.showConfirmPassword = !this.showConfirmPassword
     }
 
     onSubmit() {
         this.resetForm.markAllAsTouched()
 
-        if (this.resetForm.valid) {
-            this.messageService.add({
-                severity: 'success',
-                summary: 'Password Reset',
-                detail: 'Password changed successfully! Redirecting to login...',
-                life: 2000,
-            })
-
-            setTimeout(() => this.router.navigate(['/']), 2000)
-        } else {
+        if (this.resetForm.invalid) {
             this.messageService.add({
                 severity: 'error',
                 summary: 'Error',
-                detail: 'Please fix the errors in the form',
+                detail: 'Please fill all fields correctly',
                 life: 2000,
             })
+            return
         }
+
+        this.messageService.add({
+            severity: 'success',
+            summary: 'Success',
+            detail: 'Password changed successfully!',
+            life: 1500,
+        })
+
+        setTimeout(() => this.router.navigate(['']), 1500)
     }
 
-    get passwordControl() {
-        return this.resetForm.get('password')
+    get newPasswordControl() {
+        return this.resetForm.get('newPassword')
     }
 
     get confirmPasswordControl() {

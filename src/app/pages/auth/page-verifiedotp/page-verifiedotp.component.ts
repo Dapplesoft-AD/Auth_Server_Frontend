@@ -1,44 +1,83 @@
 import { CommonModule } from '@angular/common'
-import { Component, inject } from '@angular/core'
-import { FormsModule, NgForm } from '@angular/forms'
+import { Component, inject, OnDestroy, OnInit } from '@angular/core'
+import {
+    FormBuilder,
+    FormGroup,
+    ReactiveFormsModule,
+    Validators,
+} from '@angular/forms'
 import { Router, RouterModule } from '@angular/router'
 import { MessageService } from 'primeng/api'
-import { ButtonModule } from 'primeng/button'
-import { InputOtpModule } from 'primeng/inputotp'
-import { MessageModule } from 'primeng/message'
 import { ToastModule } from 'primeng/toast'
+
 @Component({
-    selector: 'app-otp-template',
+    selector: 'app-verifiedotp',
     standalone: true,
-    imports: [
-        CommonModule,
-        FormsModule,
-        InputOtpModule,
-        MessageModule,
-        ToastModule,
-        ButtonModule,
-        RouterModule,
-    ],
+    imports: [ReactiveFormsModule, CommonModule, RouterModule, ToastModule],
     providers: [MessageService],
     templateUrl: './page-verifiedotp.component.html',
 })
-export class PageVerifiedotpComponent {
-    value = ''
+export class PageVerifiedotpComponent implements OnInit, OnDestroy {
+    fb = inject(FormBuilder)
     router = inject(Router)
     messageService = inject(MessageService)
-    allowNumbersOnly(event: KeyboardEvent) {
-        const allowed = /[0-9]/
-        if (!allowed.test(event.key)) {
-            event.preventDefault()
-        }
+
+    otpForm!: FormGroup
+    timer = 60
+    intervalId: any
+    resendDisabled = true
+
+    ngOnInit() {
+        this.otpForm = this.fb.group({
+            otp: [
+                '',
+                [
+                    Validators.required,
+                    Validators.minLength(4),
+                    Validators.maxLength(4),
+                ],
+            ],
+            rememberMe: [false],
+        })
+
+        this.startTimer()
     }
 
-    onSubmit(form: NgForm) {
-        if (form.invalid || this.value.length < 4) {
+    ngOnDestroy() {
+        clearInterval(this.intervalId)
+    }
+
+    startTimer() {
+        this.timer = 60
+        this.resendDisabled = true
+        this.intervalId = setInterval(() => {
+            if (this.timer > 0) {
+                this.timer--
+            } else {
+                clearInterval(this.intervalId)
+                this.resendDisabled = false
+            }
+        }, 1000)
+    }
+
+    resendOtp() {
+        this.messageService.add({
+            severity: 'info',
+            summary: 'OTP Sent',
+            detail: 'A new OTP has been sent',
+            life: 1500,
+        })
+        this.startTimer()
+    }
+
+    onSubmit() {
+        this.otpForm.markAllAsTouched()
+
+        if (this.otpForm.invalid) {
             this.messageService.add({
                 severity: 'error',
-                summary: 'Invalid OTP',
-                detail: 'Please enter a valid 4-digit OTP',
+                summary: 'Error',
+                detail: 'Please enter a valid OTP',
                 life: 2000,
             })
             return
@@ -46,11 +85,15 @@ export class PageVerifiedotpComponent {
 
         this.messageService.add({
             severity: 'success',
-            summary: 'OTP Verified',
-            detail: 'OTP verified successfully! Redirecting...',
+            summary: 'Success',
+            detail: 'OTP verified successfully!',
             life: 1500,
         })
 
         setTimeout(() => this.router.navigate(['/reset']), 1500)
+    }
+
+    get otpControl() {
+        return this.otpForm.get('otp')
     }
 }

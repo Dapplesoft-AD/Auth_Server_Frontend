@@ -9,9 +9,6 @@ import {
 import { Router, RouterModule } from '@angular/router'
 import { MessageService } from 'primeng/api'
 import { ButtonModule } from 'primeng/button'
-import { CheckboxModule } from 'primeng/checkbox'
-import { InputTextModule } from 'primeng/inputtext'
-import { PasswordModule } from 'primeng/password'
 import { ToastModule } from 'primeng/toast'
 
 @Component({
@@ -22,9 +19,6 @@ import { ToastModule } from 'primeng/toast'
         ReactiveFormsModule,
         RouterModule,
         ToastModule,
-        InputTextModule,
-        PasswordModule,
-        CheckboxModule,
         ButtonModule,
     ],
     providers: [MessageService],
@@ -32,6 +26,8 @@ import { ToastModule } from 'primeng/toast'
 })
 export class PageSignupComponent {
     signupForm: FormGroup
+    showPassword = false
+    showConfirmPassword = false
 
     constructor(
         private fb: FormBuilder,
@@ -53,11 +49,18 @@ export class PageSignupComponent {
         )
     }
 
+    togglePassword() {
+        this.showPassword = !this.showPassword
+    }
+
+    toggleConfirmPassword() {
+        this.showConfirmPassword = !this.showConfirmPassword
+    }
+
     passwordMatchValidator(group: FormGroup) {
-        return group.get('password')?.value ===
-            group.get('confirmPassword')?.value
-            ? null
-            : { mismatch: true }
+        const password = group.get('password')?.value
+        const confirm = group.get('confirmPassword')?.value
+        return password === confirm ? null : { mismatch: true }
     }
 
     onSubmit() {
@@ -68,7 +71,6 @@ export class PageSignupComponent {
                 detail: 'Welcome!',
                 life: 2000,
             })
-
             setTimeout(() => this.router.navigate(['/verifiedotp']), 2000)
         } else {
             this.signupForm.markAllAsTouched()
@@ -76,7 +78,7 @@ export class PageSignupComponent {
                 severity: 'error',
                 summary: 'Error',
                 detail: 'Please fix the errors in the form',
-                life: 2000,
+                life: 2500,
             })
         }
     }
