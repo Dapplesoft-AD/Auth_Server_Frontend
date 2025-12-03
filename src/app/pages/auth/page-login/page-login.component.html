@@ -60,13 +60,19 @@
                     >Forgot password?</a
                 >
             </div>
-
-            <button
-                type="submit"
-                class="w-full rounded-lg bg-blue-500 py-2 font-medium text-white transition duration-200 hover:bg-blue-400">
-                {{loading? 'Log in': 'log out'}}
-                
-            </button>
+            @if (!loading) {
+                <button
+                    type="submit"
+                    class="relative w-full rounded-lg bg-blue-500 py-2 font-medium text-white transition duration-200 hover:bg-blue-400">
+                    <span>Log in</span>
+                </button>
+            }
+            <!-- Progress Spinner -->
+            @else {
+                <div class="flex h-full items-center justify-center">
+                    <p-progressSpinner class="h-10 w-10"></p-progressSpinner>
+                </div>
+            }
         </form>
 
         <div class="my-6 flex items-center">

@@ -43,35 +43,7 @@ export class PageLoginComponent {
 
     onSubmit() {
         this.loading = true
-        if (this.loginFormService.form.valid) {
-            const formData = this.loginFormService.getValue()
-            console.log('Login Data:', formData)
-
-            this.loginApiService.login(formData).subscribe({
-                next: (response) => {
-                    this.messageService.add({
-                        severity: 'success',
-                        summary: 'Login Successful',
-                        detail: 'Welcome back!',
-                        life: 1500,
-                    })
-                    // navigation happens ONLY when login API succeeded
-                    setTimeout(() => {
-                        this.router.navigate([dashboardRoutes.user.path])
-                    }, 500) // 0.5 sec
-                },
-
-                error: (err: { error: { message: any } }) => {
-                    this.messageService.add({
-                        severity: 'error',
-                        summary: 'Login Failed',
-                        detail:
-                            err.error?.message ?? 'Invalid email or password.',
-                        life: 2000,
-                    })
-                },
-            })
-        } else {
+        if (!this.loginFormService.form.valid) {
             this.loginFormService.form.markAllAsTouched()
             this.messageService.add({
                 severity: 'error',
@@ -79,8 +51,39 @@ export class PageLoginComponent {
                 detail: 'Form is invalid! Please check your input.',
                 life: 2000,
             })
+            this.loading = false
+            return
         }
-        this.loading = false
+
+        const formData = this.loginFormService.getValue()
+        this.loginApiService.login(formData).subscribe({
+            next: (response) => {
+                this.messageService.add({
+                    severity: 'success',
+                    summary: 'Login Successful',
+                    detail: 'Welcome back!',
+                    life: 1500,
+                })
+                // navigation happens ONLY when login API succeeded
+                setTimeout(() => {
+                    this.router.navigate([dashboardRoutes.user.path])
+                }, 500) // 0.5 sec
+            },
+
+            error: (err: { error: { message: any } }) => {
+                this.messageService.add({
+                    severity: 'error',
+                    summary: 'Login Failed',
+                    detail: err.error?.message ?? 'Invalid email or password.',
+                    life: 2000,
+                })
+                this.loading = false
+            },
+
+            complete: () => {
+                this.loading = false
+            },
+        })
     }
 
     googleLogin() {
