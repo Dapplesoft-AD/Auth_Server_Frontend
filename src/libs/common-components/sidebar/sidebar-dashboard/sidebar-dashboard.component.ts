@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common'
-import { Component } from '@angular/core'
+import { Component, inject } from '@angular/core'
 import { RouterModule } from '@angular/router'
 import { TableModule } from 'primeng/table'
+import { AuthService } from '../../../auth/service/auth.service'
 
 @Component({
     selector: 'app-sidebar-dashboard',
@@ -9,4 +10,10 @@ import { TableModule } from 'primeng/table'
     templateUrl: './sidebar-dashboard.component.html',
     styleUrl: './sidebar-dashboard.component.css',
 })
-export class SidebarDashboardComponent {}
+export class SidebarDashboardComponent {
+    private authService = inject(AuthService)
+
+    logOut() {
+        this.authService.logout()
+    }
+}
