@@ -1,4 +1,4 @@
-import { Route, Routes } from '@angular/router'
+import { Route } from '@angular/router'
 import { AuthRoutes, authRoutes } from './pages/auth/auth.route'
 import {
     DashboardRoutes,
