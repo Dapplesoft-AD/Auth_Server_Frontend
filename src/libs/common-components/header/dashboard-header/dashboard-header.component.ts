@@ -8,11 +8,9 @@ import { AuthService } from '../../../auth/service/auth.service'
     styleUrl: './dashboard-header.component.css',
 })
 export class DashboardHeaderComponent {
-    private router = inject(Router)
-    private authServer = inject(AuthService)
+    private authService = inject(AuthService)
 
     logOut() {
-        this.authServer.logout()
-        this.router.navigate(['/login'])
+        this.authService.logout()
     }
 }

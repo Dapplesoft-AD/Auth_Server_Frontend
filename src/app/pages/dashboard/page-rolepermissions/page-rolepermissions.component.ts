@@ -2,10 +2,10 @@ import { Component } from '@angular/core'
 import { ToastModule } from 'primeng/toast'
 
 @Component({
-    selector: 'app-page-rolepermissions',
+    selector: 'app-page-rolePermissions',
     standalone: true,
     imports: [ToastModule],
-    templateUrl: './page-rolepermissions.component.html',
+    templateUrl: './page-rolePermissions.component.html',
 })
 export class RolePermissionsRoutes {
     loading = false

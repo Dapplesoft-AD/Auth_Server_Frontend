@@ -1,10 +1,10 @@
 import { Route } from '@angular/router'
+import { authGuard } from '../libs/guards/auth/auth.guard'
 import { AuthRoutes, authRoutes } from './pages/auth/auth.route'
 import {
     DashboardRoutes,
     dashboardRoutes,
 } from './pages/dashboard/dashboard.route'
-
 import {
     NotFoundRoutes,
     notFoundRoutes,
@@ -19,8 +19,13 @@ const groupedRoutes: AppRouteGroups = [
 ]
 
 const flattenedRoutes: Route[] = []
+
 for (const routeGroup of groupedRoutes) {
     for (const route of Object.values(routeGroup)) {
+        // Apply AuthGuard to dashboardRoutes
+        if (routeGroup === dashboardRoutes) {
+            route.canActivate = [...(route.canActivate ?? []), authGuard]
+        }
         flattenedRoutes.push(route)
     }
 }

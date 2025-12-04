@@ -12,7 +12,7 @@ import { AuditLog } from '../../../../libs/auditlogs/auditlog.model'
 import { AuditStateService } from '../../../../libs/auditlogs/auditlog-state.service'
 
 @Component({
-    selector: 'app-page-auditlogs',
+    selector: 'app-page-auditLogs',
     standalone: true,
     imports: [
         CommonModule,
@@ -24,7 +24,7 @@ import { AuditStateService } from '../../../../libs/auditlogs/auditlog-state.ser
         ToastModule,
         ConfirmDialogModule,
     ],
-    templateUrl: './page-auditlogs.component.html',
+    templateUrl: './page-auditLogs.component.html',
     providers: [MessageService, ConfirmationService],
 })
 export class PageAuditLogsRoutesComponent implements OnInit {

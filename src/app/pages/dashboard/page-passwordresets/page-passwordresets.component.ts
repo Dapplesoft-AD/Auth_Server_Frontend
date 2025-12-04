@@ -13,7 +13,7 @@ import { PasswordReset } from '../../../../libs/passwordresets/passwordreset.mod
 import { PasswordResetDataService } from '../../../../libs/passwordresets/passwordreset-data.service'
 
 @Component({
-    selector: 'app-page-passwordresets',
+    selector: 'app-page-passwordResets',
     standalone: true,
     imports: [
         CommonModule,
@@ -26,8 +26,8 @@ import { PasswordResetDataService } from '../../../../libs/passwordresets/passwo
         InputTextModule,
         TagModule,
     ],
-    templateUrl: './page-passwordresets.component.html',
-    styleUrls: ['./page-passwordresets.component.css'],
+    templateUrl: './page-passwordResets.component.html',
+    styleUrls: ['./page-passwordResets.component.css'],
     providers: [MessageService, ConfirmationService],
 })
 export class PagePasswordResetsComponent implements OnInit {

@@ -3,15 +3,15 @@ import { Component, OnInit } from '@angular/core'
 import { ButtonModule } from 'primeng/button'
 import { TableModule } from 'primeng/table'
 import { TagModule } from 'primeng/tag'
-import { MfaSetting } from './../../../../libs/mfsettings/mfasetting.model'
+import { MfaSetting } from '../../../../libs/mfsettings/mfasetting.model'
 import { MfaSettingDataService } from '../../../../libs/mfsettings/mfasetting-data.service'
 
 @Component({
-    selector: 'app-page-mfasettings',
+    selector: 'app-page-mfaSettings',
     standalone: true,
     imports: [CommonModule, TableModule, ButtonModule, TagModule],
-    templateUrl: './page-mfasettings.component.html',
-    styleUrls: ['./page-mfasettings.component.css'],
+    templateUrl: './page-mfaSettings.component.html',
+    styleUrls: ['./page-mfaSettings.component.css'],
 })
 export class PageMfaSettingsComponent implements OnInit {
     mfaSettings: MfaSetting[] = []
