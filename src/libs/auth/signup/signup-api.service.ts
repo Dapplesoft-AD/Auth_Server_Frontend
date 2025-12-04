@@ -1,20 +1,46 @@
-import { HttpClient } from '@angular/common/http'
+import { HttpClient, HttpErrorResponse } from '@angular/common/http'
 import { Injectable, inject } from '@angular/core'
-import { Observable, tap } from 'rxjs'
-import { Signup } from './signup.model'
+import { catchError, Observable, tap, throwError } from 'rxjs'
+import { environment } from '../../../environments/environment.prod'
+import { LoginApiService } from '../login/login-api.service'
+import { AuthService } from '../service/auth.service'
+import { SignUpRequest } from './signup.model'
 // import { TokenStorageService } from '../token/token-storage.service';
 
 @Injectable({ providedIn: 'root' })
 export class SignupApiService {
     private http = inject(HttpClient)
+    private authService = inject(AuthService)
+    private authApiUrl = `${environment.authApiUrl}`
     //   private storage = inject(TokenStorageService);
 
-    signup(payload: Signup): Observable<any> {
-        return this.http.post('/api/signup', payload).pipe(
-            tap((res: any) => {
-                // if (res?.access) this.storage.saveAccessToken(res.access);
-                // if (res?.refresh) this.storage.saveRefreshToken(res.refresh);
-            }),
-        )
+    signup(payload: SignUpRequest): Observable<any> {
+        return this.http
+            .post<SignUpRequest>(`${this.authApiUrl}/users/register`, payload)
+            .pipe(
+                tap((response) => this.handleLoginResponse(response)),
+                catchError((error) => {
+                    return this.handleLoginError(error)
+                }),
+            )
+    }
+
+    private handleLoginResponse(response: SignUpRequest): void {
+        // handle response here
+    }
+
+    private handleLoginError(error: unknown) {
+        if (error instanceof HttpErrorResponse) {
+            if (error.status === 409) {
+                return throwError(
+                    () =>
+                        new HttpErrorResponse({
+                            error: { message: 'Account already exist' },
+                        }),
+                )
+            }
+            return throwError(() => error)
+        }
+        return throwError(() => new Error('Unknown login error'))
     }
 }

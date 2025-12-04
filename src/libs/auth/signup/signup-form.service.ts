@@ -1,30 +1,52 @@
 import { Injectable, inject } from '@angular/core'
 import { FormGroup, NonNullableFormBuilder, Validators } from '@angular/forms'
-import { Signup } from './signup.model'
+import { passwordMatchValidator } from './password-match.validator'
+import { SignUpRequest } from './signup.model'
 
 @Injectable()
-export class SingupFormService {
+export class SingUpFormService {
     private fb = inject(NonNullableFormBuilder)
     form = this.buildForm()
 
     buildForm(): FormGroup {
-        const { required, email, minLength, pattern } = Validators
+        const { required, email, minLength, pattern, maxLength, requiredTrue } =
+            Validators
 
-        return this.fb.group({
-            email: ['', [required, email]],
-
-            Password: [
-                '',
-                [
-                    required,
-                    minLength(8),
-                    pattern(/[A-Z]/),
-                    pattern(/[a-z]/),
-                    pattern(/[0-9]/),
-                    pattern(/[^A-Za-z0-9]/),
+        return this.fb.group(
+            {
+                fullName: [
+                    '',
+                    [
+                        required,
+                        minLength(3),
+                        pattern(/^[A-Za-z]+(?: [A-Za-z]+)*$/),
+                    ],
                 ],
-            ],
-        })
+
+                phone: ['', [maxLength(13), pattern(/[0-9]/)]],
+
+                email: ['', [required, email]],
+
+                password: [
+                    '',
+                    [
+                        required,
+                        minLength(8),
+                        // pattern(/[A-Z]/),  // at one uppercase
+                        // pattern(/[a-z]/), // at one lowercase
+                        // pattern(/[0-9]/), // at one number
+                        // pattern(/[^A-Za-z0-9]/), // at one lower special char
+                    ],
+                ],
+
+                confirmPassword: ['', [required, minLength(8)]],
+
+                acceptTerms: [false, requiredTrue],
+            },
+            {
+                validators: passwordMatchValidator,
+            },
+        )
     }
 
     controls(control: string) {
@@ -35,7 +57,7 @@ export class SingupFormService {
         return this.form.getRawValue()
     }
 
-    patchForm(data: Signup) {
+    patchForm(data: SignUpRequest) {
         this.form.patchValue(data)
     }
 }
