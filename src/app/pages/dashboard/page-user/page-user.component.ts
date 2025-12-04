@@ -1,9 +1,11 @@
 import { CommonModule } from '@angular/common'
-import { Component, OnInit } from '@angular/core'
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core'
 import { FormsModule } from '@angular/forms'
 import { ConfirmationService, MessageService } from 'primeng/api'
 import { ButtonModule } from 'primeng/button'
 import { DialogModule } from 'primeng/dialog'
+import { IconFieldModule } from 'primeng/iconfield'
+import { InputIconModule } from 'primeng/inputicon'
 import { InputTextModule } from 'primeng/inputtext'
 import { PaginatorModule } from 'primeng/paginator'
 import { TableModule } from 'primeng/table'
@@ -23,6 +25,8 @@ import { UserStateService } from '../../../../libs/user/user-state.service'
         DialogModule,
         InputTextModule,
         FormsModule,
+        IconFieldModule,
+        InputIconModule,
     ],
     templateUrl: './page-user.component.html',
     styleUrls: ['./page-user.component.css'],
@@ -33,17 +37,28 @@ export class PageUserComponent implements OnInit {
     selectedUser: User = {} as User
     displayDialog = false
     isEdit = false
+    isLoading = false
+    errorMessage: string | null = null
 
     constructor(
         private userState: UserStateService,
         private messageService: MessageService,
         private confirmationService: ConfirmationService,
+        private cdr: ChangeDetectorRef,
     ) {}
 
     ngOnInit(): void {
+        this.isLoading = true
         this.userState.users$.subscribe({
-            next: (users) => {
-                this.users = users
+            next: (data) => {
+                this.users = data
+                this.isLoading = false
+                this.cdr.detectChanges() // Manually trigger change detection
+            },
+            error: (error) => {
+                this.isLoading = false
+                this.errorMessage = 'Error loading users'
+                console.error('Error:', error)
             },
         })
         this.userState.loadUsers()
@@ -63,7 +78,7 @@ export class PageUserComponent implements OnInit {
 
     saveUser() {
         if (this.isEdit) {
-            this.userState.updateUser(this.selectedUser.id, this.selectedUser)
+            //this.userState.updateUser(this.selectedUser.id, this.selectedUser)
             this.messageService.add({
                 severity: 'success',
                 summary: 'Updated',
@@ -82,7 +97,7 @@ export class PageUserComponent implements OnInit {
 
     deleteUser(user: User) {
         this.confirmationService.confirm({
-            message: `Are you sure you want to delete ${user.name}?`,
+            message: `Are you sure you want to delete ${user.fullName}?`,
             accept: () => {
                 this.userState.deleteUser(user.id)
                 this.messageService.add({

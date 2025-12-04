@@ -1,63 +1,56 @@
-import { Injectable } from '@angular/core'
+import { Injectable, inject } from '@angular/core'
 import { Observable, of } from 'rxjs'
 import { tap } from 'rxjs/operators'
 import { User } from './user.model'
+import { UserApiService } from './user-api.service'
 
 @Injectable({
     providedIn: 'root',
 })
 export class UserDataService {
-    // Dummy data locally
-    private users: User[] = [
-        {
-            id: 1,
-            name: 'Mohammad Arman',
-            email: 'arman@example.com',
-            role: 'Admin',
-        },
-        { id: 2, name: 'Hasan Ali', email: 'hasan@example.com', role: 'User' },
-        { id: 3, name: 'Rahim Khan', email: 'rahim@example.com', role: 'User' },
-        {
-            id: 4,
-            name: 'Sadia Noor',
-            email: 'sadia@example.com',
-            role: 'Manager',
-        },
-    ]
+    private userApiService = inject(UserApiService)
+    users: User[] = []
 
     constructor() {}
 
-    // Get all users (dummy)
+    // load from api
     loadUsers(): Observable<User[]> {
-        return of(this.users).pipe(
-            tap((data) => {
-                this.users = data
+        return this.userApiService.getUsers().pipe(
+            tap((users) => {
+                this.users = users // store local copy
+                console.log('All users loaded')
             }),
         )
     }
 
     // Return local copy
-    getLocalUsers(): User[] {
+    getUsers(): User[] {
+        return this.users
+    }
+
+    // get a single user
+    getAUser(id: string) {
         return this.users
     }
 
     // Add a new user
     addUser(user: User) {
-        const newId = this.users.length
-            ? Math.max(...this.users.map((u) => u.id)) + 1
-            : 1
-        const newUser = { ...user, id: newId }
-        this.users.push(newUser)
+        // this option might be removed in future,
+        // why add while you can register new account easily? 🤔
+        // this option will cause role based complication in the back-end
     }
 
     // Update an existing user
-    updateUserLocal(id: number, user: User) {
-        const index = this.users.findIndex((u) => u.id === id)
-        if (index !== -1) this.users[index] = { ...user, id }
-    }
+    updateUser(id: string, user: User) {}
 
     // Delete a user
-    deleteUserLocal(id: number) {
+    deleteUser(id: string) {
+        // Remove from local array
         this.users = this.users.filter((u) => u.id !== id)
+
+        // Call API Delete
+        return this.userApiService
+            .deleteUser(id)
+            .pipe(tap(() => console.log('Deleted user', id)))
     }
 }

@@ -20,16 +20,16 @@ export class UserStateService {
 
     addUser(user: User) {
         this.dataService.addUser(user)
-        this.usersSubject.next(this.dataService.getLocalUsers())
+        this.usersSubject.next(this.dataService.getUsers())
     }
 
-    updateUser(id: number, user: User) {
-        this.dataService.updateUserLocal(id, user)
-        this.usersSubject.next(this.dataService.getLocalUsers())
+    updateUser(id: string, user: User) {
+        this.dataService.updateUser(id, user)
+        this.usersSubject.next(this.dataService.getUsers())
     }
 
-    deleteUser(id: number) {
-        this.dataService.deleteUserLocal(id)
-        this.usersSubject.next(this.dataService.getLocalUsers())
+    deleteUser(id: string) {
+        this.dataService.deleteUser(id)
+        this.usersSubject.next(this.dataService.getUsers())
     }
 }
