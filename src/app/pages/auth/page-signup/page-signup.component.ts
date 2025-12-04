@@ -8,6 +8,7 @@ import { CheckboxModule } from 'primeng/checkbox'
 import { FloatLabelModule } from 'primeng/floatlabel'
 import { InputTextModule } from 'primeng/inputtext'
 import { PasswordModule } from 'primeng/password'
+import { ProgressSpinner } from 'primeng/progressspinner'
 import { ToastModule } from 'primeng/toast'
 import { SingUpFormService } from '../../../../libs/auth'
 import { LoginApiService } from '../../../../libs/auth/login/login-api.service'
@@ -27,6 +28,7 @@ import { authRoutes } from '../auth.route'
         CheckboxModule,
         ButtonModule,
         FloatLabelModule,
+        ProgressSpinner,
     ],
     providers: [MessageService, SingUpFormService],
     templateUrl: './page-signup.component.html',

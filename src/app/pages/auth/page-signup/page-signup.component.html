@@ -3,7 +3,6 @@
 <div
     class="flex min-h-screen items-center justify-center bg-gray-100 px-6 py-10">
     <div class="w-full max-w-md rounded bg-white p-10 shadow-2xl">
-        
         <!-- Logo -->
         <div class="mb-8 flex justify-center">
             <img src="../../../../assets/images/image.png" class="h-10" />
@@ -14,8 +13,7 @@
         <form
             [formGroup]="signUpFormService.form"
             (ngSubmit)="onSubmit()"
-            class="space-y-6 my-1">
-            
+            class="my-1 space-y-6">
             <!-- Full Name -->
             <div>
                 <p-floatLabel class="w-full">
@@ -31,13 +29,19 @@
                     signUpFormService.form.get('fullName')?.touched &&
                     signUpFormService.form.get('fullName')?.hasError('required')
                 ) {
-                    <p class="mt-1 text-sm text-red-500">Full Name is required</p>
+                    <p class="mt-1 text-sm text-red-500">
+                        Full Name is required
+                    </p>
                 }
                 @if (
                     signUpFormService.form.get('fullName')?.touched &&
-                    signUpFormService.form.get('fullName')?.hasError('minlength')
+                    signUpFormService.form
+                        .get('fullName')
+                        ?.hasError('minlength')
                 ) {
-                    <p class="mt-1 text-sm text-red-500">Name must be at least 3 characters</p>
+                    <p class="mt-1 text-sm text-red-500">
+                        Name must be at least 3 characters
+                    </p>
                 }
             </div>
 
@@ -52,13 +56,19 @@
                         class="w-full" />
                     <label for="phone">Enter your phone number</label>
                 </p-floatLabel>
-                
+
                 @if (
                     signUpFormService.form.get('phone')?.touched &&
-                    (signUpFormService.form.get('phone')?.hasError('maxlength') ||
-                    signUpFormService.form.get('phone')?.hasError('pattern'))
+                    (signUpFormService.form
+                        .get('phone')
+                        ?.hasError('maxlength') ||
+                        signUpFormService.form
+                            .get('phone')
+                            ?.hasError('pattern'))
                 ) {
-                    <p class="mt-1 text-sm text-red-500">Phone must contain only numbers cannot exceed 13 digits</p>
+                    <p class="mt-1 text-sm text-red-500">
+                        Phone must contain only numbers cannot exceed 13 digits
+                    </p>
                 }
             </div>
 
@@ -73,7 +83,7 @@
                         class="w-full" />
                     <label for="email">Enter your email</label>
                 </p-floatLabel>
-                
+
                 @if (
                     signUpFormService.form.get('email')?.touched &&
                     signUpFormService.form.get('email')?.hasError('pattern')
@@ -100,7 +110,9 @@
                     signUpFormService.form.get('password')?.touched &&
                     signUpFormService.form.get('password')?.hasError('required')
                 ) {
-                    <p class="mt-1 text-sm text-red-500">Password is required</p>
+                    <p class="mt-1 text-sm text-red-500">
+                        Password is required
+                    </p>
                 }
             </div>
 
@@ -120,25 +132,35 @@
 
                 @if (
                     signUpFormService.form.get('confirmPassword')?.touched &&
-                    signUpFormService.form.get('confirmPassword')?.hasError('required')
+                    signUpFormService.form
+                        .get('confirmPassword')
+                        ?.hasError('required')
                 ) {
-                    <p class="mt-1 text-sm text-red-500">Confirm Password is required</p>
+                    <p class="mt-1 text-sm text-red-500">
+                        Confirm Password is required
+                    </p>
                 }
 
                 @if (
                     signUpFormService.form.hasError('passwordMismatch') &&
                     signUpFormService.form.get('confirmPassword')?.touched
                 ) {
-                    <p class="mt-1 text-sm text-red-500">Passwords do not match</p>
+                    <p class="mt-1 text-sm text-red-500">
+                        Passwords do not match
+                    </p>
                 }
             </div>
 
             <!-- Terms -->
             <div class="flex items-center space-x-3">
-                <p-checkbox formControlName="acceptTerms" binary="true"></p-checkbox>
+                <p-checkbox
+                    formControlName="acceptTerms"
+                    binary="true"></p-checkbox>
                 <span class="text-sm">
                     I agree to the
-                    <a routerLink="/terms" class="text-blue-500 hover:underline">
+                    <a
+                        routerLink="/terms"
+                        class="text-blue-500 hover:underline">
                         Terms & Conditions
                     </a>
                 </span>
@@ -146,8 +168,10 @@
 
             @if (
                 signUpFormService.form.get('acceptTerms')?.touched &&
-                (signUpFormService.form.get('acceptTerms')?.hasError('requiredTrue') ||
-                signUpFormService.form.get('acceptTerms')?.invalid)
+                (signUpFormService.form
+                    .get('acceptTerms')
+                    ?.hasError('requiredTrue') ||
+                    signUpFormService.form.get('acceptTerms')?.invalid)
             ) {
                 <p class="mt-1 text-sm text-red-500">
                     You must accept the terms and conditions
@@ -155,19 +179,26 @@
             }
 
             <!-- Submit -->
-            <button
-                pButton
-                type="submit"
-                label="Sign Up"
-                [disabled]="signUpFormService.form.invalid"
-                class="w-full rounded-md bg-blue-500 py-2 font-bold text-white transition hover:bg-blue-400">
-            </button>
+            @if (!loading) {
+                <button
+                    pButton
+                    type="submit"
+                    label="Sign Up"
+                    [disabled]="signUpFormService.form.invalid"
+                    class="w-full rounded-md bg-blue-500 py-2 font-bold text-white transition hover:bg-blue-400"></button>
+            } @else {
+                <div class="flex h-full items-center justify-center">
+                    <p-progressSpinner class="h-10 w-10"></p-progressSpinner>
+                </div>
+            }
         </form>
 
         <!-- Already have account -->
         <p class="mt-8 text-center text-sm text-gray-600">
             Already have an account?
-            <a routerLink="/login" class="font-semibold text-blue-500 hover:underline">
+            <a
+                routerLink="/login"
+                class="font-semibold text-blue-500 hover:underline">
                 Login
             </a>
         </p>
