@@ -16,15 +16,18 @@ export class UserApiService {
         return this.http.get<User[]>(this.apiUrl + '/users/get-all')
     }
 
-    // createUser(user: User): Observable<User> {
-    //     return this.http.post<User>(this.apiUrl, user)
-    // }
+    createUser(user: User): Observable<User> {
+        return this.http.post<User>(this.apiUrl, user)
+    }
 
-    updateUser(id: string, userData: Partial<User>): Observable<User> {
-        return this.http.put<User>(`${this.apiUrl}/${id}`, userData)
+    updateUser(userData: Partial<User>): Observable<User> {
+        return this.http.put<User>(
+            `${this.apiUrl}/users/update/${userData.id}`,
+            userData,
+        )
     }
 
     deleteUser(id: string): Observable<void> {
-        return this.http.delete<void>(`${this.apiUrl}/${id}`)
+        return this.http.delete<void>(`${this.apiUrl}/users/delete/${id}`)
     }
 }

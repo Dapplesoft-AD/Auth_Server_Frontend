@@ -30,25 +30,27 @@ export class UserDataService {
 
     // get a single user
     getAUser(id: string) {
-        return this.users
+        return this.users.find((u) => u.id === id) // fixed
     }
 
     // Add a new user
-    addUser(user: User) {
-        // this option might be removed in future,
-        // why add while you can register new account easily? 🤔
-        // this option will cause role based complication in the back-end
+    // this option might be removed in future,
+    // why add while you can register new account easily? 🤔
+    // this option will cause role based complication in the back-end
+    addUser(user: User): Observable<User> {
+        return this.userApiService
+            .createUser(user)
+            .pipe(tap((u) => this.users.push(u)))
     }
 
     // Update an existing user
-    updateUser(id: string, user: User) {}
+    updateUser(id: string, user: Partial<User>): Observable<User> {
+        return this.userApiService.updateUser({ id, ...user })
+    }
 
     // Delete a user
-    deleteUser(id: string) {
-        // Remove from local array
+    deleteUser(id: string): Observable<void> {
         this.users = this.users.filter((u) => u.id !== id)
-
-        // Call API Delete
         return this.userApiService
             .deleteUser(id)
             .pipe(tap(() => console.log('Deleted user', id)))
