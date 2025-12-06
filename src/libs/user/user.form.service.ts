@@ -1,10 +1,5 @@
 import { Injectable } from '@angular/core'
-import {
-    FormBuilder,
-    FormGroup,
-    NonNullableFormBuilder,
-    Validators,
-} from '@angular/forms'
+import { FormGroup, NonNullableFormBuilder, Validators } from '@angular/forms'
 import { User } from './user.model'
 
 @Injectable({
@@ -17,11 +12,14 @@ export class UserFormService {
     }
 
     buildForm(): FormGroup {
-        const { required, minLength, email } = Validators
+        const { required, minLength, email, pattern } = Validators
         return this.fb.group({
-            email: ['', [email]],
-            fullName: ['', [minLength(3)]],
-            phone: ['', [minLength(11)]],
+            email: ['', [required, email]],
+            fullName: [
+                '',
+                [required, minLength(3), pattern(/^[A-Za-z]+(?: [A-Za-z]+)*$/)],
+            ],
+            phone: ['', [minLength(11), pattern(/^[0-9]+$/)]],
             role: ['', []],
         })
     }
