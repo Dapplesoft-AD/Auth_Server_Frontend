@@ -1,6 +1,10 @@
-export interface Signup {
-    full_name: string
+export interface SignUpRequest {
+    fullName: string
+    phone: string
     email: string
     password: string
-    confirm_password: string
+}
+
+export interface SignUpResponse {
+    id: string
 }

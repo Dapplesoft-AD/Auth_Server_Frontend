@@ -11,7 +11,7 @@ export class AlertService {
     private messageService = inject(MessageService)
 
     private getToastKey(): string {
-        return 'confirmDialog'
+        return 'myToast'
     }
 
     success(message: string) {
@@ -19,6 +19,7 @@ export class AlertService {
             severity: 'success',
             summary: 'Success',
             detail: message,
+            life: 1500,
             key: this.getToastKey(),
         })
     }
@@ -28,6 +29,7 @@ export class AlertService {
             detail: message,
             severity: 'error',
             summary: 'Error',
+            life: 1500,
             key: this.getToastKey(),
         })
     }
@@ -37,6 +39,7 @@ export class AlertService {
             detail: message,
             severity: 'info',
             summary: 'Info',
+            life: 1500,
             key: this.getToastKey(),
         })
     }
@@ -46,6 +49,7 @@ export class AlertService {
             detail: message,
             severity: 'warning',
             summary: 'Warning',
+            life: 1500,
             key: this.getToastKey(),
         })
     }

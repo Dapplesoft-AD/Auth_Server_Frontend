@@ -18,34 +18,39 @@
             [formGroup]="loginFormService.form"
             (ngSubmit)="onSubmit()"
             class="space-y-4">
-            <div class="mb-4">
-                <input
-                    pInputText
-                    id="email"
-                    type="email"
-                    formControlName="email"
-                    placeholder="Enter your email address"
-                    class="w-full rounded-lg border border-gray-300 px-4 py-2 placeholder-gray-400" />
+
+            <!--Email-->
+            <div>
+                <p-floatLabel class="w-full" variant="on">
+                    <input
+                        pInputText
+                        type="email"
+                        id="email"
+                        formControlName="email"
+                        class="w-full" />
+                    <label for="email">Enter your email</label>
+                </p-floatLabel>
+
+                @if (
+                    loginFormService.form.get('email')?.touched &&
+                    loginFormService.form.get('email')?.hasError('pattern')
+                ) {
+                    <p class="mt-1 text-sm text-red-500">Invalid Email</p>
+                }
             </div>
 
-            <div class="relative w-full">
-                <input
-                    [type]="showPassword ? 'text' : 'password'"
+            <!--Password-->
+            <p-floatLabel class="w-full" variant="on">
+                <p-password
+                    id="password"
                     formControlName="password"
-                    placeholder="Enter Password"
-                    class="w-full rounded-lg border border-gray-300 px-4 py-2 placeholder-gray-400" />
-                <button
-                    type="button"
-                    class="absolute inset-y-0 right-3 flex items-center text-gray-400"
-                    (click)="showPassword = !showPassword"
-                    aria-label="Toggle password visibility">
-                    <i
-                        [ngClass]="
-                            showPassword ? 'pi pi-eye-slash' : 'pi pi-eye'
-                        "
-                        style="font-size: 1.25rem"></i>
-                </button>
-            </div>
+                    [toggleMask]="true"
+                    [feedback]="false"
+                    inputStyleClass="w-full"
+                    class="w-full">
+                </p-password>
+                <label for="password">Enter your password</label>
+            </p-floatLabel>
 
             <div class="mt-2 flex items-center justify-between">
                 <label

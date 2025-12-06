@@ -4,6 +4,8 @@ import { ReactiveFormsModule } from '@angular/forms'
 import { Router, RouterModule } from '@angular/router'
 import { MessageService } from 'primeng/api'
 import { ButtonModule } from 'primeng/button'
+import { FloatLabelModule } from 'primeng/floatlabel'
+import { InputTextModule } from 'primeng/inputtext'
 import { PasswordModule } from 'primeng/password'
 import { ProgressSpinnerModule } from 'primeng/progressspinner'
 import { ToastModule } from 'primeng/toast'
@@ -21,6 +23,8 @@ import { dashboardRoutes } from '../../dashboard/dashboard.route'
         ButtonModule,
         PasswordModule,
         ProgressSpinnerModule,
+        InputTextModule,
+        FloatLabelModule,
     ],
     providers: [LoginFormService, MessageService],
     templateUrl: './page-login.component.html',
@@ -34,7 +38,6 @@ export class PageLoginComponent {
         private router: Router,
         private messageService: MessageService,
         private loginApiService: LoginApiService,
-        private tokenStorage: TokenStorageService,
     ) {}
 
     togglePassword() {

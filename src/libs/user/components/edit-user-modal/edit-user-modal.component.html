@@ -1,0 +1,49 @@
+<div class="bg-surface-50 p-4">
+    <form
+        [formGroup]="userFormService.form"
+        class="space-y-4"
+        (ngSubmit)="submit($event)">
+        <p-floatLabel class="w-full" variant="on">
+            <input
+                pInputText
+                type="email"
+                id="email"
+                formControlName="email"
+                class="w-full" />
+            <label for="email">Email</label>
+        </p-floatLabel>
+        <p-floatLabel class="w-full" variant="on">
+            <input
+                pInputText
+                id="fullName"
+                formControlName="fullName"
+                class="w-full" />
+            <label for="email">Full Name</label>
+        </p-floatLabel>
+        <p-floatLabel class="w-full" variant="on">
+            <input
+                pInputText
+                type="tel"
+                id="phone"
+                formControlName="phone"
+                class="w-full" />
+            <label for="email">Phone Number</label>
+        </p-floatLabel>
+        <p-floatLabel class="w-full" variant="on">
+            <input
+                pInputText
+                id="role"
+                formControlName="role"
+                class="w-full" />
+            <label for="email">Role</label>
+        </p-floatLabel>
+        <p-button
+            [label]="'Update'"
+            [loading]="isLoading()"
+            [disabled]="isLoading() || userFormService.form.invalid"
+            type="submit"
+            class="mt-8 flex w-full items-center justify-center gap-2 rounded-md py-2">
+            <i pButtonIcon class="pi pi-user text-base! leading-normal!"></i>
+        </p-button>
+    </form>
+</div>
