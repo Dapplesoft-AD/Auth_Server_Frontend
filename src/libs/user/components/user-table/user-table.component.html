@@ -80,12 +80,18 @@
                     <span
                         class="rounded-full px-2 py-1 text-xs font-semibold"
                         [ngClass]="{
-                            'bg-green-500 text-white': user.role === 'Admin',
-                            'bg-blue-500 text-white': user.role === 'Manager',
+                            'bg-green-500 text-white': user.role === 1,
+                            'bg-blue-500 text-white': user.role === 2,
                             'bg-gray-200 text-gray-800':
-                                !user.role || user.role === 'User',
+                                !user.role || user.role === 3,
                         }">
-                        {{ user.role || 'User' }}
+                        {{
+                            (user.role === 1 )? 'Admin'
+                                : (user.role === 2) ? 'Moderator'
+                                : (user.role === 3) ? 'Editor'
+                                : (user.role === 4) ? 'User'
+                                : 'User'
+                        }}
                     </span>
                 </td>
 
