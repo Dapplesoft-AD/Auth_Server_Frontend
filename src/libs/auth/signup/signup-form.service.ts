@@ -22,25 +22,28 @@ export class SingUpFormService {
                         pattern(/^[A-Za-z]+(?: [A-Za-z]+)*$/),
                     ],
                 ],
-
-                phone: ['', [maxLength(13), pattern(/[0-9]/)]],
-
+                phone: [
+                    '',
+                    [
+                        required,
+                        minLength(11),
+                        maxLength(13),
+                        pattern(/^[0-9]+$/),
+                    ],
+                ],
                 email: ['', [required, email]],
-
                 password: [
                     '',
                     [
                         required,
                         minLength(8),
-                        // pattern(/[A-Z]/),  // at one uppercase
-                        // pattern(/[a-z]/), // at one lowercase
-                        // pattern(/[0-9]/), // at one number
-                        // pattern(/[^A-Za-z0-9]/), // at one lower special char
+                        // pattern(/[A-Z]/),  // at least one uppercase
+                        // pattern(/[a-z]/), // at least one lowercase
+                        // pattern(/[0-9]/), // at least one number
+                        // pattern(/[^A-Za-z0-9]/), // at least one special char
                     ],
                 ],
-
                 confirmPassword: ['', [required, minLength(8)]],
-
                 acceptTerms: [false, requiredTrue],
             },
             {
