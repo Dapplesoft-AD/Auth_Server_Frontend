@@ -1,0 +1,53 @@
+<div class="bg-surface-50 p-4">
+    <form [formGroup]="roleFormService.form" class="grid grid-cols-1 gap-6">
+        <div class="w-full">
+            <label
+                for="id"
+                class="text-surface-900 w-full leading-normal font-medium"
+                >ID</label
+            >
+            <input
+                pInputText
+                type="text"
+                placeholder="id"
+                formControlName="Id"
+                class="w-full rounded-md px-3 py-2 shadow-sm" />
+        </div>
+        <div class="w-full">
+            <label
+                for="roleName"
+                class="text-surface-900 w-full leading-normal font-medium"
+                >Role Name</label
+            >
+            <input
+                pInputText
+                id="roleName"
+                type="text"
+                formControlName="role name"
+                placeholder="role"
+                class="w-full rounded-md px-3 py-2 shadow-sm" />
+        </div>
+        <div class="w-full">
+            <label
+                for="description"
+                class="text-surface-900 w-full leading-normal font-medium"
+                >decpriptin</label
+            >
+            <input
+                pInputText
+                id="description"
+                type="text"
+                placeholder="description"
+                formControlName="description"
+                class="w-full rounded-md px-3 py-2 shadow-sm" />
+        </div>
+    </form>
+    <p-button
+        [label]="'Add'"
+        [loading]="isLoading()"
+        [disabled]="isLoading() || roleFormService.form.invalid"
+        class="mt-8 flex w-full items-center justify-center gap-2 rounded-md py-2"
+        (click)="submit($event)">
+        <i pButtonIcon class="pi pi-user text-base! leading-normal!"></i>
+    </p-button>
+</div>

@@ -1,58 +1,83 @@
-
 <p-toast></p-toast>
-<div class="flex min-h-screen items-center justify-center bg-gray-100 px-6">
-  <div class="w-full max-w-md rounded bg-white p-8 shadow-xl">
-    <div class="mb-8 flex justify-center">
-      <img src="../../../../assets/images/image.png" alt="Logo" class="h-10 w-auto" />
+<div class="flex h-screen items-center justify-center bg-gray-100">
+    <div
+        class="h-150 w-full max-w-md items-center justify-center rounded bg-gray-100 p-10 shadow-xl">
+        <div class="mb-8 flex justify-center">
+            <img
+                src="../../../../assets/images/image.png"
+                alt="Logo"
+                class="h-10 w-auto" />
+        </div>
+
+            <div class="mb-6 pt-15 text-left">
+            <h2
+                class="text-lg font-bold tracking-wide text-gray-800 md:text-xl">
+                Change Password
+            </h2>
+
+        </div>
+
+        <form [formGroup]="resetForm" (ngSubmit)="onSubmit()" class="space-y-4">
+            <div>
+                <p-password
+                    formControlName="password"
+                    [toggleMask]="true"
+                    [feedback]="false"
+                    class="w-full"
+                    placeholder="Enter your password"
+                    inputStyleClass="w-full"></p-password>
+
+                <p
+                    *ngIf="
+                        passwordControl?.touched &&
+                        passwordControl?.hasError('required')
+                    "
+                    class="mt-1 text-sm text-red-500">
+                    Password is required
+                </p>
+                <p
+                    *ngIf="
+                        passwordControl?.touched &&
+                        passwordControl?.hasError('minlength')
+                    "
+                    class="mt-1 text-sm text-red-500">
+                    Password must be at least 8 characters
+                </p>
+            </div>
+
+            <div>
+                <p-password
+                    formControlName="confirmPassword"
+                    [toggleMask]="true"
+                    [feedback]="false"
+                    class="w-full"
+                    placeholder="Confirm your password"
+                    inputStyleClass="w-full"></p-password>
+
+                <p
+                    *ngIf="
+                        confirmPasswordControl?.touched &&
+                        confirmPasswordControl?.hasError('required')
+                    "
+                    class="mt-1 text-sm text-red-500">
+                    Confirm Password is required
+                </p>
+                <p
+                    *ngIf="
+                        resetForm.hasError('mismatch') &&
+                        confirmPasswordControl?.touched
+                    "
+                    class="mt-1 text-sm text-red-500">
+                    Passwords do not match
+                </p>
+            </div>
+
+            <button
+                type="submit"
+                class="w-full rounded-md bg-blue-400 py-2 font-bold text-white transition hover:bg-blue-500">
+                Reset Password
+            </button>
+        </form>
     </div>
 
-    <h2 class="mb-4 text-left text-xl font-extrabold text-gray-900">
-      Reset Password
-    </h2>
-
-    <form [formGroup]="resetForm" (ngSubmit)="onSubmit()" class="space-y-4">
-      <div>
-        <p-password
-          formControlName="password"
-          [toggleMask]="true"
-          [feedback]="false"
-          class="w-full"
-          placeholder="Enter your password"
-          inputStyleClass="w-full"
-        ></p-password>
-
-        <p *ngIf="passwordControl?.touched && passwordControl?.hasError('required')" class="mt-1 text-sm text-red-500">
-          Password is required
-        </p>
-        <p *ngIf="passwordControl?.touched && passwordControl?.hasError('minlength')" class="mt-1 text-sm text-red-500">
-          Password must be at least 8 characters
-        </p>
-      </div>
-
-      <div>
-        <p-password
-          formControlName="confirmPassword"
-          [toggleMask]="true"
-          [feedback]="false"
-          class="w-full"
-          placeholder="Confirm your password"
-          inputStyleClass="w-full"
-        ></p-password>
-
-        <p *ngIf="confirmPasswordControl?.touched && confirmPasswordControl?.hasError('required')" class="mt-1 text-sm text-red-500">
-          Confirm Password is required
-        </p>
-        <p *ngIf="resetForm.hasError('mismatch') && confirmPasswordControl?.touched" class="mt-1 text-sm text-red-500">
-          Passwords do not match
-        </p>
-      </div>
-
-      <button
-        type="submit"
-        class="w-full rounded bg-blue-400 py-2 font-semibold text-white shadow-md transition duration-200 hover:bg-blue-500"
-      >
-        Reset Password
-      </button>
-    </form>
-  </div>
 </div>
