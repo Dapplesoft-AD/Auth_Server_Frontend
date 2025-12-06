@@ -2,7 +2,6 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http'
 import { Injectable, inject } from '@angular/core'
 import { catchError, Observable, tap, throwError } from 'rxjs'
 import { environment } from '../../../environments/environment.prod'
-import { LoginApiService } from '../login/login-api.service'
 import { AuthService } from '../service/auth.service'
 import { SignUpRequest } from './signup.model'
 // import { TokenStorageService } from '../token/token-storage.service';

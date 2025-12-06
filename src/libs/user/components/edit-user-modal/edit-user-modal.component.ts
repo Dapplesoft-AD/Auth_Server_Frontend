@@ -8,7 +8,6 @@ import { InputTextModule } from 'primeng/inputtext'
 import { AlertService } from '../../../common-service/lib/alert.service'
 import { UserFormService } from '../../user.form.service'
 import { User } from '../../user.model'
-import { UserApiService } from '../../user-api.service'
 import { UserStateService } from '../../user-state.service'
 
 @Component({
@@ -43,7 +42,6 @@ export class EditUserModalComponent {
     submit(event: Event) {
         this.isLoading.set(true)
         event.preventDefault()
-
         const selectedUser = this.config.data?.user
         const formValue = this.userFormService.getValue()
 
