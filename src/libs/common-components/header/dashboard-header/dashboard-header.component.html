@@ -1,37 +1,35 @@
 <header class="fixed top-0 right-0 left-0 z-50 w-full antialiased">
     <nav class="border-gray-200 bg-white px-4 py-2.5 lg:px-6 dark:bg-gray-800">
         <div class="flex flex-wrap items-center justify-between">
-            <div class="flex items-center justify-start">
-
+     
+            <div class="flex items-center gap-3">
+      
                 <button
-                    aria-expanded="true"
-                    aria-controls="sidebar"
-                    class="mr-2 cursor-pointer rounded-lg p-2 text-gray-600 hover:bg-gray-100 hover:text-gray-900 focus:bg-gray-100 focus:ring-2 focus:ring-gray-100 lg:hidden dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:bg-gray-700 dark:focus:ring-gray-700">
+                    id="sidebarToggle"
+                    class="rounded-xl border border-white/30 bg-white/20 p-1 text-white shadow-md backdrop-blur-lg transition-all duration-200 hover:bg-white/30 active:scale-95 md:hidden">
                     <svg
-                        class="h-[18px] w-[18px]"
-                        aria-hidden="true"
                         xmlns="http://www.w3.org/2000/svg"
+                        class="h-6 w-6"
                         fill="none"
-                        viewBox="0 0 17 14">
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        stroke-width="2">
                         <path
-                            stroke="currentColor"
                             stroke-linecap="round"
                             stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M1 1h15M1 7h15M1 13h15" />
+                            d="M4 6h16M4 12h16M4 18h16" />
                     </svg>
-                    <span class="sr-only">Toggle sidebar</span>
                 </button>
 
-                <div
-                    class="relative mt-1 flex items-center justify-start lg:w-96">
-                    <h1 class="text-2xl md:text-2xl tracking-wide text-white sm:text-sm">
+    
+                <div class="flex items-center gap-2">
+                    <h1 class=" md:text-2xl font-bold tracking-wide text-white">
                         Auth Server
                     </h1>
                 </div>
             </div>
-            <div class="flex items-center lg:order-2">
 
+            <div class="flex items-center lg:order-2">
                 <button
                     type="button"
                     data-dropdown-toggle="notification-dropdown"
@@ -43,18 +41,14 @@
                         aria-hidden="true"
                         xmlns="http://www.w3.org/2000/svg"
                         fill="currentColor"
-
-
                         viewBox="0 0 14 20">
                         <path
                             d="M12.133 10.632v-1.8A5.406 5.406 0 0 0 7.979 3.57.946.946 0 0 0 8 3.464V1.1a1 1 0 0 0-2 0v2.364a.946.946 0 0 0 .021.106 5.406 5.406 0 0 0-4.154 5.262v1.8C1.867 13.018 0 13.614 0 14.807 0 15.4 0 16 .538 16h12.924C14 16 14 15.4 14 14.807c0-1.193-1.867-1.789-1.867-4.175ZM3.823 17a3.453 3.453 0 0 0 6.354 0H3.823Z" />
                     </svg>
                 </button>
 
-
                 <div
                     class="z-50 my-4 hidden max-w-sm list-none divide-y divide-gray-100 overflow-hidden rounded bg-white text-base shadow-lg dark:divide-gray-600 dark:bg-gray-700"
-
                     id="notification-dropdown">
                     <div
                         class="block bg-gray-50 px-4 py-2 text-center text-base font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-400">
@@ -85,7 +79,6 @@
                 <button
                     type="button"
                     data-dropdown-toggle="apps-dropdown"
-
                     class="rounded-lg p-2 text-gray-500 hover:bg-gray-100 hover:text-gray-900 focus:ring-4 focus:ring-gray-300 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-600">
                     <span class="sr-only">View notifications</span>
 
@@ -100,20 +93,16 @@
                     </svg>
                 </button>
 
-
                 <div
                     class="z-50 my-4 hidden max-w-sm list-none divide-y divide-gray-100 overflow-hidden rounded bg-white text-base shadow-lg dark:divide-gray-600 dark:bg-gray-700"
-
                     id="apps-dropdown">
                     <div
                         class="block bg-gray-50 px-4 py-2 text-center text-base font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-400">
                         Apps
                     </div>
                     <div class="grid grid-cols-3 gap-4 p-4">
-
                         <a
                             routerLink="admin/profile"
-
                             class="group block rounded-lg p-4 text-center hover:bg-gray-100 dark:hover:bg-gray-600">
                             <svg
                                 class="mx-auto mb-2 h-5 w-5 text-gray-400 group-hover:text-gray-500 dark:text-gray-400 dark:group-hover:text-gray-400"
@@ -132,8 +121,6 @@
 
                         <a
                             routerLink="setting"
-
-
                             class="group block rounded-lg p-4 text-center hover:bg-gray-100 dark:hover:bg-gray-600">
                             <svg
                                 class="mx-auto mb-2 h-5 w-5 text-gray-400 group-hover:text-gray-500 dark:text-gray-400 dark:group-hover:text-gray-400"
@@ -150,9 +137,8 @@
                             </div>
                         </a>
 
-
-                        <button (click)="logOut()"
-
+                        <button
+                            (click)="logOut()"
                             class="group block rounded-lg p-4 text-center hover:bg-gray-100 dark:hover:bg-gray-600">
                             <svg
                                 class="mx-auto mb-2 h-5 w-5 text-gray-400 group-hover:text-gray-500 dark:text-gray-400 dark:group-hover:text-gray-400"
@@ -174,17 +160,7 @@
                         </button>
                     </div>
                 </div>
-                <button
-                    type="button"
-                    class="mx-3 flex rounded-full bg-gray-800 text-sm focus:ring-4 focus:ring-gray-300 md:mr-0 dark:focus:ring-gray-600"
-                    id="user-menu-button"
-                    aria-expanded="false"
-                    data-dropdown-toggle="dropdown">
-                    <span class="sr-only">Open user menu</span>
-                </button>  
             </div>
         </div>
     </nav>
-
 </header>
-

@@ -1,58 +1,45 @@
-
-
 <p-toast></p-toast>
-
-<div class="flex min-h-screen items-center justify-center bg-gray-100 px-6 py-10">
-  <div class="w-full max-w-md rounded-lg bg-white p-8 shadow-xl">
-
-
-      <div class="mb-8 flex justify-center">
+<div class="flex h-screen items-center justify-center bg-gray-100">
+    <div
+        class="h-150 w-full max-w-md items-center justify-center rounded bg-gray-100 p-10 shadow-xl">
+        <div class="mb-8 flex justify-center">
             <img
                 src="../../../../assets/images/image.png"
                 alt="Logo"
                 class="h-10 w-auto" />
         </div>
 
-        <h2
-            class="mb-4 text-left text-xl font-extrabold text-gray-900 md:text-xl">
-            Number Verification
-        </h2>
+        <div class="mb-6 pt-10 text-left">
+            <h2
+                class="text-lg font-bold tracking-wide text-gray-800 md:text-xl">
+                Forget Password
+            </h2>
 
+            <p class="mt-5 text-xs text-gray-500 md:text-sm">
+                Enter your mobile number for verification. We’ll send you a
+                4-digit verification code.
+            </p>
+        </div>
 
-    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-5">
+        <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-5">
+            <div>
+              <div class="pb-3 text-xs text-gray-500 md:text-sm">
+                <label for="">Phone Number</label>
+              </div>
+                <p-inputMask
+                    id="phone"
+                    mask="99999999999"
+                    placeholder="Enter 11-digit phone number"
+                    formControlName="phone"
+                    (input)="onPhoneInput($event)"
+                    class="w-full items-center h-screen">
+                  </p-inputMask>
+            </div>
 
-
-      <div>
-        <p-inputMask
-          id="phone"
-          mask="99999999999"
-          placeholder="Enter 11-digit phone number"
-          formControlName="phone"
-          (input)="onPhoneInput($event)"
-          inputStyleClass="w-full rounded border border-gray-300 px-4 py-2 text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition"
-        ></p-inputMask>
-
-   
-        <ng-container *ngIf="phoneControl?.touched && phoneControl?.invalid">
-          <p class="mt-1 text-sm text-red-500" *ngIf="phoneControl?.errors?.['required']">
-            Phone number is required.
-          </p>
-          <p class="mt-1 text-sm text-red-500" *ngIf="phoneControl?.errors?.['minlength'] || phoneControl?.errors?.['maxlength']">
-            Phone must be 11 digits.
-          </p>
-          <p class="mt-1 text-sm text-red-500" *ngIf="phoneControl?.errors?.['pattern']">
-            Only digits allowed.
-          </p>
-        </ng-container>
-      </div>
-
-      <button
-        pButton
-        type="submit"
-        label="Send OTP"
-        class="w-full rounded-md bg-blue-500 py-2 font-bold text-white shadow-md transition hover:bg-blue-600"
-      ></button>
-
-    </form>
-  </div>
+            <button
+                pButton
+                type="submit"
+                class="w-full rounded-md bg-blue-400 py-2 font-bold text-white transition hover:bg-blue-500">Send OTP</button>
+        </form>
+    </div>
 </div>

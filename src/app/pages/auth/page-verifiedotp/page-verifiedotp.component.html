@@ -1,7 +1,6 @@
 <p-toast></p-toast>
-<div
-    class="flex min-h-screen items-center justify-center bg-gray-100 px-6 py-8">
-    <div class="w-full max-w-md rounded bg-white p-10 shadow-xl">
+<div class="flex h-screen items-center justify-center bg-gray-100">
+    <div class="h-150 w-full max-w-md rounded bg-gray-100 p-10 shadow-xl">
         <div class="mb-8 flex justify-center">
             <img
                 src="../../../../assets/images/image.png"
@@ -9,10 +8,13 @@
                 class="h-10 w-auto" />
         </div>
 
-        <h2
-            class="mb-4 text-left text-xl font-extrabold text-gray-900 md:text-xl">
-            Verification OTP
-        </h2>
+        <div class="mb-6 pt-15">
+                     <h2 class="text-lg font-bold tracking-wide text-gray-800 md:text-xl">Verification Code</h2>
+
+            <p class="mt-5 text-xs leading-relaxed text-gray-500 md:text-sm">
+                Enter the 4-digit code sent to your mobile.
+            </p>
+        </div>
 
         <form
             #exampleForm="ngForm"
@@ -43,8 +45,8 @@
             <button
                 pButton
                 type="submit"
-                label="Submit"
-                class="w-full rounded-md bg-blue-400 py-2 font-bold text-white transition hover:bg-blue-500"></button>
+                class="w-full rounded-md bg-blue-400 py-2 font-bold text-white transition hover:bg-blue-500">Submit</button>
         </form>
     </div>
 </div>
+    
