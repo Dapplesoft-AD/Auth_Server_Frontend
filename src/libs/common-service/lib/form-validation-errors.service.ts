@@ -15,6 +15,7 @@ export class FormValidationErrorsService {
         if (errors['maxlength'])
             return `Maximum ${errors['maxlength'].requiredLength} characters allowed`
         if (errors['passwordMismatch']) return 'Passwords do not match'
+        if (errors['requiredTrue']) return 'Must agree'
 
         return null
     }

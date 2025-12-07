@@ -54,7 +54,7 @@
                     <label for="password">Enter your password</label>
                 </p-floatLabel>
 
-                @if (signUpFormService.getErrorMsg('password'); as msg) {
+                @if (signUpFormService.form.get('password')?.touched && signUpFormService.getErrorMsg('password'); as msg) {
                     <p class="mt-1 text-sm text-red-500">
                         {{ msg }}
                     </p>
@@ -74,7 +74,7 @@
                     <label for="confirmPassword">Confirm your password</label>
                 </p-floatLabel>
 
-                @if (signUpFormService.getErrorMsg('confirmPassword'); as msg) {
+                @if (signUpFormService.form.get('confirmPassword')?.touched && signUpFormService.getErrorMsg('confirmPassword'); as msg) {
                     <p class="mt-1 text-sm text-red-500">
                         {{ msg }}
                     </p>
@@ -96,9 +96,9 @@
                 </span>
             </div>
 
-            @if (signUpFormService.getErrorMsg('phone'); as msg) {
+            @if (signUpFormService.form.get('acceptTerms')?.hasError('required')) {
                 <p class="mt-1 text-sm text-red-500">
-                    {{ msg }}
+                    Must agree with terms
                 </p>
             }
 
