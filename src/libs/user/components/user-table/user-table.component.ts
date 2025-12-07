@@ -1,5 +1,10 @@
 import { CommonModule } from '@angular/common'
-import { ChangeDetectorRef, Component, inject } from '@angular/core'
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    inject,
+} from '@angular/core'
 import { ConfirmationService } from 'primeng/api'
 import { ButtonModule } from 'primeng/button'
 import { ConfirmDialogModule } from 'primeng/confirmdialog'
@@ -27,6 +32,7 @@ import { EditUserModalComponent } from '../edit-user-modal/edit-user-modal.compo
     standalone: true,
     templateUrl: './user-table.component.html',
     styleUrl: './user-table.component.css',
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserTableComponent {
     users: User[] = []
@@ -49,7 +55,7 @@ export class UserTableComponent {
             next: (data) => {
                 this.users = data
                 this.isLoading = false
-                this.cdr.detectChanges() // Manually trigger change detection
+                this.cdr.markForCheck() // Manually trigger change detection
             },
             error: (error) => {
                 this.isLoading = false
