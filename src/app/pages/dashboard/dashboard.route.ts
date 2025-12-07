@@ -7,7 +7,7 @@ export type DashboardRoutes = {
     userLoginHistory: Route
     businesses: Route
     member: Route
-    roles: Route
+    // roles: Route
     permissions: Route
     rolePermissions: Route
     applications: Route
@@ -60,14 +60,14 @@ export const dashboardRoutes: DashboardRoutes = {
             ),
         resolve: { layout: setLayout(PageLayout.Dashboard) },
     },
-    roles: {
-        path: 'admin/roles',
-        loadComponent: () =>
-            import('./page-roles/page-roles.component').then(
-                (m) => m.PageRolesComponent,
-            ),
-        resolve: { layout: setLayout(PageLayout.Dashboard) },
-    },
+    // roles: {
+    //     path: 'admin/roles',
+    //     loadComponent: () =>
+    //         import('./page-roles/page-roles.component').then(
+    //             (m) => m.PageRolesComponent,
+    //         ),
+    //     resolve: { layout: setLayout(PageLayout.Dashboard) },
+    // },
     permissions: {
         path: 'admin/permissions',
         loadComponent: () =>
