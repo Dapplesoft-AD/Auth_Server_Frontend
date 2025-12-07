@@ -34,12 +34,12 @@ export class SignupApiService {
                 return throwError(
                     () =>
                         new HttpErrorResponse({
-                            error: { message: 'Account already exist' },
+                            error: { message: 'Account already exists' },
                         }),
                 )
             }
             return throwError(() => error)
         }
-        return throwError(() => new Error('Unknown login error'))
+        return throwError(() => new Error('Unknown Signup error'))
     }
 }
