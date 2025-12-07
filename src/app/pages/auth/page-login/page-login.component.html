@@ -1,7 +1,6 @@
 <p-toast></p-toast>
-<div
-    class="flex min-h-screen items-center justify-center bg-gray-100 px-6 py-8">
-    <div class="w-full max-w-md rounded bg-white p-10 shadow-xl">
+<div class="flex h-screen items-center justify-center bg-gray-100">
+    <div class="h-[550px] w-full max-w-md rounded bg-gray-100 p-10 shadow-xl">
         <div class="mb-8 flex justify-center">
             <img
                 src="../../../../assets/images/image.png"
@@ -11,7 +10,7 @@
 
         <h2
             class="mb-4 text-left text-xl font-extrabold text-gray-900 md:text-xl">
-            Sign in
+            Log in
         </h2>
 
         <form
@@ -56,15 +55,17 @@
                         class="accent-blue-500" />
                     <span>Remember me</span>
                 </label>
-                <a routerLink="/verified" class="text-blue-500 hover:underline"
+                <a
+                    routerLink="/verified"
+                    class="font-semibold text-blue-500 hover:underline"
                     >Forgot password?</a
                 >
             </div>
             @if (!loading) {
                 <button
                     type="submit"
-                    class="relative w-full rounded-lg bg-blue-500 py-2 font-medium text-white transition duration-200 hover:bg-blue-400">
-                    <span>Log in</span>
+                    class="w-full rounded-md bg-blue-400 py-2 font-bold text-white transition hover:bg-blue-500">
+                    Log in
                 </button>
             }
             <!-- Progress Spinner -->

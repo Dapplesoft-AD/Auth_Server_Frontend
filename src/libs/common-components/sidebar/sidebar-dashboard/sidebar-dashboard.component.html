@@ -1,21 +1,12 @@
-<button
-    data-drawer-target="default-sidebar"
-    data-drawer-toggle="default-sidebar"
-    aria-controls="default-sidebar"
-    type="button"
-    class="mt-2 ml-3 inline-flex items-center rounded-lg p-2 text-sm text-gray-500 hover:bg-gray-100 focus:ring-2 focus:ring-gray-200 focus:outline-none sm:hidden dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600">
-    <i class="pi pi-bars text-xl"></i>
-    <span class="sr-only">Open sidebar</span>
-</button>
 
 <aside
-    id="default-sidebar"
-    class="fixed top-0 left-0 z-40 h-screen w-80 -translate-x-full pt-14 transition-transform sm:translate-x-0"
+    id="sidebar"
+    class="fixed top-0 left-0 z-40 h-screen w-56 -translate-x-full pt-14 transition-transform sm:translate-x-0"
     aria-label="Sidenav">
     <div
-        class="h-full overflow-y-auto border-r border-gray-200 bg-white px-5 dark:bg-gray-800">
+        class="h-full overflow-y-auto border-r border-gray-200 bg-white dark:bg-gray-800">
         <ul class="space-y-2">
-            <ul class="mt-5 space-y-1 border-gray-200 pt-5">
+            <ul class="mt-5 space-y-1 border-gray-200 p-2 pt-5">
                 <li>
                     <a
                         [routerLink]="['/admin/user']"
@@ -151,10 +142,10 @@
                 </li>
             </ul>
         </ul>
-        <div class="pt-5">
+        <div class="p-3">
             <button
                 (click)="logOut()"
-                class="flex w-full items-center justify-center gap-2 rounded-lg bg-red-500 px-4 py-2 font-medium text-white transition-transform duration-150 ease-in-out hover:bg-red-600 active:scale-95">
+                class="flex w-full items-center justify-center rounded-lg bg-red-500 px-4 py-2 font-medium text-white transition-transform duration-150 ease-in-out hover:bg-red-600 active:scale-95">
                 <i class="pi pi-sign-out text-lg"></i> Logout
             </button>
         </div>

@@ -10,6 +10,7 @@ import {
     LayoutPublicComponent,
     PageLayout,
     PageLayoutService,
+    PublicFooterComponent,
 } from '../libs/common-components'
 
 @Component({
@@ -25,6 +26,7 @@ import {
         ConfirmDialog,
         NgxSonnerToaster,
         ConfirmPopup,
+        PublicFooterComponent,
     ],
     templateUrl: './app.component.html',
 })

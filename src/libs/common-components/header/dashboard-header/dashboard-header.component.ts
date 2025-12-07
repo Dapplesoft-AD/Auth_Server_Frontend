@@ -10,6 +10,15 @@ import { AuthService } from '../../../auth/service/auth.service'
 export class DashboardHeaderComponent {
     private authService = inject(AuthService)
 
+    ngOnInit(): void {
+        const sidebar = document.getElementById('sidebar')
+        const toggle = document.getElementById('sidebarToggle')
+
+        toggle?.addEventListener('click', () => {
+            sidebar?.classList.toggle('-translate-x-full')
+        })
+    }
+
     logOut() {
         this.authService.logout()
     }

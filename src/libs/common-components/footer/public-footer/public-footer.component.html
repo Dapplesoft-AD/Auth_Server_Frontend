@@ -1,43 +1,41 @@
-<footer class="bg-white p-4 md:p-8 lg:p-10 shadow">
-    <div class="mx-auto max-w-screen-xl text-center">
-        <a
-            href="#"
-            class="flex items-center justify-center text-2xl font-semibold text-gray-900 dark:text-white">
-            {{ data.siteName }}
-        </a>
-        <p class="my-6 text-gray-500 dark:text-gray-400">
-            {{ data.description }}
-        </p>
-        <ul
-            class="mb-6 flex flex-wrap items-center justify-center text-gray-900">
-            <li>
-                <a href="#" class="mr-4 hover:underline md:mr-6">About</a>
-            </li>
-            <li>
-                <a href="#" class="mr-4 hover:underline md:mr-6">Premium</a>
-            </li>
-            <li>
-                <a href="#" class="mr-4 hover:underline md:mr-6">Campaigns</a>
-            </li>
-            <li>
-                <a href="#" class="mr-4 hover:underline md:mr-6">Blog</a>
-            </li>
-            <li>
-                <a href="#" class="mr-4 hover:underline md:mr-6"
-                    >Affiliate Program</a
-                >
-            </li>
-            <li>
-                <a href="#" class="mr-4 hover:underline md:mr-6">FAQs</a>
-            </li>
-            <li>
-                <a href="#" class="mr-4 hover:underline md:mr-6">Contact</a>
-            </li>
-        </ul>
-        <span class="text-sm text-gray-500 sm:text-center dark:text-gray-400"
-            >© 2021-2022
-            <a href="#" class="hover:underline">{{ data.siteName }}</a
-            >. All Rights Reserved.</span
-        >
+<footer class="bg-gray-900 py-10 text-gray-300">
+    <div
+        class="mx-auto grid max-w-screen-xl grid-cols-1 gap-8 px-4 sm:grid-cols-3">
+        <div class="text-center sm:text-left">
+            <h3 class="mb-3 text-lg font-semibold text-white">Follow Us</h3>
+            <div class="flex justify-center space-x-4 sm:justify-start">
+                <button
+                    pButton
+                    icon="pi pi-facebook"
+                    class="p-button-rounded p-button-text text-white transition hover:text-indigo-400"></button>
+                <button
+                    pButton
+                    icon="pi pi-twitter"
+                    class="p-button-rounded p-button-text text-white transition hover:text-blue-400"></button>
+                <button
+                    pButton
+                    icon="pi pi-linkedin"
+                    class="p-button-rounded p-button-text text-white transition hover:text-blue-600"></button>
+                <button
+                    pButton
+                    icon="pi pi-github"
+                    class="p-button-rounded p-button-text text-white transition hover:text-gray-100"></button>
+            </div>
+            <ul class="mt-4 space-y-1 text-sm text-gray-400">
+                <li>
+                    <a href="#" class="transition hover:text-white"
+                        >Help Center</a
+                    >
+                </li>
+                <li>
+                    <a href="#" class="transition hover:text-white"
+                        >Documentation</a
+                    >
+                </li>
+                <li>
+                    <a href="#" class="transition hover:text-white">FAQs</a>
+                </li>
+            </ul>
+        </div>
     </div>
 </footer>

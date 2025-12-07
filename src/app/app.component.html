@@ -3,12 +3,10 @@
 <p-confirmpopup />
 
 @switch (layoutService.layout$ | async) {
-
     @case (PageLayout.Public) {
-            <router-outlet></router-outlet>
+        <router-outlet></router-outlet>
     }
     @case (PageLayout.Dashboard) {
-       
         <app-layout-dashboard>
             <router-outlet></router-outlet>
         </app-layout-dashboard>
