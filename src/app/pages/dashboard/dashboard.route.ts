@@ -4,19 +4,19 @@ import { PageLayout, setLayout } from '../../../libs/common-components'
 export type DashboardRoutes = {
     user: Route
     profile: Route
-    userhistory: Route
+    userLoginHistory: Route
     businesses: Route
     member: Route
-    roles: Route
+    // roles: Route
     permissions: Route
-    rolepermissions: Route
+    rolePermissions: Route
     applications: Route
     tokens: Route
     emailVerifications: Route
-    passwordresets: Route
-    mfasettings: Route
-    mfalogs: Route
-    auditlogs: Route
+    passwordResets: Route
+    mfaSettings: Route
+    mfaLogs: Route
+    auditLogs: Route
 }
 
 export const dashboardRoutes: DashboardRoutes = {
@@ -36,8 +36,8 @@ export const dashboardRoutes: DashboardRoutes = {
             ),
         resolve: { layout: setLayout(PageLayout.Dashboard) },
     },
-    userhistory: {
-        path: 'admin/userhistory',
+    userLoginHistory: {
+        path: 'admin/user-Login-history',
         loadComponent: () =>
             import('./page-user-history/page-user-history.component').then(
                 (m) => m.PageUserHistoryComponent,
@@ -60,14 +60,14 @@ export const dashboardRoutes: DashboardRoutes = {
             ),
         resolve: { layout: setLayout(PageLayout.Dashboard) },
     },
-    roles: {
-        path: 'admin/roles',
-        loadComponent: () =>
-            import('./page-roles/page-roles.component').then(
-                (m) => m.PageRolesComponent,
-            ),
-        resolve: { layout: setLayout(PageLayout.Dashboard) },
-    },
+    // roles: {
+    //     path: 'admin/roles',
+    //     loadComponent: () =>
+    //         import('./page-roles/page-roles.component').then(
+    //             (m) => m.PageRolesComponent,
+    //         ),
+    //     resolve: { layout: setLayout(PageLayout.Dashboard) },
+    // },
     permissions: {
         path: 'admin/permissions',
         loadComponent: () =>
@@ -76,11 +76,11 @@ export const dashboardRoutes: DashboardRoutes = {
             ),
         resolve: { layout: setLayout(PageLayout.Dashboard) },
     },
-    rolepermissions: {
-        path: 'admin/rolepermissions',
+    rolePermissions: {
+        path: 'admin/role-permissions',
         loadComponent: () =>
             import(
-                './page-rolepermissions/page-rolepermissions.component'
+                './page-rolePermissions/page-rolePermissions.component'
             ).then((m) => m.RolePermissionsRoutes),
         resolve: { layout: setLayout(PageLayout.Dashboard) },
     },
@@ -109,34 +109,34 @@ export const dashboardRoutes: DashboardRoutes = {
             ).then((m) => m.PageEmailVerificationsComponent),
         resolve: { layout: setLayout(PageLayout.Dashboard) },
     },
-    passwordresets: {
-        path: 'admin/passwordresets',
+    passwordResets: {
+        path: 'admin/password-resets',
         loadComponent: () =>
-            import('./page-passwordresets/page-passwordresets.component').then(
+            import('./page-passwordResets/page-passwordResets.component').then(
                 (m) => m.PagePasswordResetsComponent,
             ),
         resolve: { layout: setLayout(PageLayout.Dashboard) },
     },
-    mfasettings: {
-        path: 'admin/mfasettings',
+    mfaSettings: {
+        path: 'admin/mfa-settings',
         loadComponent: () =>
-            import('./page-mfasettings/page-mfasettings.component').then(
+            import('./page-mfaSettings/page-mfaSettings.component').then(
                 (m) => m.PageMfaSettingsComponent,
             ),
         resolve: { layout: setLayout(PageLayout.Dashboard) },
     },
-    mfalogs: {
-        path: 'admin/mfalogs',
+    mfaLogs: {
+        path: 'admin/mfa-logs',
         loadComponent: () =>
-            import('./page-mfalogs/page-mfalogs.component').then(
+            import('./page-mfaLogs/page-mfaLogs.component').then(
                 (m) => m.PageMfaLogsRoutesComponent,
             ),
         resolve: { layout: setLayout(PageLayout.Dashboard) },
     },
-    auditlogs: {
-        path: 'admin/auditlogs',
+    auditLogs: {
+        path: 'admin/audit-logs',
         loadComponent: () =>
-            import('./page-auditlogs/page-auditlogs.component').then(
+            import('./page-auditLogs/page-auditLogs.component').then(
                 (m) => m.PageAuditLogsRoutesComponent,
             ),
         resolve: { layout: setLayout(PageLayout.Dashboard) },

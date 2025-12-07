@@ -5,11 +5,13 @@ import { RouterOutlet } from '@angular/router'
 import { NgxSonnerToaster } from 'ngx-sonner'
 import { ConfirmDialog } from 'primeng/confirmdialog'
 import { ConfirmPopup } from 'primeng/confirmpopup'
+import { ToastModule } from 'primeng/toast'
 import {
     LayoutDashboardComponent,
     LayoutPublicComponent,
     PageLayout,
     PageLayoutService,
+    PublicFooterComponent,
 } from '../libs/common-components'
 
 @Component({
@@ -25,6 +27,8 @@ import {
         ConfirmDialog,
         NgxSonnerToaster,
         ConfirmPopup,
+        ToastModule,
+        PublicFooterComponent,
     ],
     templateUrl: './app.component.html',
 })

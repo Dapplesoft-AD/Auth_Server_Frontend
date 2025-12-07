@@ -1,35 +1,112 @@
-import { Injectable } from '@angular/core'
-import { BehaviorSubject } from 'rxjs'
+import { Injectable, inject } from '@angular/core'
+import {
+    BehaviorSubject,
+    catchError,
+    Observable,
+    shareReplay,
+    switchMap,
+    tap,
+    throwError,
+} from 'rxjs'
 import { User } from './user.model'
-import { UserDataService } from './user-data.service'
+import { UserApiService } from './user-api.service'
 
 @Injectable({
     providedIn: 'root',
 })
 export class UserStateService {
-    private usersSubject = new BehaviorSubject<User[]>([])
-    users$ = this.usersSubject.asObservable()
+    private userApiService = inject(UserApiService)
+    private reloadTrigger = new BehaviorSubject<void>(undefined)
+    private loadingSubject = new BehaviorSubject<boolean>(false)
+    private errorSubject = new BehaviorSubject<boolean>(false)
 
-    constructor(private dataService: UserDataService) {}
+    loading$ = this.loadingSubject.asObservable()
+    error$ = this.errorSubject.asObservable()
 
+    users$ = this.reloadTrigger.pipe(
+        tap(() => {
+            this.loadingSubject.next(true)
+            this.errorSubject.next(false)
+        }),
+        switchMap(() =>
+            this.userApiService.getUsers().pipe(
+                tap(() => this.loadingSubject.next(false)),
+                catchError((err) => {
+                    this.loadingSubject.next(false)
+                    this.errorSubject.next(true)
+                    return throwError(() => err)
+                }),
+            ),
+        ),
+        shareReplay({ bufferSize: 1, refCount: true }),
+    )
+
+    // fun
+    private startLoading() {
+        this.loadingSubject.next(true)
+        this.errorSubject.next(false)
+    }
+
+    private stopLoadingWithError() {
+        this.loadingSubject.next(false)
+        this.errorSubject.next(true)
+    }
+
+    private stopLoading() {
+        this.loadingSubject.next(false)
+    }
+
+    // ---State > Data---
     loadUsers() {
-        this.dataService.loadUsers().subscribe((data) => {
-            this.usersSubject.next(data)
-        })
+        this.reload()
     }
 
-    addUser(user: User) {
-        this.dataService.addUser(user)
-        this.usersSubject.next(this.dataService.getLocalUsers())
+    reload() {
+        this.reloadTrigger.next()
     }
 
-    updateUser(id: number, user: User) {
-        this.dataService.updateUserLocal(id, user)
-        this.usersSubject.next(this.dataService.getLocalUsers())
+    addUser(user: User): Observable<User> {
+        this.startLoading()
+
+        return this.userApiService.createUser(user).pipe(
+            tap(() => {
+                this.stopLoading()
+                this.reload()
+            }),
+            catchError((err) => {
+                this.stopLoadingWithError()
+                return throwError(() => err)
+            }),
+        )
     }
 
-    deleteUser(id: number) {
-        this.dataService.deleteUserLocal(id)
-        this.usersSubject.next(this.dataService.getLocalUsers())
+    updateUser(id: string, user: Partial<User>): Observable<User> {
+        this.startLoading()
+
+        return this.userApiService.updateUser({ id, ...user }).pipe(
+            tap(() => {
+                this.stopLoading()
+                this.reload()
+            }),
+            catchError((err) => {
+                this.stopLoadingWithError()
+                return throwError(() => err)
+            }),
+        )
+    }
+
+    deleteUser(user: User): Observable<void> {
+        this.startLoading()
+
+        return this.userApiService.deleteUser(user.id).pipe(
+            tap(() => {
+                this.stopLoading()
+                this.reload()
+            }),
+            catchError((err) => {
+                this.stopLoadingWithError()
+                return throwError(() => err)
+            }),
+        )
     }
 }

@@ -1,7 +1,6 @@
 <p-toast></p-toast>
-<div
-    class="flex min-h-screen items-center justify-center bg-gray-100 px-6 py-8">
-    <div class="w-full max-w-md rounded bg-white p-10 shadow-xl">
+<div class="flex h-screen items-center justify-center bg-gray-100">
+    <div class="h-[550px] w-full max-w-md rounded bg-gray-100 p-10 shadow-xl">
         <div class="mb-8 flex justify-center">
             <img
                 src="../../../../assets/images/image.png"
@@ -11,99 +10,115 @@
 
         <h2
             class="mb-4 text-left text-xl font-extrabold text-gray-900 md:text-xl">
-            Sign in
+            Log in
         </h2>
-        <form (ngSubmit)="onLogin()" class="flex flex-col gap-5">
-            <div class="flex flex-col">
-                <input
-                    pInputText
-                    id="emailOrPhone"
-                    [(ngModel)]="loginData.emailOrPhone"
-                    name="emailOrPhone"
-                    placeholder="Enter your email or phone"
-                    required
-                    class="w-full rounded border border-gray-300 px-4 py-2" />
-            </div>
 
-            <div class="flex flex-col">
-                <label for="password" class="mb-1 font-medium text-gray-700">
-                    Password
-                </label>
-                <p-password
-                    [(ngModel)]="loginData.password"
-                    inputId="password"
-                    name="password"
-                    [toggleMask]="true"
-                    [feedback]="false"
-                    placeholder="Enter your password"
-                    class="w-full"
-                    inputStyleClass="w-full px-4 py-2 border border-gray-300 rounded">
-                </p-password>
+        <form
+            [formGroup]="loginFormService.form"
+            (ngSubmit)="onSubmit()"
+            class="space-y-4">
 
-                @if (passwordError) {
-                    <p class="text-red-500">{{ passwordError }}</p>
+            <!--Email-->
+            <div>
+                <p-floatLabel class="w-full" variant="on">
+                    <input
+                        pInputText
+                        type="email"
+                        id="email"
+                        formControlName="email"
+                        class="w-full" />
+                    <label for="email">Enter your email</label>
+                </p-floatLabel>
+
+                @if (
+                    loginFormService.form.get('email')?.touched &&
+                    loginFormService.form.get('email')?.hasError('pattern')
+                ) {
+                    <p class="mt-1 text-sm text-red-500">Invalid Email</p>
                 }
             </div>
+
+            <!--Password-->
+            <p-floatLabel class="w-full" variant="on">
+                <p-password
+                    id="password"
+                    formControlName="password"
+                    [toggleMask]="true"
+                    [feedback]="false"
+                    inputStyleClass="w-full"
+                    class="w-full">
+                </p-password>
+                <label for="password">Enter your password</label>
+            </p-floatLabel>
 
             <div class="mt-2 flex items-center justify-between">
                 <label
                     class="flex cursor-pointer items-center gap-2 select-none">
                     <input
                         type="checkbox"
-                        [(ngModel)]="loginData.remember"
-                        class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" />
-                    <span class="text-sm text-gray-700">Remember Me</span>
+                        formControlName="rememberMe"
+                        class="accent-blue-500" />
+                    <span>Remember me</span>
                 </label>
-
                 <a
-                    [routerLink]="['/verified']"
-                    class="text-sm font-semibold text-blue-500 hover:underline">
-                    Forgot Password?
-                </a>
+                    routerLink="/verified"
+                    class="font-semibold text-blue-500 hover:underline"
+                    >Forgot password?</a
+                >
             </div>
-
-            <button
-                pButton
-                type="submit"
-                label="Login"
-                class="w-full rounded-md bg-blue-500 py-2 font-bold text-white transition hover:bg-blue-400"></button>
+            @if (!loading) {
+                <button
+                    type="submit"
+                    class="w-full rounded-md bg-blue-400 py-2 font-bold text-white transition hover:bg-blue-500">
+                    Log in
+                </button>
+            }
+            <!-- Progress Spinner -->
+            @else {
+                <div class="flex h-full items-center justify-center">
+                    <p-progressSpinner class="h-10 w-10"></p-progressSpinner>
+                </div>
+            }
         </form>
+
         <div class="my-6 flex items-center">
             <hr class="flex-1 border-gray-300" />
-            <span class="px-3 text-sm text-gray-400">OR</span>
+            <span class="px-3 text-sm text-gray-500">OR</span>
             <hr class="flex-1 border-gray-300" />
         </div>
 
-        <div class="mt-4 flex justify-center gap-6">
-            <div
-                class="flex h-12 w-12 cursor-pointer items-center justify-center rounded-full transition-all duration-200 hover:bg-gray-100">
-                <img
-                    src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/google/google-original.svg"
-                    class="h-6 w-6" />
+        <div class="space-y-3">
+            <div class="mt-4 flex justify-center gap-6">
+                <div
+                    class="flex h-12 w-12 cursor-pointer items-center justify-center rounded-full transition-all duration-200 hover:bg-gray-100">
+                    <img
+                        src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/google/google-original.svg"
+                        class="h-6 w-6" />
+                </div>
+
+                <div
+                    class="flex h-12 w-12 cursor-pointer items-center justify-center rounded-full transition-all duration-200 hover:bg-gray-100">
+                    <img
+                        src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/facebook/facebook-original.svg"
+                        class="h-6 w-6" />
+                </div>
+
+                <div
+                    class="flex h-12 w-12 cursor-pointer items-center justify-center rounded-full transition-all duration-200 hover:bg-gray-100">
+                    <img
+                        src="./../../../../assets/images/Microsoft.webp"
+                        class="h-6 w-6" />
+                </div>
             </div>
 
-            <div
-                class="flex h-12 w-12 cursor-pointer items-center justify-center rounded-full transition-all duration-200 hover:bg-gray-100">
-                <img
-                    src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/facebook/facebook-original.svg"
-                    class="h-6 w-6" />
-            </div>
-
-            <div
-                class="flex h-12 w-12 cursor-pointer items-center justify-center rounded-full transition-all duration-200 hover:bg-gray-100">
-                <img
-                    src="./../../../../assets/images/Microsoft.webp"
-                    class="h-6 w-6" />
-            </div>
+            <p class="mt-8 text-center text-sm text-gray-500">
+                Don’t have an account?
+                <a
+                    routerLink="/signup"
+                    class="font-semibold text-blue-500 hover:underline"
+                    >Create Account</a
+                >
+            </p>
         </div>
-
-        <p class="mt-8 text-center text-sm text-gray-500">
-            Don’t have an account?
-            <a
-                routerLink="/signup"
-                class="font-semibold text-blue-500 hover:underline"
-                >Create Account</a
-            >
-        </p>
     </div>
 </div>

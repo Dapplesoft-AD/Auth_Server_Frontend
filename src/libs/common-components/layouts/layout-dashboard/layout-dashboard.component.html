@@ -1,12 +1,16 @@
-<div class="grid grid-cols-12 min-h-screen">
+<div class="flex min-h-screen flex-col bg-gray-100 md:flex-row">
+    <aside class="w-full bg-white shadow-lg md:w-56">
+        <app-sidebar-dashboard class="w-full"></app-sidebar-dashboard>
+    </aside>
+    <div class="flex flex-1 flex-col">
+        <header class="bg-white shadow-sm">
+            <app-dashboard-header></app-dashboard-header>
+        </header>
 
-  <div class="col-span-12 md:col-span-2 bg-gray-100">
-    <app-sidebar-dashboard class="w-full" />
-  </div>
-
-
-  <div class="col-span-12 md:col-span-10">
-    <app-dashboard-header />
-    <ng-content></ng-content>
-  </div>
+        <main class="">
+            <div class="rounded-xl bg-gray-200 shadow-sm">
+                <ng-content> </ng-content>
+            </div>
+        </main>
+    </div>
 </div>
