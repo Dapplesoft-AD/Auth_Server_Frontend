@@ -19,7 +19,7 @@ export class UserFormService {
                 '',
                 [required, minLength(3), pattern(/^[A-Za-z]+(?: [A-Za-z]+)*$/)],
             ],
-            phone: ['', [minLength(11), pattern(/^[0-9]+$/)]],
+            phone: ['', [required, minLength(11), pattern(/^[0-9]+$/)]],
             role: ['', []],
         })
     }

@@ -17,18 +17,18 @@ export class SignupApiService {
         return this.http
             .post<SignUpRequest>(`${this.authApiUrl}/users/register`, payload)
             .pipe(
-                tap((response) => this.handleLoginResponse(response)),
+                tap((response) => this.handleSignUpResponse(response)),
                 catchError((error) => {
-                    return this.handleLoginError(error)
+                    return this.handleSignUpError(error)
                 }),
             )
     }
 
-    private handleLoginResponse(response: SignUpRequest): void {
+    private handleSignUpResponse(response: SignUpRequest): void {
         // handle response here
     }
 
-    private handleLoginError(error: unknown) {
+    private handleSignUpError(error: unknown) {
         if (error instanceof HttpErrorResponse) {
             if (error.status === 409) {
                 return throwError(

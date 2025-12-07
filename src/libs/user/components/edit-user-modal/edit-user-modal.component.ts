@@ -5,6 +5,7 @@ import { DialogModule } from 'primeng/dialog'
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog'
 import { FloatLabelModule } from 'primeng/floatlabel'
 import { InputTextModule } from 'primeng/inputtext'
+import { FormInputComponent } from '../../../common-components/form/form-input/form-input.component'
 import { AlertService } from '../../../common-service/lib/alert.service'
 import { UserFormService } from '../../user.form.service'
 import { User } from '../../user.model'
@@ -18,6 +19,7 @@ import { UserStateService } from '../../user-state.service'
         ReactiveFormsModule,
         FloatLabelModule,
         InputTextModule,
+        FormInputComponent,
     ],
     templateUrl: './edit-user-modal.component.html',
     styleUrl: './edit-user-modal.component.css',
