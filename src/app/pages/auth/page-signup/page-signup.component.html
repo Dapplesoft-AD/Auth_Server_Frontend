@@ -14,83 +14,30 @@
             [formGroup]="signUpFormService.form"
             (ngSubmit)="onSubmit()"
             class="mt-6 space-y-3">
-
             <!-- Full Name -->
             <div>
-                <p-floatLabel class="w-full" variant="on">
-                    <input
-                        pInputText
-                        id="fullName"
-                        formControlName="fullName"
-                        class="w-full" />
-                    <label for="fullName">Enter your full name</label>
-                </p-floatLabel>
-
-                @if (
-                    signUpFormService.form.get('fullName')?.touched &&
-                    signUpFormService.form.get('fullName')?.hasError('required')
-                ) {
-                    <p class="mt-1 text-sm text-red-500">
-                        Full Name is required
-                    </p>
-                }
-                @if (
-                    signUpFormService.form.get('fullName')?.touched &&
-                    signUpFormService.form
-                        .get('fullName')
-                        ?.hasError('minlength')
-                ) {
-                    <p class="mt-1 text-sm text-red-500">
-                        Name must be at least 3 characters
-                    </p>
-                }
+                <common-form-input
+                    controlName="fullName"
+                    label="Enter your full name"
+                    type="text">
+                </common-form-input>
             </div>
 
             <!-- Phone -->
             <div>
-                <p-floatLabel class="w-full" variant="on">
-                    <input
-                        pInputText
-                        id="phone"
-                        type="tel"
-                        formControlName="phone"
-                        class="w-full" />
-                    <label for="phone">Enter your phone number</label>
-                </p-floatLabel>
-
-                @if (
-                    signUpFormService.form.get('phone')?.touched &&
-                    (signUpFormService.form
-                        .get('phone')
-                        ?.hasError('maxlength') ||
-                        signUpFormService.form
-                            .get('phone')
-                            ?.hasError('pattern'))
-                ) {
-                    <p class="mt-1 text-sm text-red-500">
-                        Phone must contain only numbers cannot exceed 13 digits
-                    </p>
-                }
+                <common-form-input
+                    controlName="phone"
+                    label="Enter your phone number"
+                    type="tel">
+                </common-form-input>
             </div>
-
             <!-- Email -->
             <div>
-                <p-floatLabel class="w-full" variant="on">
-                    <input
-                        pInputText
-                        type="email"
-                        id="email"
-                        formControlName="email"
-                        class="w-full" />
-                    <label for="email">Enter your email</label>
-                </p-floatLabel>
-
-                @if (
-                    signUpFormService.form.get('email')?.touched &&
-                    signUpFormService.form.get('email')?.hasError('pattern')
-                ) {
-                    <p class="mt-1 text-sm text-red-500">Invalid Email</p>
-                }
+                <common-form-input
+                    controlName="email"
+                    label="Enter your email"
+                    type="email">
+                </common-form-input>
             </div>
 
             <!-- Password -->
@@ -107,16 +54,12 @@
                     <label for="password">Enter your password</label>
                 </p-floatLabel>
 
-                @if (
-                    signUpFormService.form.get('password')?.touched &&
-                    signUpFormService.form.get('password')?.hasError('required')
-                ) {
+                @if (signUpFormService.getErrorMsg('password'); as msg) {
                     <p class="mt-1 text-sm text-red-500">
-                        Password is required
+                        {{ msg }}
                     </p>
                 }
             </div>
-
             <!-- Confirm Password -->
             <div>
                 <p-floatLabel class="w-full" variant="on">
@@ -131,23 +74,9 @@
                     <label for="confirmPassword">Confirm your password</label>
                 </p-floatLabel>
 
-                @if (
-                    signUpFormService.form.get('confirmPassword')?.touched &&
-                    signUpFormService.form
-                        .get('confirmPassword')
-                        ?.hasError('required')
-                ) {
+                @if (signUpFormService.getErrorMsg('confirmPassword'); as msg) {
                     <p class="mt-1 text-sm text-red-500">
-                        Confirm Password is required
-                    </p>
-                }
-
-                @if (
-                    signUpFormService.form.hasError('passwordMismatch') &&
-                    signUpFormService.form.get('confirmPassword')?.touched
-                ) {
-                    <p class="mt-1 text-sm text-red-500">
-                        Passwords do not match
+                        {{ msg }}
                     </p>
                 }
             </div>
@@ -167,15 +96,9 @@
                 </span>
             </div>
 
-            @if (
-                signUpFormService.form.get('acceptTerms')?.touched &&
-                (signUpFormService.form
-                    .get('acceptTerms')
-                    ?.hasError('requiredTrue') ||
-                    signUpFormService.form.get('acceptTerms')?.invalid)
-            ) {
+            @if (signUpFormService.getErrorMsg('phone'); as msg) {
                 <p class="mt-1 text-sm text-red-500">
-                    You must accept the terms and conditions
+                    {{ msg }}
                 </p>
             }
 

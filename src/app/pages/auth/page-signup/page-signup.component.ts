@@ -13,6 +13,7 @@ import { ToastModule } from 'primeng/toast'
 import { LoginApiService } from '../../../../libs/auth/login/login-api.service'
 import { SignupApiService } from '../../../../libs/auth/signup/signup-api.service'
 import { SignUpFormService } from '../../../../libs/auth/signup/signup-form.service'
+import { FormInputComponent } from '../../../../libs/common-components/form/form-input/form-input.component'
 import { authRoutes } from '../auth.route'
 
 @Component({
@@ -29,6 +30,7 @@ import { authRoutes } from '../auth.route'
         ButtonModule,
         FloatLabelModule,
         ProgressSpinner,
+        FormInputComponent,
     ],
     providers: [MessageService, SignUpFormService],
     templateUrl: './page-signup.component.html',
@@ -43,13 +45,6 @@ export class PageSignupComponent {
         public signUpFormService: SignUpFormService,
         private messageService: MessageService,
     ) {}
-
-    passwordMatchValidator(group: FormGroup) {
-        return group.get('password')?.value ===
-            group.get('confirmPassword')?.value
-            ? null
-            : { mismatch: true }
-    }
 
     onSubmit() {
         this.loading = true

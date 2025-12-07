@@ -1,11 +1,13 @@
 import { Injectable, inject } from '@angular/core'
 import { FormGroup, NonNullableFormBuilder, Validators } from '@angular/forms'
-import { passwordMatchValidator } from './password-match.validator'
+import { FormValidationErrorsService } from '../../common-service/lib/form-validation-errors.service'
+import { passwordMatchValidator } from '../../common-service/lib/password-match.validator'
 import { SignUpRequest } from './signup.model'
 
 @Injectable()
 export class SignUpFormService {
     private fb = inject(NonNullableFormBuilder)
+    private formError = inject(FormValidationErrorsService)
     form = this.buildForm()
 
     buildForm(): FormGroup {
@@ -47,7 +49,7 @@ export class SignUpFormService {
                 acceptTerms: [false, requiredTrue],
             },
             {
-                validators: passwordMatchValidator,
+                validators: passwordMatchValidator(),
             },
         )
     }
@@ -62,5 +64,9 @@ export class SignUpFormService {
 
     patchForm(data: SignUpRequest) {
         this.form.patchValue(data)
+    }
+
+    getErrorMsg(name: string): string | null {
+        return this.formError.getErrorMsg(this.controls(name))
     }
 }
