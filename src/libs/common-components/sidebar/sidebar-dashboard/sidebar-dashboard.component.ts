@@ -3,7 +3,6 @@ import { Component, inject } from '@angular/core'
 import { RouterModule } from '@angular/router'
 import { TableModule } from 'primeng/table'
 import { AuthService } from '../../../auth/service/auth.service'
-
 @Component({
     selector: 'app-sidebar-dashboard',
     imports: [RouterModule, CommonModule, TableModule],

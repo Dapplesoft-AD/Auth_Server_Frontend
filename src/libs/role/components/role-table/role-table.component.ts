@@ -39,10 +39,8 @@ export class RoleTableComponent {
     roles: Role[] = []
     private dialogService = inject(DialogService)
     private alertService = inject(AlertService)
-    selectedRole: Role = {} as Role
 
     isLoading = false
-    errorMessage: string | null = null
 
     constructor(
         private roleState: RoleStateService,
@@ -52,11 +50,9 @@ export class RoleTableComponent {
 
     ngOnInit(): void {
         this.isLoading = true
-        console.log(this.roleState)
         this.roleState.roles$.subscribe({
             next: (data) => {
                 this.roles = data
-                console.log('Role Data :', data)
                 this.isLoading = false
                 this.cdr.markForCheck()
             },

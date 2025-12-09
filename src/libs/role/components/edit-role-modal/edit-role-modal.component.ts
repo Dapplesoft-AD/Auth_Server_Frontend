@@ -8,7 +8,6 @@ import { InputTextModule } from 'primeng/inputtext'
 import { FormInputComponent } from '../../../common-components/form/form-input/form-input.component'
 import { AlertService } from '../../../common-service/lib/alert.service'
 import { Role } from '../../role.model'
-import { RoleApiService } from '../../role-api.service'
 import { RoleFormService } from '../../role-form.service'
 import { RoleStateService } from '../../role-state.service'
 

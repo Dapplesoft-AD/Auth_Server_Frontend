@@ -1,8 +1,7 @@
-import { HttpClient, HttpParams } from '@angular/common/http'
-import { Inject, Injectable, inject } from '@angular/core'
+import { HttpClient } from '@angular/common/http'
+import { Injectable } from '@angular/core'
 import { Observable } from 'rxjs'
-import { environment } from '../../environments/environment.prod'
-import { ApiService } from '../common-service/lib/api.service'
+import { environment } from '../../environments/environment.staging'
 import { Role } from './role.model'
 
 @Injectable({
