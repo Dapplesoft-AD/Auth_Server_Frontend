@@ -28,7 +28,6 @@ import {
         NgxSonnerToaster,
         ConfirmPopup,
         ToastModule,
-        PublicFooterComponent,
     ],
     templateUrl: './app.component.html',
 })

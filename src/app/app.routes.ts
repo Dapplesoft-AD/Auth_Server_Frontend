@@ -9,12 +9,19 @@ import {
     NotFoundRoutes,
     notFoundRoutes,
 } from './pages/not-found/not-found.routes'
+import { AddressRoutes, addressRoutes } from './pages/shared-address/address'
 
-type AppRouteGroups = [AuthRoutes, DashboardRoutes, NotFoundRoutes]
+type AppRouteGroups = [
+    AuthRoutes,
+    DashboardRoutes,
+    AddressRoutes,
+    NotFoundRoutes,
+]
 
 const groupedRoutes: AppRouteGroups = [
     authRoutes,
     dashboardRoutes,
+    addressRoutes,
     notFoundRoutes,
 ]
 
