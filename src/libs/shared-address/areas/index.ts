@@ -1,0 +1,6 @@
+export * from './areas.model'
+export * from './areas-api.service'
+export * from './areas-form.service'
+export * from './areas-state.service'
+export * from './components/areas-modal/areas-modal.component'
+export * from './components/areas-table/areas-table.componet'

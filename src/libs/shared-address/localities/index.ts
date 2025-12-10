@@ -1,0 +1,6 @@
+export * from './components/localities-modal/localities-modal.component'
+export * from './components/localities-table/localities-table.componet'
+export * from './localities.model'
+export * from './localities-api.service'
+export * from './localities-form.service'
+export * from './localities-state.service'

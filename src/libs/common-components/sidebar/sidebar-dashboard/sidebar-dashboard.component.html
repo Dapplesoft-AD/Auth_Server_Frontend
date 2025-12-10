@@ -6,41 +6,6 @@
         class="h-full overflow-y-auto border-r border-gray-200 bg-white dark:bg-gray-800">
         <ul class="space-y-2">
             <ul class="mt-5 space-y-1 border-gray-200 p-2 pt-5">
-                <li class="select-none">
-                    <button
-                        (click)="toggleCentralizedMenu()"
-                        class="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-gray-800 transition-all duration-200 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700">
-                        <span class="font-bold">Centralized Table</span>
-
-                        <i
-                            class="pi pi-chevron-down ml-auto text-gray-500 transition-all duration-300"
-                            [class.rotate-180]="isCentralizedOpen"></i>
-                    </button>
-
-                    <!-- Submenu -->
-                    <ul
-                        *ngIf="isCentralizedOpen"
-                        class="mt-2 space-y-1 border-l pl-6 dark:border-gray-700">
-                        <li>
-                            <a
-                                [routerLink]="['admin/country']"
-                                class="block rounded-md px-3 py-2 text-sm text-gray-700 transition hover:bg-gray-200 dark:text-gray-300 dark:hover:bg-gray-600">
-                                Country
-                            </a>
-                        </li>
-
-                        <li>
-                            <a
-                                [routerLink]="['admin/regions']"
-                                class="block rounded-md px-3 py-2 text-sm text-gray-700 transition hover:bg-gray-200 dark:text-gray-300 dark:hover:bg-gray-600">
-                                Region
-                            </a>
-                        </li>
-
-                      
-                    </ul>
-                </li>
-
                 <li>
                     <a
                         [routerLink]="['/admin/user']"
@@ -173,6 +138,60 @@
                         <i class="pi pi-list"></i>
                         <span class="ml-3">Audit Logs</span>
                     </a>
+                </li>
+
+                <li class="select-none">
+                    <button
+                        (click)="toggleCentralizedMenu()"
+                        class="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-gray-800 transition-all duration-200 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700">
+                        <span class="font-bold">Centralized Table</span>
+
+                        <i
+                            class="pi pi-chevron-down ml-auto text-gray-500 transition-all duration-300"
+                            [class.rotate-180]="isCentralizedOpen"></i>
+                    </button>
+
+                    <!-- Submenu -->
+                    <ul
+                        *ngIf="isCentralizedOpen"
+                        class="mt-2 space-y-1 border-l pl-6 dark:border-gray-700">
+                        <li>
+                            <a
+                                [routerLink]="['admin/country']"
+                                class="block rounded-md px-3 py-2 text-sm text-gray-700 transition hover:bg-gray-200 dark:text-gray-300 dark:hover:bg-gray-600">
+                                Country
+                            </a>
+                        </li>
+
+                        <li>
+                            <a
+                                [routerLink]="['admin/region']"
+                                class="block rounded-md px-3 py-2 text-sm text-gray-700 transition hover:bg-gray-200 dark:text-gray-300 dark:hover:bg-gray-600">
+                                Region
+                            </a>
+                        </li>
+                        <li>
+                            <a
+                                [routerLink]="['admin/district']"
+                                class="block rounded-md px-3 py-2 text-sm text-gray-700 transition hover:bg-gray-200 dark:text-gray-300 dark:hover:bg-gray-600">
+                                District
+                            </a>
+                        </li>
+                        <li>
+                            <a
+                                [routerLink]="['admin/area']"
+                                class="block rounded-md px-3 py-2 text-sm text-gray-700 transition hover:bg-gray-200 dark:text-gray-300 dark:hover:bg-gray-600">
+                                Area
+                            </a>
+                        </li>
+                        <li>
+                            <a
+                                [routerLink]="['admin/localitie']"
+                                class="block rounded-md px-3 py-2 text-sm text-gray-700 transition hover:bg-gray-200 dark:text-gray-300 dark:hover:bg-gray-600">
+                                Localitie
+                            </a>
+                        </li>
+                    </ul>
                 </li>
             </ul>
         </ul>

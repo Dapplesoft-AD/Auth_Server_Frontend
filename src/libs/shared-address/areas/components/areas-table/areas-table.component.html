@@ -1,0 +1,88 @@
+<p-confirmDialog></p-confirmDialog>
+<div class="mb-6 flex flex-col text-start items-center justify-between md:flex-row">
+
+        <h2 class="text-2xl  font-bold text-gray-800">
+            Area List
+        </h2>
+
+    <button
+        pButton
+        type="button"
+        label="Add Region"
+        icon="pi pi-plus"
+        class="p-button-success mt-3 flex items-center gap-2 md:mt-0"
+        (click)="openModal()">
+    </button>
+</div>
+<div class="card rounded border border-gray-300 bg-white shadow">
+    <p-table
+        [value]="district"
+        [paginator]="true"
+        [rows]="10"
+        dataKey="id"
+        class="p-datatable-gridlines p-datatable-striped">
+        <ng-template pTemplate="header">
+            <tr class="bg-gray-800 text-white">
+                <th>ID</th>
+                   <th pSortableColumn="countryId">
+                    <div class="flex items-center gap-2">
+                        Country Id <p-sortIcon field="countryId"></p-sortIcon>
+                    </div>
+                </th>
+                  <th pSortableColumn="districtId">
+                    <div class="flex items-center gap-2">
+                        District Id <p-sortIcon field="districtId"></p-sortIcon>
+                    </div>
+                </th>
+              
+                <th pSortableColumn="name">
+                    <div class="flex items-center gap-2">
+                         Name <p-sortIcon field="name"></p-sortIcon>
+                    </div>
+                </th>   
+
+                <th pSortableColumn="typeName">
+                    <div class="flex items-center gap-2">
+                        Type Name <p-sortIcon field="typeName"></p-sortIcon>
+                    </div>
+                </th>
+                  <th pSortableColumn="type">
+                    <div class="flex items-center gap-2">
+                        Type<p-sortIcon field="type"></p-sortIcon>
+                    </div>
+                </th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-area>
+            <tr>
+                <td>{{ area.id }}</td>
+                <td>{{ area.countryId }}</td>
+                <td>{{ area.districtId}}</td>
+                <td>{{ area.name }}</td>
+                <td>{{ area.typeName }}</td>
+                <td>{{ area.type }}</td>
+                <td>{{ area.isActive }}</td>
+                <td>
+                    <p-button
+                        icon="pi pi-pencil"
+                        class="mr-2"
+                        [rounded]="true"
+                        [outlined]="true"
+                        (click)="openModal(area)">
+                    </p-button>
+
+                    <p-button
+                        icon="pi pi-trash"
+                        severity="danger"
+                        [rounded]="true"
+                        [outlined]="true"
+                        (click)="deleteArea(area)">
+                    </p-button>
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>
