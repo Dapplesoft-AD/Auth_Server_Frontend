@@ -15,9 +15,10 @@ export class RoleApiService {
     getRoles(): Observable<Role[]> {
         return this.http.get<Role[]>(this.apiUrl + '/roles')
     }
-    createRole(role: Role): Observable<Role> {
-        return this.http.post<Role>(this.apiUrl, role)
+    createRole(role: Partial<Role>): Observable<Role> {
+        return this.http.post<Role>(`${this.apiUrl}/roles`, role)
     }
+
     updateRole(id: string, data: Partial<Role>): Observable<Role> {
         return this.http.put<Role>(`${this.apiUrl}/roles/${id}`, data)
     }
