@@ -13,17 +13,17 @@ export class CountryApiService {
 
     constructor(private http: HttpClient) {}
 
-    getCountris(): Observable<Country[]> {
+    getCountries(): Observable<Country[]> {
         return this.http.get<Country[]>(this.apiUrl + '/countries')
     }
-    createCountris(country: Country): Observable<Country> {
+    createCountries(country: Country): Observable<Country> {
         return this.http.post<Country>(`${this.apiUrl}/countries`, country)
     }
 
-    updateCountris(id: string, data: Partial<Country>): Observable<Country> {
+    updateCountries(id: string, data: Partial<Country>): Observable<Country> {
         return this.http.put<Country>(`${this.apiUrl}/countries/${id}`, data)
     }
-    deleteCountris(id: string): Observable<void> {
+    deleteCountries(id: string): Observable<void> {
         return this.http.delete<void>(`${this.apiUrl}/countries/${id}`)
     }
 }

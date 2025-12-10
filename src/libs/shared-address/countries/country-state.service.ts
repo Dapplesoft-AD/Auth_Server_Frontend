@@ -27,7 +27,7 @@ export class CountryStateService {
     country$ = this.reloadTrigger.pipe(
         tap(() => this.startLoading()),
         switchMap(() =>
-            this.countryApiService.getCountris().pipe(
+            this.countryApiService.getCountries().pipe(
                 tap(() => this.stopLoading()),
                 catchError((err) => {
                     this.stopLoadingWithError()
@@ -61,7 +61,7 @@ export class CountryStateService {
     }
     createCountry(data: Partial<Country>): Observable<Country> {
         this.startLoading()
-        return this.countryApiService.createCountris(data as Country).pipe(
+        return this.countryApiService.createCountries(data as Country).pipe(
             tap(() => {
                 this.stopLoading()
                 this.reload()
@@ -78,7 +78,7 @@ export class CountryStateService {
         updatedData: Partial<Country>,
     ): Observable<Country> {
         this.startLoading()
-        return this.countryApiService.updateCountris(id, updatedData).pipe(
+        return this.countryApiService.updateCountries(id, updatedData).pipe(
             tap(() => {
                 this.stopLoading()
                 this.reload()
@@ -92,7 +92,7 @@ export class CountryStateService {
 
     deleteCountry(id: string): Observable<void> {
         this.startLoading()
-        return this.countryApiService.deleteCountris(String(id)).pipe(
+        return this.countryApiService.deleteCountries(String(id)).pipe(
             tap(() => {
                 this.stopLoading()
                 this.reload()

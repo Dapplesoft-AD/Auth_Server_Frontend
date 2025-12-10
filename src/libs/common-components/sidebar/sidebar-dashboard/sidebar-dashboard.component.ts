@@ -11,10 +11,10 @@ import { AuthService } from '../../../auth/service/auth.service'
 })
 export class SidebarDashboardComponent {
     private authService = inject(AuthService)
-    isCentralisedOpen = false
+    isCentralizedOpen = false
 
-    toggleCentralisedMenu() {
-        this.isCentralisedOpen = !this.isCentralisedOpen
+    toggleCentralizedMenu() {
+        this.isCentralizedOpen = !this.isCentralizedOpen
     }
     logOut() {
         this.authService.logout()

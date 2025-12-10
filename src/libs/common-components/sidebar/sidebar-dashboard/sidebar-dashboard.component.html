@@ -8,18 +8,18 @@
             <ul class="mt-5 space-y-1 border-gray-200 p-2 pt-5">
                 <li class="select-none">
                     <button
-                        (click)="toggleCentralisedMenu()"
+                        (click)="toggleCentralizedMenu()"
                         class="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-gray-800 transition-all duration-200 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700">
-                        <span class="font-bold">Centralised Table</span>
+                        <span class="font-bold">Centralized Table</span>
 
                         <i
                             class="pi pi-chevron-down ml-auto text-gray-500 transition-all duration-300"
-                            [class.rotate-180]="isCentralisedOpen"></i>
+                            [class.rotate-180]="isCentralizedOpen "></i>
                     </button>
 
                     <!-- Submenu -->
                     <ul
-                        *ngIf="isCentralisedOpen"
+                        *ngIf="isCentralizedOpen "
                         class="mt-2 space-y-1 border-l pl-6 dark:border-gray-700">
                         <li>
                             <a
