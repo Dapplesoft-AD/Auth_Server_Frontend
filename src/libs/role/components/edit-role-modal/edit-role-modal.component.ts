@@ -51,12 +51,30 @@ export class EditRoleModalComponent {
         const selectedRole = this.config.data?.role
         const formValue = this.roleFormService.getValue()
 
-        const roleData: Partial<Role> = {
-            ...formValue,
-            id: selectedRole.id,
+        if (selectedRole) {
+            const RoleData: Partial<Role> = {
+                ...formValue,
+                id: selectedRole.id,
+            }
+            this.updateRole(RoleData)
+        } else {
+            this.createRole(formValue)
         }
+    }
 
-        this.updateRole(roleData)
+    createRole(RoleData: Partial<Role>) {
+        this.roleState.createRole(RoleData).subscribe({
+            next: (newRole) => {
+                this.roleFormService.form.reset()
+                this.isLoading.set(false)
+                this.alertService.success('Country added successfully')
+                this.ref.close(newRole)
+            },
+            error: () => {
+                this.isLoading.set(false)
+                this.alertService.error('Failed to add role')
+            },
+        })
     }
     updateRole(roleData: Partial<Role>) {
         this.roleState.updateRole(roleData.id!, roleData).subscribe({

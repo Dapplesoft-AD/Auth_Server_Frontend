@@ -1,6 +1,21 @@
 <p-confirmDialog></p-confirmDialog>
+ <div class="mb-6 flex flex-col text-start items-center justify-between md:flex-row">
 
+        <h2 class="text-2xl  font-bold text-gray-800">
+            Role List
+        </h2>
+
+    <button
+        pButton
+        type="button"
+        label="Add Role"
+        icon="pi pi-plus"
+        class="p-button-success mt-3 flex items-center gap-2 md:mt-0"
+       (click)="openModal()">
+    </button>
+</div>
 <div class="card rounded border border-gray-300 bg-white shadow">
+
     <p-table
         [value]="roles"
         [paginator]="true"
@@ -32,7 +47,7 @@
                         class="mr-2"
                         [rounded]="true"
                         [outlined]="true"
-                        (click)="openEditDialog(role)">
+                        (click)="openModal(role)">
                     </p-button>
                     
                     <p-button

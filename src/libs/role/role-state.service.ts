@@ -60,9 +60,8 @@ export class RoleStateService {
         this.reloadTrigger.next()
     }
 
-    addRole(role: Role): Observable<Role> {
+    createRole(role: Partial<Role>): Observable<Role> {
         this.startLoading()
-
         return this.roleApiService.createRole(role).pipe(
             tap(() => {
                 this.stopLoading()

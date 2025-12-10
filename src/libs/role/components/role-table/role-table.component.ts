@@ -60,10 +60,10 @@ export class RoleTableComponent {
         this.roleState.loadRoles()
     }
 
-    openEditDialog(role: Role) {
+    openModal(role?: Role) {
         this.dialogService.open(EditRoleModalComponent, {
-            header: 'Edit Role',
-            data: { role },
+            header: role ? 'Edit Role' : 'Add Role',
+            data: { role: role ?? null },
             width: '50%',
             closable: true,
             baseZIndex: 10000,
