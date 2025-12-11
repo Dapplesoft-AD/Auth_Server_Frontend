@@ -11,9 +11,9 @@ import { PaginatorModule } from 'primeng/paginator'
 import { TableModule } from 'primeng/table'
 import { ToastModule } from 'primeng/toast'
 import {
-    RegionStateService,
-    RegionTableComponent,
-} from '../../../../libs/shared-address/regions'
+    DistrictStateService,
+    DistrictTableComponent,
+} from '../../../../libs/shared-address/districts'
 @Component({
     selector: 'app-country',
     imports: [
@@ -27,16 +27,16 @@ import {
         ToastModule,
         IconFieldModule,
         InputIconModule,
-        RegionTableComponent,
+        DistrictTableComponent,
     ],
-    templateUrl: './page-regions.component.html',
-    styleUrl: './page-regions.component.css',
+    templateUrl: './page-districts.component.html',
+    styleUrl: './page-districts.component.css',
     providers: [MessageService, ConfirmationService],
 })
-export class PageRegionsComponent implements OnInit {
-    constructor(private regionState: RegionStateService) {}
+export class PageDistrictsComponent implements OnInit {
+    constructor(private districtState: DistrictStateService) {}
 
     ngOnInit(): void {
-        this.regionState.loadRegion()
+        this.districtState.loadDistrict()
     }
 }
