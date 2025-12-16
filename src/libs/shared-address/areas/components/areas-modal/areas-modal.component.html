@@ -1,48 +1,87 @@
+
 <div class="bg-surface-50 p-4">
     <form
         [formGroup]="areaFormService.form"
-        class="space-y-4"
+        class="grid grid-cols-1 gap-6"
         (ngSubmit)="submit($event)">
-        <div>
-            <common-form-input
-                controlName="countryId"
-                label="Country Id"
-                type="text">
-            </common-form-input>
-        </div>
-        <div>
-            <common-form-input
-                controlName="districtId"
-                label="District Id"
-                type="text">
-            </common-form-input>
-        </div>
-        <div>
-            <common-form-input 
-            controlName="name"
-             label="Name"
-              type="text">
-            </common-form-input>
+        
+        <div class="w-full">
+            <label
+                for="countryId"
+                class="text-surface-900 w-full leading-normal font-medium">
+                Country Id
+            </label>
+            <input
+                pInputText
+                id="countryId"
+                type="text"
+                placeholder="Enter country id"
+                formControlName="countryId"
+                class="w-full rounded-md px-3 py-2 shadow-sm" />
         </div>
 
-          <div>
-            <common-form-input 
-            controlName="typeName"
-             label="Area Name"
-              type="text">
-            </common-form-input>
-        </div>
-           <div>
-            <common-form-input 
-            controlName="type"
-             label="Type"
-              type="text">
-            </common-form-input>
+        <div class="w-full">
+            <label
+                for="districtId"
+                class="text-surface-900 w-full leading-normal font-medium">
+                District Id
+            </label>
+            <input
+                pInputText
+                id="districtId"
+                type="text"
+                placeholder="Enter district id"
+                formControlName="districtId"
+                class="w-full rounded-md px-3 py-2 shadow-sm" />
         </div>
 
+        <div class="w-full">
+            <label
+                for="name"
+                class="text-surface-900 w-full leading-normal font-medium">
+                Name
+            </label>
+            <input
+                pInputText
+                id="name"
+                type="text"
+                placeholder="Enter area name"
+                formControlName="name"
+                class="w-full rounded-md px-3 py-2 shadow-sm" />
+        </div>
+
+        <div class="w-full">
+            <label
+                for="typeName"
+                class="text-surface-900 w-full leading-normal font-medium">
+                Area Type Name
+            </label>
+            <input
+                pInputText
+                id="typeName"
+                type="text"
+                placeholder="Enter type name"
+                formControlName="typeName"
+                class="w-full rounded-md px-3 py-2 shadow-sm" />
+        </div>
+
+        <div class="w-full">
+            <label
+                for="type"
+                class="text-surface-900 w-full leading-normal font-medium">
+                Type
+            </label>
+            <input
+                pInputText
+                id="type"
+                type="text"
+                placeholder="Enter type"
+                formControlName="type"
+                class="w-full rounded-md px-3 py-2 shadow-sm" />
+        </div>
 
         <p-button
-            [label]="'Update'"
+            [label]="isEditMode() ? 'Update Area' : 'Add Area'"
             [loading]="isLoading()"
             [disabled]="isLoading() || areaFormService.form.invalid"
             type="submit"

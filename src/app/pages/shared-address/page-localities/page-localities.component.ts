@@ -1,42 +1,23 @@
 import { CommonModule } from '@angular/common'
-import { Component, OnInit } from '@angular/core'
+import { Component, inject, OnInit } from '@angular/core'
 import { FormsModule } from '@angular/forms'
-import { ConfirmationService, MessageService } from 'primeng/api'
-import { ButtonModule } from 'primeng/button'
-import { DialogModule } from 'primeng/dialog'
-import { IconFieldModule } from 'primeng/iconfield'
-import { InputIconModule } from 'primeng/inputicon'
-import { InputTextModule } from 'primeng/inputtext'
-import { PaginatorModule } from 'primeng/paginator'
-import { TableModule } from 'primeng/table'
-import { ToastModule } from 'primeng/toast'
+import { PrimeModules } from '../../../../libs/prime-modules'
 import {
-    LocalitieStateService,
+    LocalitieListStateService,
     LocalitieTableComponent,
 } from '../../../../libs/shared-address/localities'
+
 @Component({
-    selector: 'app-country',
-    imports: [
-        CommonModule,
-        TableModule,
-        PaginatorModule,
-        ButtonModule,
-        DialogModule,
-        InputTextModule,
-        FormsModule,
-        ToastModule,
-        IconFieldModule,
-        InputIconModule,
-        LocalitieTableComponent,
-    ],
+    selector: 'app-page-localities',
+    imports: [CommonModule, FormsModule, PrimeModules, LocalitieTableComponent],
     templateUrl: './page-localities.component.html',
     styleUrl: './page-localities.component.css',
-    providers: [MessageService, ConfirmationService],
+    providers: [LocalitieListStateService],
 })
 export class PageLocalitiesComponent implements OnInit {
-    constructor(private localitieState: LocalitieStateService) {}
+    private localitieListState = inject(LocalitieListStateService)
 
     ngOnInit(): void {
-        this.localitieState.loadLocalitie()
+        this.localitieListState.init()
     }
 }

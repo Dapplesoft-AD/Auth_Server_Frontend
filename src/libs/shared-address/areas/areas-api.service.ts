@@ -1,27 +1,50 @@
-import { HttpClient } from '@angular/common/http'
-import { Injectable } from '@angular/core'
+import { HttpClient, HttpParams } from '@angular/common/http'
+import { Inject, Injectable, inject } from '@angular/core'
 import { Observable } from 'rxjs'
-import { environment } from '../../../environments/environment.staging'
+import { ApiService } from '../../common-service/lib/api.service'
+import { ENVIRONMENT, EnvironmentConfig } from '../../core'
 import { Area } from './areas.model'
 
 @Injectable({
     providedIn: 'root',
 })
-export class AreaApiService {
-    private apiUrl = `${environment.apiUrl}`
+export class AreaApiService extends ApiService<Area, Area> {
+    constructor(
+        @Inject(ENVIRONMENT)
+        private env: EnvironmentConfig,
+    ) {
+        super(inject(HttpClient), `${env.apiUrl}/areas`)
+    }
 
-    constructor(private http: HttpClient) {}
+    findAllAreas(query?: {
+        search?: string
+        page?: number
+        size?: number
+    }): Observable<Area[]> {
+        let params = new HttpParams()
 
-    getAreas(): Observable<Area[]> {
-        return this.http.get<Area[]>(this.apiUrl + '/areas')
+        if (query?.search) {
+            params = params.set('search', query.search)
+        }
+        if (query?.page !== undefined) {
+            params = params.set('page', query.page.toString())
+        }
+        if (query?.size !== undefined) {
+            params = params.set('size', query.size.toString())
+        }
+
+        return this.http.get<Area[]>(this.apiUrl, { params })
     }
-    createAreas(area: Area): Observable<Area> {
-        return this.http.post<Area>(`${this.apiUrl}/areas`, area)
+
+    createArea(area: Area): Observable<Area> {
+        return this.http.post<Area>(this.apiUrl, area)
     }
-    updateAreas(id: string, data: Partial<Area>): Observable<Area> {
-        return this.http.put<Area>(`${this.apiUrl}/areas/${id}`, data)
+
+    updateArea(id: string, area: Area): Observable<Area> {
+        return this.http.put<Area>(`${this.apiUrl}/${id}`, area)
     }
-    deleteAreas(id: string): Observable<void> {
-        return this.http.delete<void>(`${this.apiUrl}/areas/${id}`)
+
+    deleteArea(id: string): Observable<void> {
+        return this.http.delete<void>(`${this.apiUrl}/${id}`)
     }
 }

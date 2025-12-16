@@ -1,42 +1,21 @@
-import { CommonModule } from '@angular/common'
-import { Component, OnInit } from '@angular/core'
-import { FormsModule } from '@angular/forms'
-import { ConfirmationService, MessageService } from 'primeng/api'
-import { ButtonModule } from 'primeng/button'
-import { DialogModule } from 'primeng/dialog'
-import { IconFieldModule } from 'primeng/iconfield'
-import { InputIconModule } from 'primeng/inputicon'
-import { InputTextModule } from 'primeng/inputtext'
-import { PaginatorModule } from 'primeng/paginator'
-import { TableModule } from 'primeng/table'
-import { ToastModule } from 'primeng/toast'
+import { Component, inject, OnInit } from '@angular/core'
+import { PrimeModules } from '../../../../libs/prime-modules'
 import {
-    AreaStateService,
+    AreaListStateService,
     AreaTableComponent,
 } from '../../../../libs/shared-address/areas'
+
 @Component({
-    selector: 'app-country',
-    imports: [
-        CommonModule,
-        TableModule,
-        PaginatorModule,
-        ButtonModule,
-        DialogModule,
-        InputTextModule,
-        FormsModule,
-        ToastModule,
-        IconFieldModule,
-        InputIconModule,
-        AreaTableComponent,
-    ],
+    selector: 'app-page-areas',
+    imports: [AreaTableComponent, PrimeModules],
     templateUrl: './page-areas.component.html',
     styleUrl: './page-areas.component.css',
-    providers: [MessageService, ConfirmationService],
+    providers: [AreaListStateService],
 })
 export class PageAreasComponent implements OnInit {
-    constructor(private areaState: AreaStateService) {}
+    private areaListStateService = inject(AreaListStateService)
 
     ngOnInit(): void {
-        this.areaState.loadArea()
+        this.areaListStateService.init()
     }
 }

@@ -1,104 +1,127 @@
 import { Injectable, inject } from '@angular/core'
 import {
-    BehaviorSubject,
     catchError,
-    Observable,
-    shareReplay,
+    combineLatest,
+    debounceTime,
+    finalize,
     switchMap,
     tap,
     throwError,
 } from 'rxjs'
-import { Role } from './role.model'
+import { SimpleStore } from '../store'
+import { Role, RoleDto } from './role.model'
 import { RoleApiService } from './role-api.service'
 
-@Injectable({
-    providedIn: 'root',
-})
-export class RoleStateService {
+export type RoleState = {
+    roles: Role[]
+    loading: boolean
+    error: boolean
+    search: string
+    page: number
+    size: number
+}
+
+const initialRoleState: RoleState = {
+    roles: [],
+    loading: false,
+    error: false,
+    search: '',
+    page: 1,
+    size: 10,
+}
+
+@Injectable()
+export class RoleListStateService extends SimpleStore<RoleState> {
     private roleApiService = inject(RoleApiService)
 
-    private reloadTrigger = new BehaviorSubject<void>(undefined)
-    private loadingSubject = new BehaviorSubject<boolean>(false)
-    private errorSubject = new BehaviorSubject<boolean>(false)
-
-    loading$ = this.loadingSubject.asObservable()
-    error$ = this.errorSubject.asObservable()
-
-    roles$ = this.reloadTrigger.pipe(
-        tap(() => this.startLoading()),
-        switchMap(() =>
-            this.roleApiService.getRoles().pipe(
-                tap(() => this.stopLoading()),
-                catchError((err) => {
-                    this.stopLoadingWithError()
-                    return throwError(() => err)
-                }),
-            ),
-        ),
-        shareReplay({ bufferSize: 1, refCount: true }),
-    )
-
-    private startLoading() {
-        this.loadingSubject.next(true)
-        this.errorSubject.next(false)
+    constructor() {
+        super(initialRoleState)
     }
 
-    private stopLoadingWithError() {
-        this.loadingSubject.next(false)
-        this.errorSubject.next(true)
+    init() {
+        this.loadRoles()
     }
 
-    private stopLoading() {
-        this.loadingSubject.next(false)
+    private loadRoles() {
+        combineLatest([
+            this.select('search'),
+            this.select('page'),
+            this.select('size'),
+        ])
+            .pipe(
+                debounceTime(300),
+                tap(() => this.setState({ loading: true, error: false })),
+                switchMap(([search, page, size]) =>
+                    this.roleApiService.findAllRoles({
+                        search,
+                        page,
+                        size,
+                    }),
+                ),
+            )
+            .subscribe({
+                next: (roles) => {
+                    this.setState({ roles, loading: false })
+                },
+                error: () => {
+                    this.setState({ error: true, loading: false })
+                },
+            })
     }
 
-    loadRoles() {
-        this.reload()
-    }
-
-    reload() {
-        this.reloadTrigger.next()
-    }
-
-    createRole(role: Partial<Role>): Observable<Role> {
-        this.startLoading()
+    createRole(role: RoleDto) {
+        this.setState({ loading: true, error: false })
         return this.roleApiService.createRole(role).pipe(
-            tap(() => {
-                this.stopLoading()
-                this.reload()
+            tap((role) => this.pushRole(role)),
+            catchError(() => {
+                this.setState({ error: true })
+                return throwError(() => new Error('Failed to create role'))
             }),
-            catchError((err) => {
-                this.stopLoadingWithError()
-                return throwError(() => err)
-            }),
+            finalize(() => this.setState({ loading: false })),
         )
     }
 
-    updateRole(id: string, updatedData: Partial<Role>): Observable<Role> {
-        this.startLoading()
-        return this.roleApiService.updateRole(id, updatedData).pipe(
-            tap(() => {
-                this.stopLoading()
-                this.reload()
+    updateRole(id: string, role: RoleDto) {
+        this.setState({ loading: true, error: false })
+        return this.roleApiService.updateRole(id, role).pipe(
+            tap((role) => this.replaceRole(role)),
+            catchError(() => {
+                this.setState({ error: true })
+                return throwError(() => new Error('Failed to update role'))
             }),
-            catchError((err) => {
-                this.stopLoadingWithError()
-                return throwError(() => err)
-            }),
+            finalize(() => this.setState({ loading: false })),
         )
     }
 
-    deleteRole(id: string): Observable<void> {
-        this.startLoading()
-        return this.roleApiService.deleteRole(String(id)).pipe(
-            tap(() => {
-                this.stopLoading()
-                this.reload()
+    deleteRole(id: string) {
+        this.setState({ loading: true, error: false })
+        return this.roleApiService.deleteRole(id).pipe(
+            tap(() => this.removeRoleFromState(id)),
+            catchError(() => {
+                this.setState({ error: true })
+                return throwError(() => new Error('Failed to delete role'))
             }),
-            catchError((err) => {
-                this.stopLoadingWithError()
-                return throwError(() => err)
-            }),
+            finalize(() => this.setState({ loading: false })),
         )
+    }
+
+    private pushRole(role: Role) {
+        this.setState({
+            roles: [role, ...this.getState().roles],
+        })
+    }
+
+    private replaceRole(role: Role) {
+        this.setState({
+            roles: this.getState().roles.map((r) =>
+                r.id === role.id ? role : r,
+            ),
+        })
+    }
+
+    private removeRoleFromState(id: string) {
+        this.setState({
+            roles: this.getState().roles.filter((r) => r.id !== id),
+        })
     }
 }

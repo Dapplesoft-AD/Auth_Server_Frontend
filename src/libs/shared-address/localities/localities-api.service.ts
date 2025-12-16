@@ -1,30 +1,41 @@
-import { HttpClient } from '@angular/common/http'
-import { Injectable } from '@angular/core'
+import { HttpClient, HttpParams } from '@angular/common/http'
+import { Inject, Injectable, inject } from '@angular/core'
 import { Observable } from 'rxjs'
-import { environment } from '../../../environments/environment.staging'
+import { ApiService } from '../../common-service/lib/api.service'
+import { ENVIRONMENT, EnvironmentConfig } from '../../core'
 import { Localitie } from './localities.model'
 
 @Injectable({
     providedIn: 'root',
 })
-export class LocalitieApiService {
-    private apiUrl = `${environment.apiUrl}`
+export class LocalitieApiService extends ApiService<Localitie, Localitie> {
+    constructor(@Inject(ENVIRONMENT) private env: EnvironmentConfig) {
+        super(inject(HttpClient), `${env.apiUrl}/localities`)
+    }
 
-    constructor(private http: HttpClient) {}
+    findAllLocalities(query?: {
+        search?: string
+        page?: number
+        size?: number
+    }): Observable<Localitie[]> {
+        let params = new HttpParams()
 
-    getLocalities(): Observable<Localitie[]> {
-        return this.http.get<Localitie[]>(this.apiUrl + '/localities')
+        if (query?.search) params = params.set('search', query.search)
+        if (query?.page) params = params.set('page', query.page.toString())
+        if (query?.size) params = params.set('size', query.size.toString())
+
+        return this.http.get<Localitie[]>(this.apiUrl, { params })
     }
-    createLocalities(localitie: Localitie): Observable<Localitie> {
-        return this.http.post<Localitie>(`${this.apiUrl}/localities`, localitie)
+
+    createLocalitie(localitie: Localitie): Observable<Localitie> {
+        return this.http.post<Localitie>(this.apiUrl, localitie)
     }
-    updateLocalities(
-        id: string,
-        data: Partial<Localitie>,
-    ): Observable<Localitie> {
-        return this.http.put<Localitie>(`${this.apiUrl}/localities/${id}`, data)
+
+    updateLocalitie(id: string, localitie: Localitie): Observable<Localitie> {
+        return this.http.put<Localitie>(`${this.apiUrl}/${id}`, localitie)
     }
-    deleteLocalities(id: string): Observable<void> {
-        return this.http.delete<void>(`${this.apiUrl}/localities/${id}`)
+
+    deleteLocalitie(id: string): Observable<void> {
+        return this.http.delete<void>(`${this.apiUrl}/${id}`)
     }
 }

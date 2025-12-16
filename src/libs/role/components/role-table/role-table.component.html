@@ -1,64 +1,71 @@
-<p-confirmDialog></p-confirmDialog>
- <div class="mb-6 flex flex-col text-start items-center justify-between md:flex-row">
+@let state = roleListStateService.selectAll() | async;
+@let loading = roleListStateService.select('loading') | async;
+@let roles = state?.roles;
 
-        <h2 class="text-2xl  font-bold text-gray-800">
-            Role List
-        </h2>
+@if (loading) {
+    <div class="flex items-center justify-center py-8">
+        <i
+            class="pi pi-spin pi-spinner"
+            style="font-size: 2rem; color: green"></i>
+    </div>
+} @else if (roles?.length) {
+    <div class="max-h-[70vh] rounded-md">
+        <div
+            class="mb-4 flex flex-col items-center justify-between gap-4 md:flex-row">
+            <h2 class="text-xl font-bold">Roles Page</h2>
 
-    <button
-        pButton
-        type="button"
-        label="Add Role"
-        icon="pi pi-plus"
-        class="p-button-success mt-3 flex items-center gap-2 md:mt-0"
-       (click)="openModal()">
-    </button>
-</div>
-<div class="card rounded border border-gray-300 bg-white shadow">
+            <div class="flex w-full items-center gap-2 md:w-auto">
+                <p-button
+                    label="Add Role"
+                    icon="pi pi-plus"
+                    (click)="addRole()"
+                    class="p-button-success rounded"></p-button>
+            </div>
+        </div>
 
-    <p-table
-        [value]="roles"
-        [paginator]="true"
-        [rows]="10"
-        dataKey="id"
-        class="p-datatable-gridlines p-datatable-striped">
+        <p-table
+            [value]="roles ?? []"
+            [paginator]="true"
+            [rows]="10"
+            [tableStyle]="{ 'min-width': '30rem' }"
+            [globalFilterFields]="['roleName', 'description', 'id']"
+            stripedRows="true">
+            <ng-template #header>
+                <tr>
+                    <th>Id</th>
+                    <th>Role Name</th>
+                    <th>Description</th>
+                    <th>Actions</th>
+                </tr>
+            </ng-template>
 
-        <ng-template pTemplate="header">
-            <tr class="bg-gray-800 text-white">
-                <th>ID</th>
-                <th pSortableColumn="roleName">
-                    <div class="flex items-center gap-2">
-                        Role Name <p-sortIcon field="roleName"></p-sortIcon>
-                    </div>
-                </th>
-                <th>Description</th>
-                <th>Actions</th>
-            </tr>
-        </ng-template>
+            <ng-template #body let-data>
+                <tr>
+                    <td>{{ data.id }}</td>
+                    <td>{{ data.roleName }}</td>
+                    <td>{{ data.description | slice: 0 : 40 }}</td>
+                    <td class="flex gap-1">
+                        <p-button
+                            icon="pi pi-pen-to-square"
+                            size="small"
+                            rounded
+                            text
+                            (click)="editRole(data)" />
 
-        <ng-template pTemplate="body" let-role>
-            <tr>
-                <td>{{ role.id }}</td>
-                <td>{{ role.roleName }}</td>
-                <td>{{ role.description }}</td>
-                <td>
-                    <p-button
-                        icon="pi pi-pencil"
-                        class="mr-2"
-                        [rounded]="true"
-                        [outlined]="true"
-                        (click)="openModal(role)">
-                    </p-button>
-                    
-                    <p-button
-                        icon="pi pi-trash"
-                        severity="danger"
-                        [rounded]="true"
-                        [outlined]="true"
-                        (click)="deleteRole(role)">
-                    </p-button>
-                </td>
-            </tr>
-        </ng-template>
-    </p-table>
-</div>
+                        <p-button
+                            icon="pi pi-trash"
+                            severity="warn"
+                            size="small"
+                            rounded
+                            text
+                            (click)="confirmDelete(data)" />
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+} @else {
+    <div class="flex items-center justify-center py-8">
+        <span class="text-2xl font-bold">No data found</span>
+    </div>
+}

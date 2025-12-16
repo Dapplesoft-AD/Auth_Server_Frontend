@@ -1,37 +1,60 @@
+
+
+
+
 <div class="bg-surface-50 p-4">
-    <form
-        [formGroup]="districtFormService.form"
-        class="space-y-4"
-        (ngSubmit)="submit($event)">
-        <div>
-            <common-form-input
-                controlName="countryId"
-                label="Country Id"
-                type="text">
-            </common-form-input>
+    <form [formGroup]="districtFormService.form" class="grid grid-cols-1 gap-6">
+        <div class="w-full">
+            <label
+                for="countryId"
+                class="text-surface-900 w-full leading-normal font-medium">
+                Country Id
+            </label>
+            <input
+                pInputText
+                id="countryId"
+                type="text"
+                placeholder="Enter country id"
+                formControlName="countryId"
+                class="w-full rounded-md px-3 py-2 shadow-sm" />
         </div>
-        <div>
-            <common-form-input
-                controlName="regionId"
-                label="Region Id"
-                type="text">
-            </common-form-input>
+
+        <div class="w-full">
+            <label
+                for="regionId"
+                class="text-surface-900 w-full leading-normal font-medium">
+                Region Id
+            </label>
+            <input
+                pInputText
+                id="regionId"
+                type="text"
+                placeholder="Enter region id"
+                formControlName="regionId"
+                class="w-full rounded-md px-3 py-2 shadow-sm" />
         </div>
-        <div>
-            <common-form-input 
-            controlName="name"
-             label="Name"
-              type="text">
-            </common-form-input>
+
+        <div class="w-full">
+            <label
+                for="name"
+                class="text-surface-900 w-full leading-normal font-medium">
+                District Name
+            </label>
+            <input
+                pInputText
+                id="name"
+                type="text"
+                placeholder="Enter district name"
+                formControlName="name"
+                class="w-full rounded-md px-3 py-2 shadow-sm" />
         </div>
-   
+
         <p-button
-            [label]="'Update'"
+            [label]="isEditMode() ? 'Update District' : 'Add District'"
             [loading]="isLoading()"
             [disabled]="isLoading() || districtFormService.form.invalid"
-            type="submit"
-            class="mt-8 flex w-full items-center justify-center gap-2 rounded-md py-2">
-            <i pButtonIcon class="pi pi-save"></i>
+            class="mt-8 flex w-full items-center justify-center gap-2 rounded-md py-2"
+            (click)="submit($event)">
         </p-button>
     </form>
 </div>

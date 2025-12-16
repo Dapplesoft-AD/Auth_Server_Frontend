@@ -1,108 +1,121 @@
 import { Injectable, inject } from '@angular/core'
 import {
-    BehaviorSubject,
     catchError,
-    Observable,
-    shareReplay,
+    combineLatest,
+    debounceTime,
+    finalize,
     switchMap,
     tap,
     throwError,
 } from 'rxjs'
+import { SimpleStore } from '../../store'
 import { Localitie } from './localities.model'
 import { LocalitieApiService } from './localities-api.service'
 
-@Injectable({
-    providedIn: 'root',
-})
-export class LocalitieStateService {
+export type LocalitieState = {
+    localities: Localitie[]
+    loading: boolean
+    error: boolean
+    search: string
+    page: number
+    size: number
+}
+
+const initialLocalitieState: LocalitieState = {
+    localities: [],
+    loading: false,
+    error: false,
+    search: '',
+    page: 1,
+    size: 10,
+}
+
+@Injectable()
+export class LocalitieListStateService extends SimpleStore<LocalitieState> {
     private localitieApiService = inject(LocalitieApiService)
 
-    private reloadTrigger = new BehaviorSubject<void>(undefined)
-    private loadingSubject = new BehaviorSubject<boolean>(false)
-    private errorSubject = new BehaviorSubject<boolean>(false)
-
-    loading$ = this.loadingSubject.asObservable()
-    error$ = this.errorSubject.asObservable()
-
-    area$ = this.reloadTrigger.pipe(
-        tap(() => this.startLoading()),
-        switchMap(() =>
-            this.localitieApiService.getLocalities().pipe(
-                tap(() => this.stopLoading()),
-                catchError((err) => {
-                    this.stopLoadingWithError()
-                    return throwError(() => err)
-                }),
-            ),
-        ),
-        shareReplay({ bufferSize: 1, refCount: true }),
-    )
-
-    private startLoading() {
-        this.loadingSubject.next(true)
-        this.errorSubject.next(false)
+    constructor() {
+        super(initialLocalitieState)
     }
 
-    private stopLoadingWithError() {
-        this.loadingSubject.next(false)
-        this.errorSubject.next(true)
+    init() {
+        this.loadLocalities()
     }
 
-    private stopLoading() {
-        this.loadingSubject.next(false)
-    }
-
-    loadLocalitie() {
-        this.reload()
-    }
-
-    reload() {
-        this.reloadTrigger.next()
-    }
-    createLocalitie(data: Partial<Localitie>): Observable<Localitie> {
-        this.startLoading()
-        return this.localitieApiService
-            .createLocalities(data as Localitie)
+    private loadLocalities() {
+        combineLatest([
+            this.select('search'),
+            this.select('page'),
+            this.select('size'),
+        ])
             .pipe(
-                tap(() => {
-                    this.stopLoading()
-                    this.reload()
-                }),
-                catchError((err) => {
-                    this.stopLoadingWithError()
-                    return throwError(() => err)
-                }),
+                debounceTime(300),
+                tap(() => this.setState({ loading: true, error: false })),
+                switchMap(
+                    ([search, page, size]) =>
+                        this.localitieApiService.findAllLocalities(), // you can add query params if API supports
+                ),
             )
+            .subscribe({
+                next: (localities) =>
+                    this.setState({ localities, loading: false }),
+                error: () => this.setState({ error: true, loading: false }),
+            })
     }
 
-    updateLocalitie(
-        id: string,
-        updatedData: Partial<Localitie>,
-    ): Observable<Localitie> {
-        this.startLoading()
-        return this.localitieApiService.updateLocalities(id, updatedData).pipe(
-            tap(() => {
-                this.stopLoading()
-                this.reload()
+    createLocalitie(localitie: Localitie) {
+        this.setState({ loading: true, error: false })
+        return this.localitieApiService.createLocalitie(localitie).pipe(
+            tap((newLocalitie) => this.pushLocalitie(newLocalitie)),
+            catchError(() => {
+                this.setState({ error: true })
+                return throwError(() => new Error('Failed to create localitie'))
             }),
-            catchError((err) => {
-                this.stopLoadingWithError()
-                return throwError(() => err)
-            }),
+            finalize(() => this.setState({ loading: false })),
         )
     }
 
-    deleteLocalitie(id: string): Observable<void> {
-        this.startLoading()
-        return this.localitieApiService.deleteLocalities(id).pipe(
-            tap(() => {
-                this.stopLoading()
-                this.reload()
+    updateLocalitie(id: string, localitie: Localitie) {
+        this.setState({ loading: true, error: false })
+        return this.localitieApiService.updateLocalitie(id, localitie).pipe(
+            tap((updatedLocalitie) => this.replaceLocalitie(updatedLocalitie)),
+            catchError(() => {
+                this.setState({ error: true })
+                return throwError(() => new Error('Failed to update localitie'))
             }),
-            catchError((err) => {
-                this.stopLoadingWithError()
-                return throwError(() => err)
-            }),
+            finalize(() => this.setState({ loading: false })),
         )
+    }
+
+    deleteLocalitie(id: string) {
+        this.setState({ loading: true, error: false })
+        return this.localitieApiService.deleteLocalitie(id).pipe(
+            tap(() => this.removeLocalitieFromState(id)),
+            catchError(() => {
+                this.setState({ error: true })
+                return throwError(() => new Error('Failed to delete localitie'))
+            }),
+            finalize(() => this.setState({ loading: false })),
+        )
+    }
+
+    private pushLocalitie(localitie: Localitie) {
+        this.setState({
+            localities: [localitie, ...this.getState().localities],
+        })
+    }
+
+    private replaceLocalitie(localitie: Localitie) {
+        this.setState({
+            localities: this.getState().localities.map((l) =>
+                l.id === localitie.id ? localitie : l,
+            ),
+        })
+    }
+
+    private removeLocalitieFromState(id: string) {
+        this.setState({
+            localities: this.getState().localities.filter((l) => l.id !== id),
+        })
     }
 }

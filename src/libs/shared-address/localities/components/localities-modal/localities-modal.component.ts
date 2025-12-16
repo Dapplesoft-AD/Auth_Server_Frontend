@@ -1,94 +1,98 @@
+import { CommonModule } from '@angular/common'
 import { Component, inject, signal } from '@angular/core'
-import { ReactiveFormsModule } from '@angular/forms'
-import { ButtonModule } from 'primeng/button'
-import { DialogModule } from 'primeng/dialog'
+import { FormsModule, ReactiveFormsModule } from '@angular/forms'
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog'
-import { FloatLabelModule } from 'primeng/floatlabel'
-import { InputTextModule } from 'primeng/inputtext'
-import { FormInputComponent } from '../../../../common-components/form/form-input/form-input.component'
 import { AlertService } from '../../../../common-service/lib/alert.service'
+import { PrimeModules } from '../../../../prime-modules'
 import { Localitie } from '../../localities.model'
 import { LocalitieFormService } from '../../localities-form.service'
-import { LocalitieStateService } from '../../localities-state.service'
+import { LocalitieListStateService } from '../../localities-state.service'
+
 @Component({
     selector: 'app-localities-modal',
-    imports: [
-        ButtonModule,
-        DialogModule,
-        ReactiveFormsModule,
-        FloatLabelModule,
-        InputTextModule,
-        FormInputComponent,
-    ],
+    imports: [CommonModule, PrimeModules, FormsModule, ReactiveFormsModule],
     templateUrl: './localities-modal.component.html',
     styleUrls: ['./localities-modal.component.css'],
-    standalone: true,
 })
 export class LocalitieModalComponent {
-    private config = inject(DynamicDialogConfig)
-    private ref = inject(DynamicDialogRef)
-
     protected localitieFormService = inject(LocalitieFormService)
-    private localitieState = inject(LocalitieStateService)
+    private localitieState = inject(LocalitieListStateService)
     private alertService = inject(AlertService)
+    private ref = inject(DynamicDialogRef)
+    private config = inject(DynamicDialogConfig)
 
     isLoading = signal(false)
-    isError = signal(false)
+    isEditMode = signal(false)
+    private localitieId?: string
 
-    ngOnInit() {
-        const selectedLocalitie: Localitie = this.config.data?.localitie
+    constructor() {
+        this.initializeForm()
+    }
 
-        if (selectedLocalitie) {
-            this.localitieFormService.patchForm(selectedLocalitie)
+    private initializeForm() {
+        const localitie: Localitie | undefined = this.config.data?.localitie
+
+        if (localitie) {
+            this.isEditMode.set(true)
+            this.localitieId = localitie.id
+            this.localitieFormService.patchForm(localitie)
+        } else {
+            this.isEditMode.set(false)
+            this.localitieId = undefined
+            this.localitieFormService.form.reset()
         }
     }
 
     submit(event: Event) {
         event.preventDefault()
-        this.isLoading.set(true)
+        if (this.localitieFormService.form.invalid) return
 
-        const selectedLocalitie = this.config.data?.localitie
+        this.isLoading.set(true)
         const formValue = this.localitieFormService.getValue()
 
-        if (selectedLocalitie) {
-            const localitieData: Partial<Localitie> = {
-                ...formValue,
-                id: selectedLocalitie.id,
-            }
-            this.updateLocalitie(localitieData)
-        } else {
-            this.addLocalitie(formValue)
+        const localitieData: Localitie = {
+            id: this.localitieId || '',
+            countryId: formValue.countryId!,
+            areaId: formValue.areaId!,
+            name: formValue.name!,
+            type: formValue.type!,
+            typeName: formValue.typeName!,
+            isActive: formValue.isActive ?? true,
         }
+
+        this.isEditMode()
+            ? this.updateLocalitie(localitieData)
+            : this.createLocalitie(localitieData)
     }
 
-    addLocalitie(localitieData: Partial<Localitie>) {
-        this.localitieState.createLocalitie(localitieData).subscribe({
-            next: (newLocalitie: Localitie) => {
-                this.localitieFormService.form.reset()
+    private createLocalitie(localitie: Localitie) {
+        this.localitieState.createLocalitie(localitie).subscribe({
+            next: (newLocalitie) => {
                 this.isLoading.set(false)
-                this.alertService.success('Localitie added successfully')
                 this.ref.close(newLocalitie)
+                this.alertService.success('Localitie created successfully')
             },
             error: () => {
                 this.isLoading.set(false)
-                this.alertService.error('Failed to add Localitie')
+                this.alertService.error('Failed to create Localitie')
             },
         })
     }
 
-    updateLocalitie(localitieData: Partial<Localitie>) {
+    private updateLocalitie(localitie: Localitie) {
+        if (!this.localitieId) return
+
         this.localitieState
-            .updateLocalitie(localitieData.id!, localitieData)
+            .updateLocalitie(this.localitieId, localitie)
             .subscribe({
-                next: () => {
-                    this.localitieFormService.form.reset()
+                next: (updatedLocalitie) => {
                     this.isLoading.set(false)
-                    this.alertService.success('Localities updated successfully')
-                    this.ref.close(localitieData)
+                    this.ref.close(updatedLocalitie)
+                    this.alertService.success('Localitie updated successfully')
                 },
                 error: () => {
                     this.isLoading.set(false)
-                    this.alertService.error('Failed to update Localities')
+                    this.alertService.error('Failed to update Localitie')
                 },
             })
     }

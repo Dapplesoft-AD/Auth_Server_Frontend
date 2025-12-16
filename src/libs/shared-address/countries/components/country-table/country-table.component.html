@@ -1,70 +1,82 @@
+@let state = countryListStateService.selectAll() | async;
+@let loading = countryListStateService.select('loading') | async;
+@let countries = state?.countries;
+
+@if (loading) {
+    <div class="flex items-center justify-center py-8">
+        <i
+            class="pi pi-spin pi-spinner"
+            style="font-size: 2rem; color: green">
+        </i>
+    </div>
+} @else if (countries?.length) {
+    <div class="max-h-[70vh] rounded-md">
+        <div
+            class="mb-4 flex flex-col items-center justify-between gap-4 md:flex-row">
+            <h2 class="text-xl font-bold">Countries Page</h2>
+
+            <div class="flex w-full items-center gap-2 md:w-auto">
+                <p-button
+                    label="Add Country"
+                    icon="pi pi-plus"
+                    class="p-button-success rounded"
+                    (click)="addCountry()">
+                </p-button>
+            </div>
+        </div>
+
+        <p-table
+            [value]="countries ?? []"
+            [paginator]="true"
+            [rows]="10"
+            [tableStyle]="{ 'min-width': '30rem' }"
+            [globalFilterFields]="['name', 'capital', 'phoneCode', 'id']"
+            stripedRows="true">
+
+            <ng-template #header>
+                <tr>
+                    <th>Id</th>
+                    <th>Country Name</th>
+                    <th>Capital</th>
+                    <th>Phone Code</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </ng-template>
+
+            <ng-template #body let-data>
+                <tr>
+                    <td>{{ data.id }}</td>
+                    <td>{{ data.name }}</td>
+                    <td>{{ data.capital }}</td>
+                    <td>{{ data.phoneCode }}</td>
+                    <td>{{ data.isActive }}</td>
+                    <td class="flex gap-1">
+                        <p-button
+                            icon="pi pi-pen-to-square"
+                            size="small"
+                            rounded
+                            text
+                            (click)="editCountry(data)">
+                        </p-button>
+
+                        <p-button
+                            icon="pi pi-trash"
+                            severity="warn"
+                            size="small"
+                            rounded
+                            text
+                            (click)="confirmDelete(data)">
+                        </p-button>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+} @else {
+    <div class="flex items-center justify-center py-8">
+        <span class="text-2xl font-bold">No data found</span>
+    </div>
+}
+
 <p-confirmDialog></p-confirmDialog>
-<div class="mb-6 flex flex-col text-start items-center justify-between md:flex-row">
-
-        <h2 class="text-2xl  font-bold text-gray-800">
-            Country List
-        </h2>
-
-    <button
-        pButton
-        type="button"
-        label="Add Country"
-        icon="pi pi-plus"
-        class="p-button-success mt-3 flex items-center gap-2 md:mt-0"
-        (click)="openModal()">
-    </button>
-</div>
-<div class="card rounded border border-gray-300 bg-white shadow">
-    <p-table
-        [value]="country"
-        [paginator]="true"
-        [rows]="10"
-        dataKey="id"
-        class="p-datatable-gridlines p-datatable-striped">
-        <ng-template pTemplate="header">
-            <tr class="bg-gray-800 text-white">
-                <th>ID</th>
-                <th pSortableColumn="name">
-                    <div class="flex items-center gap-2">
-                        Country Name <p-sortIcon field="name"></p-sortIcon>
-                    </div>
-                </th>
-                <th pSortableColumn="capital">
-                    <div class="flex items-center gap-2">
-                        Capital <p-sortIcon field="capital"></p-sortIcon>
-                    </div>
-                </th>
-                <th>Phone Code</th>
-                <th>Status</th>
-                <th>Actions</th>
-            </tr>
-        </ng-template>
-
-        <ng-template pTemplate="body" let-county>
-            <tr>
-                <td>{{ county.id }}</td>
-                <td>{{ county.name }}</td>
-                <td>{{ county.capital }}</td>
-                <td>{{ county.phoneCode }}</td>
-                <td>{{ county.isActive }}</td>
-                <td>
-                    <p-button
-                        icon="pi pi-pencil"
-                        class="mr-2"
-                        [rounded]="true"
-                        [outlined]="true"
-                        (click)="openModal(county)">
-                    </p-button>
-
-                    <p-button
-                        icon="pi pi-trash"
-                        severity="danger"
-                        [rounded]="true"
-                        [outlined]="true"
-                        (click)="deleteCountry(county)">
-                    </p-button>
-                </td>
-            </tr>
-        </ng-template>
-    </p-table>
-</div>

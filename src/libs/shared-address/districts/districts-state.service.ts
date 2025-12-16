@@ -1,106 +1,122 @@
 import { Injectable, inject } from '@angular/core'
 import {
-    BehaviorSubject,
     catchError,
-    Observable,
-    shareReplay,
+    combineLatest,
+    debounceTime,
+    finalize,
     switchMap,
     tap,
     throwError,
 } from 'rxjs'
+import { SimpleStore } from '../../store'
 import { District } from './districts.model'
 import { DistrictApiService } from './districts-api.service'
 
-@Injectable({
-    providedIn: 'root',
-})
-export class DistrictStateService {
+export type DistrictState = {
+    districts: District[]
+    loading: boolean
+    error: boolean
+    search: string
+    page: number
+    size: number
+}
+
+const initialDistrictState: DistrictState = {
+    districts: [],
+    loading: false,
+    error: false,
+    search: '',
+    page: 1,
+    size: 10,
+}
+
+@Injectable()
+export class DistrictListStateService extends SimpleStore<DistrictState> {
     private districtApiService = inject(DistrictApiService)
 
-    private reloadTrigger = new BehaviorSubject<void>(undefined)
-    private loadingSubject = new BehaviorSubject<boolean>(false)
-    private errorSubject = new BehaviorSubject<boolean>(false)
+    constructor() {
+        super(initialDistrictState)
+    }
 
-    loading$ = this.loadingSubject.asObservable()
-    error$ = this.errorSubject.asObservable()
+    init() {
+        this.loadDistricts()
+    }
 
-    district$ = this.reloadTrigger.pipe(
-        tap(() => this.startLoading()),
-        switchMap(() =>
-            this.districtApiService.getDistricts().pipe(
-                tap(() => this.stopLoading()),
-                catchError((err) => {
-                    this.stopLoadingWithError()
-                    return throwError(() => err)
-                }),
+    private loadDistricts() {
+        combineLatest([
+            this.select('search'),
+            this.select('page'),
+            this.select('size'),
+        ])
+            .pipe(
+                debounceTime(300),
+                tap(() => this.setState({ loading: true, error: false })),
+                switchMap(([search, page, size]) =>
+                    this.districtApiService.findAllDistricts({
+                        search,
+                        page,
+                        size,
+                    }),
+                ),
+            )
+            .subscribe({
+                next: (districts) =>
+                    this.setState({ districts, loading: false }),
+                error: () => this.setState({ error: true, loading: false }),
+            })
+    }
+
+    createDistrict(district: District) {
+        this.setState({ loading: true, error: false })
+        return this.districtApiService.createDistrict(district).pipe(
+            tap((newDistrict) => this.pushDistrict(newDistrict)),
+            catchError(() => {
+                this.setState({ error: true })
+                return throwError(() => new Error('Failed to create district'))
+            }),
+            finalize(() => this.setState({ loading: false })),
+        )
+    }
+
+    updateDistrict(id: string, district: District) {
+        this.setState({ loading: true, error: false })
+        return this.districtApiService.updateDistrict(id, district).pipe(
+            tap((updatedDistrict) => this.replaceDistrict(updatedDistrict)),
+            catchError(() => {
+                this.setState({ error: true })
+                return throwError(() => new Error('Failed to update district'))
+            }),
+            finalize(() => this.setState({ loading: false })),
+        )
+    }
+
+    deleteDistrict(id: string) {
+        this.setState({ loading: true, error: false })
+        return this.districtApiService.deleteDistrict(id).pipe(
+            tap(() => this.removeDistrictFromState(id)),
+            catchError(() => {
+                this.setState({ error: true })
+                return throwError(() => new Error('Failed to delete district'))
+            }),
+            finalize(() => this.setState({ loading: false })),
+        )
+    }
+
+    private pushDistrict(district: District) {
+        this.setState({ districts: [district, ...this.getState().districts] })
+    }
+
+    private replaceDistrict(district: District) {
+        this.setState({
+            districts: this.getState().districts.map((d) =>
+                d.id === district.id ? district : d,
             ),
-        ),
-        shareReplay({ bufferSize: 1, refCount: true }),
-    )
-
-    private startLoading() {
-        this.loadingSubject.next(true)
-        this.errorSubject.next(false)
+        })
     }
 
-    private stopLoadingWithError() {
-        this.loadingSubject.next(false)
-        this.errorSubject.next(true)
-    }
-
-    private stopLoading() {
-        this.loadingSubject.next(false)
-    }
-
-    loadDistrict() {
-        this.reload()
-    }
-
-    reload() {
-        this.reloadTrigger.next()
-    }
-    createDistrict(data: Partial<District>): Observable<District> {
-        this.startLoading()
-        return this.districtApiService.createDistricts(data as District).pipe(
-            tap(() => {
-                this.stopLoading()
-                this.reload()
-            }),
-            catchError((err) => {
-                this.stopLoadingWithError()
-                return throwError(() => err)
-            }),
-        )
-    }
-
-    updateDistrict(
-        id: string,
-        updatedData: Partial<District>,
-    ): Observable<District> {
-        this.startLoading()
-        return this.districtApiService.updateDistricts(id, updatedData).pipe(
-            tap(() => {
-                this.stopLoading()
-                this.reload()
-            }),
-            catchError((err) => {
-                this.stopLoadingWithError()
-                return throwError(() => err)
-            }),
-        )
-    }
-
-    deleteDistrict(id: string): Observable<void> {
-        this.startLoading()
-        return this.districtApiService.deleteDistricts(id).pipe(
-            tap(() => {
-                this.stopLoading()
-                this.reload()
-            }),
-            catchError((err) => {
-                this.stopLoadingWithError()
-                return throwError(() => err)
-            }),
-        )
+    private removeDistrictFromState(id: string) {
+        this.setState({
+            districts: this.getState().districts.filter((d) => d.id !== id),
+        })
     }
 }

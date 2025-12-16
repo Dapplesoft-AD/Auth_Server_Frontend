@@ -1,41 +1,19 @@
-import { CommonModule } from '@angular/common'
-import { Component, OnInit } from '@angular/core'
-import { FormsModule } from '@angular/forms'
-import { ConfirmationService, MessageService } from 'primeng/api'
-import { ButtonModule } from 'primeng/button'
-import { DialogModule } from 'primeng/dialog'
-import { IconFieldModule } from 'primeng/iconfield'
-import { InputIconModule } from 'primeng/inputicon'
-import { InputTextModule } from 'primeng/inputtext'
-import { PaginatorModule } from 'primeng/paginator'
-import { TableModule } from 'primeng/table'
-import { ToastModule } from 'primeng/toast'
+import { Component, inject, OnInit } from '@angular/core'
+import { PrimeModules } from '../../../../libs/prime-modules'
+import { RoleListStateService } from '../../../../libs/role'
 import { RoleTableComponent } from '../../../../libs/role/components/role-table/role-table.component'
-import { RoleStateService } from '../../../../libs/role/role-state.service'
 
 @Component({
-    selector: 'app-page-todo',
-    imports: [
-        CommonModule,
-        TableModule,
-        PaginatorModule,
-        ButtonModule,
-        DialogModule,
-        InputTextModule,
-        FormsModule,
-        ToastModule,
-        IconFieldModule,
-        InputIconModule,
-        RoleTableComponent,
-    ],
+    selector: 'app-page-role',
+    imports: [RoleTableComponent, PrimeModules],
     templateUrl: './page-roles.component.html',
     styleUrl: './page-roles.component.css',
-    providers: [MessageService, ConfirmationService],
+    providers: [RoleListStateService],
 })
 export class PageRolesComponent implements OnInit {
-    constructor(private roleState: RoleStateService) {}
+    private roleListStateService = inject(RoleListStateService)
 
     ngOnInit(): void {
-        this.roleState.loadRoles()
+        this.roleListStateService.init()
     }
 }

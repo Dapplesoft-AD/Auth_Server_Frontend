@@ -1,92 +1,96 @@
+import { CommonModule } from '@angular/common'
 import { Component, inject, signal } from '@angular/core'
-import { ReactiveFormsModule } from '@angular/forms'
-import { ButtonModule } from 'primeng/button'
-import { DialogModule } from 'primeng/dialog'
+import { FormsModule, ReactiveFormsModule } from '@angular/forms'
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog'
-import { FloatLabelModule } from 'primeng/floatlabel'
-import { InputTextModule } from 'primeng/inputtext'
-import { FormInputComponent } from '../../../../common-components/form/form-input/form-input.component'
 import { AlertService } from '../../../../common-service/lib/alert.service'
-import { Area } from '../../areas.model'
+import { PrimeModules } from '../../../../prime-modules'
+import { Area, AreaDto } from '../../areas.model'
+import { AreaApiService } from '../../areas-api.service'
 import { AreaFormService } from '../../areas-form.service'
-import { AreaStateService } from '../../areas-state.service'
+
 @Component({
     selector: 'app-areas-modal',
-    imports: [
-        ButtonModule,
-        DialogModule,
-        ReactiveFormsModule,
-        FloatLabelModule,
-        InputTextModule,
-        FormInputComponent,
-    ],
+    imports: [CommonModule, PrimeModules, FormsModule, ReactiveFormsModule],
     templateUrl: './areas-modal.component.html',
     styleUrls: ['./areas-modal.component.css'],
-    standalone: true,
 })
 export class AreaModalComponent {
-    private config = inject(DynamicDialogConfig)
-    private ref = inject(DynamicDialogRef)
-
     protected areaFormService = inject(AreaFormService)
-    private areaState = inject(AreaStateService)
+    private areaApiService = inject(AreaApiService)
     private alertService = inject(AlertService)
+    private ref = inject(DynamicDialogRef)
+    private config = inject(DynamicDialogConfig)
 
     isLoading = signal(false)
-    isError = signal(false)
+    isEditMode = signal(false)
+    private areaId?: string
 
-    ngOnInit() {
-        const selectedArea: Area = this.config.data?.area
+    constructor() {
+        this.initializeForm()
+    }
 
-        if (selectedArea) {
-            this.areaFormService.patchForm(selectedArea)
+    private initializeForm() {
+        const area: Area | undefined = this.config.data?.area
+
+        if (area) {
+            this.isEditMode.set(true)
+            this.areaId = area.id
+            this.areaFormService.patchForm(area)
+        } else {
+            this.isEditMode.set(false)
+            this.areaId = undefined
+            this.areaFormService.resetForm()
         }
     }
 
     submit(event: Event) {
         event.preventDefault()
-        this.isLoading.set(true)
+        if (this.areaFormService.form.invalid) return
 
-        const selectedArea = this.config.data?.area
+        this.isLoading.set(true)
         const formValue = this.areaFormService.getValue()
 
-        if (selectedArea) {
-            const areaData: Partial<Area> = {
-                ...formValue,
-                id: selectedArea.id,
-            }
-            this.updateArea(areaData)
+        const area: Area = {
+            id: this.isEditMode() ? this.areaId! : '',
+            countryId: formValue.countryId!,
+            districtId: formValue.districtId!,
+            name: formValue.name!,
+            typeName: formValue.typeName!,
+            type: formValue.type!,
+            isActive: formValue.isActive ?? true,
+        }
+
+        if (this.isEditMode()) {
+            this.updateArea(area)
         } else {
-            this.addArea(formValue)
+            this.createArea(area)
         }
     }
 
-    addArea(areaData: Partial<Area>) {
-        this.areaState.createArea(areaData).subscribe({
-            next: (newArea) => {
-                this.areaFormService.form.reset()
+    private createArea(area: Area) {
+        this.areaApiService.createArea(area).subscribe({
+            next: (newArea: Area) => {
                 this.isLoading.set(false)
-                this.alertService.success('Area added successfully')
                 this.ref.close(newArea)
+                this.alertService.success('Area created successfully')
             },
             error: () => {
                 this.isLoading.set(false)
-                this.alertService.error('Failed to add area')
+                this.alertService.error('Failed to create area')
             },
         })
     }
 
-    updateArea(areaData: Partial<Area>) {
-        this.areaState.updateArea(areaData.id!, areaData).subscribe({
-            next: () => {
-                this.areaFormService.form.reset()
+    private updateArea(area: Area) {
+        this.areaApiService.updateArea(area.id, area).subscribe({
+            next: (updatedArea: Area) => {
                 this.isLoading.set(false)
+                this.ref.close(updatedArea)
                 this.alertService.success('Area updated successfully')
-                this.ref.close(areaData)
             },
             error: () => {
                 this.isLoading.set(false)
-                this.alertService.error('Failed to update Area')
+                this.alertService.error('Failed to update area')
             },
         })
     }

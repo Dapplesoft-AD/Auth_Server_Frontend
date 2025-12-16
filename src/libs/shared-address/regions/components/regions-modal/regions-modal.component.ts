@@ -1,88 +1,83 @@
+import { CommonModule } from '@angular/common'
 import { Component, inject, signal } from '@angular/core'
-import { ReactiveFormsModule } from '@angular/forms'
-import { ButtonModule } from 'primeng/button'
-import { DialogModule } from 'primeng/dialog'
+import { FormsModule, ReactiveFormsModule } from '@angular/forms'
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog'
-import { FloatLabelModule } from 'primeng/floatlabel'
-import { InputTextModule } from 'primeng/inputtext'
-import { FormInputComponent } from '../../../../common-components/form/form-input/form-input.component'
 import { AlertService } from '../../../../common-service/lib/alert.service'
-import { Region } from '../../regions.model'
+import { PrimeModules } from '../../../../prime-modules'
+import { Region, RegionDto } from '../../regions.model'
 import { RegionFormService } from '../../regions-form.service'
-import { RegionStateService } from '../../regions-state.service'
+import { RegionListStateService } from '../../regions-state.service'
+
 @Component({
     selector: 'app-region-modal',
-    imports: [
-        ButtonModule,
-        DialogModule,
-        ReactiveFormsModule,
-        FloatLabelModule,
-        InputTextModule,
-        FormInputComponent,
-    ],
+    standalone: true,
+    imports: [CommonModule, PrimeModules, FormsModule, ReactiveFormsModule],
     templateUrl: './regions-modal.component.html',
     styleUrls: ['./regions-modal.component.css'],
-    standalone: true,
 })
 export class RegionModalComponent {
-    private config = inject(DynamicDialogConfig)
-    private ref = inject(DynamicDialogRef)
-
     protected regionFormService = inject(RegionFormService)
-    private regionState = inject(RegionStateService)
+    private regionState = inject(RegionListStateService)
     private alertService = inject(AlertService)
+    private ref = inject(DynamicDialogRef)
+    private config = inject(DynamicDialogConfig)
 
     isLoading = signal(false)
-    isError = signal(false)
+    isEditMode = signal(false)
+    private regionId?: string
 
-    ngOnInit() {
-        const selectedRegion: Region = this.config.data?.region
+    constructor() {
+        this.initializeForm()
+    }
 
-        if (selectedRegion) {
-            this.regionFormService.patchForm(selectedRegion)
+    private initializeForm() {
+        const region: Region | undefined = this.config.data?.region
+
+        if (region) {
+            this.isEditMode.set(true)
+            this.regionId = region.id
+            this.regionFormService.patchForm(region)
+        } else {
+            this.isEditMode.set(false)
+            this.regionId = undefined
+            this.regionFormService.resetForm()
         }
     }
 
     submit(event: Event) {
         event.preventDefault()
+        if (this.regionFormService.form.invalid) return
+
         this.isLoading.set(true)
+        const regionData: RegionDto = this.regionFormService.getValue()
 
-        const selectedRegion = this.config.data?.region
-        const formValue = this.regionFormService.getValue()
-
-        if (selectedRegion) {
-            const regionData: Partial<Region> = {
-                ...formValue,
-                id: selectedRegion.id,
-            }
-            this.updateRegion(regionData)
-        } else {
-            this.addRegion(formValue)
-        }
+        this.isEditMode()
+            ? this.updateRegion(regionData)
+            : this.createRegion(regionData)
     }
 
-    addRegion(regionData: Partial<Region>) {
-        this.regionState.createRegion(regionData).subscribe({
-            next: (newRegion) => {
-                this.regionFormService.form.reset()
+    createRegion(region: RegionDto) {
+        this.regionState.createRegion(region).subscribe({
+            next: (res) => {
                 this.isLoading.set(false)
-                this.alertService.success('Region added successfully')
-                this.ref.close(newRegion)
+                this.ref.close(res)
+                this.alertService.success('Region created successfully')
             },
             error: () => {
                 this.isLoading.set(false)
-                this.alertService.error('Failed to add region')
+                this.alertService.error('Failed to create region')
             },
         })
     }
 
-    updateRegion(regionData: Partial<Region>) {
-        this.regionState.updateCountry(regionData.id!, regionData).subscribe({
-            next: () => {
-                this.regionFormService.form.reset()
+    updateRegion(region: RegionDto) {
+        if (!this.regionId) return
+
+        this.regionState.updateRegion(this.regionId, region).subscribe({
+            next: (res) => {
                 this.isLoading.set(false)
+                this.ref.close(res)
                 this.alertService.success('Region updated successfully')
-                this.ref.close(regionData)
             },
             error: () => {
                 this.isLoading.set(false)

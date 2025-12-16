@@ -1,42 +1,21 @@
-import { CommonModule } from '@angular/common'
-import { Component, OnInit } from '@angular/core'
-import { FormsModule } from '@angular/forms'
-import { ConfirmationService, MessageService } from 'primeng/api'
-import { ButtonModule } from 'primeng/button'
-import { DialogModule } from 'primeng/dialog'
-import { IconFieldModule } from 'primeng/iconfield'
-import { InputIconModule } from 'primeng/inputicon'
-import { InputTextModule } from 'primeng/inputtext'
-import { PaginatorModule } from 'primeng/paginator'
-import { TableModule } from 'primeng/table'
-import { ToastModule } from 'primeng/toast'
+import { Component, inject, OnInit } from '@angular/core'
+import { PrimeModules } from '../../../../libs/prime-modules'
 import {
-    RegionStateService,
+    RegionListStateService,
     RegionTableComponent,
 } from '../../../../libs/shared-address/regions'
+
 @Component({
-    selector: 'app-country',
-    imports: [
-        CommonModule,
-        TableModule,
-        PaginatorModule,
-        ButtonModule,
-        DialogModule,
-        InputTextModule,
-        FormsModule,
-        ToastModule,
-        IconFieldModule,
-        InputIconModule,
-        RegionTableComponent,
-    ],
+    selector: 'app-page-regions',
+    imports: [RegionTableComponent, PrimeModules],
     templateUrl: './page-regions.component.html',
     styleUrl: './page-regions.component.css',
-    providers: [MessageService, ConfirmationService],
+    providers: [RegionListStateService],
 })
 export class PageRegionsComponent implements OnInit {
-    constructor(private regionState: RegionStateService) {}
+    private regionListStateService = inject(RegionListStateService)
 
     ngOnInit(): void {
-        this.regionState.loadRegion()
+        this.regionListStateService.init()
     }
 }

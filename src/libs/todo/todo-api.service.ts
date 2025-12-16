@@ -42,4 +42,7 @@ export class TodoApiService extends ApiService<Todo, TodoDto> {
     crateNewTodo(todo: TodoDto): Observable<Todo> {
         return this.http.post<Todo>(this.apiUrl, todo)
     }
+    deleteTodo(id: string): Observable<any> {
+        return this.http.delete(`${this.apiUrl}/${id}`)
+    }
 }

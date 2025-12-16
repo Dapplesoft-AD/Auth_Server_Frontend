@@ -1,75 +1,79 @@
+@let state = regionListStateService.selectAll() | async;
+@let loading = regionListStateService.select('loading') | async;
+@let regions = state?.regions;
+
+@if (loading) {
+    <div class="flex items-center justify-center py-8">
+        <i class="pi pi-spin pi-spinner" style="font-size: 2rem; color: green">
+        </i>
+    </div>
+} @else if (regions?.length) {
+    <div class="max-h-[70vh] rounded-md">
+        <div
+            class="mb-4 flex flex-col items-center justify-between gap-4 md:flex-row">
+            <h2 class="text-xl font-bold">Regions Page</h2>
+
+            <div class="flex w-full items-center gap-2 md:w-auto">
+                <p-button
+                    label="Add Region"
+                    icon="pi pi-plus"
+                    class="p-button-success rounded"
+                    (click)="addRegion()">
+                </p-button>
+            </div>
+        </div>
+
+        <p-table
+            [value]="regions ?? []"
+            [paginator]="true"
+            [rows]="10"
+            [tableStyle]="{ 'min-width': '40rem' }"
+            [globalFilterFields]="['countryId', 'name', 'regionType', 'id']"
+            stripedRows="true">
+            <ng-template #header>
+                <tr>
+                    <th>Id</th>
+                    <th>Country Id</th>
+                    <th>Name</th>
+                    <th>Region Type</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </ng-template>
+
+            <ng-template #body let-data>
+                <tr>
+                    <td>{{ data.id }}</td>
+                    <td>{{ data.countryId }}</td>
+                    <td>{{ data.name }}</td>
+                    <td>{{ data.regionType }}</td>
+                    <td>{{ data.isActive }}</td>
+                    <td class="flex gap-1">
+                        <p-button
+                            icon="pi pi-pen-to-square"
+                            size="small"
+                            rounded
+                            text
+                            (click)="editRegion(data)">
+                        </p-button>
+
+                        <p-button
+                            icon="pi pi-trash"
+                            severity="warn"
+                            size="small"
+                            rounded
+                            text
+                            (click)="confirmDelete(data)">
+                        </p-button>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+} @else {
+    <div class="flex items-center justify-center py-8">
+        <span class="text-2xl font-bold">No data found</span>
+    </div>
+}
+
 <p-confirmDialog></p-confirmDialog>
-<div class="mb-6 flex flex-col text-start items-center justify-between md:flex-row">
-
-        <h2 class="text-2xl  font-bold text-gray-800">
-            Region List
-        </h2>
-
-    <button
-        pButton
-        type="button"
-        label="Add Region"
-        icon="pi pi-plus"
-        class="p-button-success mt-3 flex items-center gap-2 md:mt-0"
-        (click)="openModal()">
-    </button>
-</div>
-<div class="card rounded border border-gray-300 bg-white shadow">
-    <p-table
-        [value]="region"
-        [paginator]="true"
-        [rows]="10"
-        dataKey="id"
-        class="p-datatable-gridlines p-datatable-striped">
-        <ng-template pTemplate="header">
-            <tr class="bg-gray-800 text-white">
-                <th>ID</th>
-                   <th pSortableColumn="countryId">
-                    <div class="flex items-center gap-2">
-                        Country Id <p-sortIcon field="countryId"></p-sortIcon>
-                    </div>
-                </th>
-              
-                <th pSortableColumn="name">
-                    <div class="flex items-center gap-2">
-                         Name <p-sortIcon field="name"></p-sortIcon>
-                    </div>
-                </th>   
-                <th pSortableColumn="regionType">
-                    <div class="flex items-center gap-2">
-                        Region name <p-sortIcon field="regionType"></p-sortIcon>
-                    </div>
-                </th>
-                <th>Status</th>
-                <th>Actions</th>
-            </tr>
-        </ng-template>
-
-        <ng-template pTemplate="body" let-region>
-            <tr>
-                <td>{{ region.id }}</td>
-                <td>{{ region.countryId }}</td>
-                <td>{{ region.name }}</td>
-                <td>{{ region.regionType }}</td>
-                <td>{{ region.isActive }}</td>
-                <td>
-                    <p-button
-                        icon="pi pi-pencil"
-                        class="mr-2"
-                        [rounded]="true"
-                        [outlined]="true"
-                        (click)="openModal(region)">
-                    </p-button>
-
-                    <p-button
-                        icon="pi pi-trash"
-                        severity="danger"
-                        [rounded]="true"
-                        [outlined]="true"
-                        (click)="deleteRegion(region)">
-                    </p-button>
-                </td>
-            </tr>
-        </ng-template>
-    </p-table>
-</div>

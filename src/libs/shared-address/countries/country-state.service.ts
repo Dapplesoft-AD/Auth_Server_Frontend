@@ -1,106 +1,122 @@
 import { Injectable, inject } from '@angular/core'
 import {
-    BehaviorSubject,
     catchError,
-    Observable,
-    shareReplay,
+    combineLatest,
+    debounceTime,
+    finalize,
     switchMap,
     tap,
     throwError,
 } from 'rxjs'
+import { SimpleStore } from '../../store'
 import { Country } from './country.model'
 import { CountryApiService } from './country-api.service'
 
-@Injectable({
-    providedIn: 'root',
-})
-export class CountryStateService {
+export type CountryState = {
+    countries: Country[]
+    loading: boolean
+    error: boolean
+    search: string
+    page: number
+    size: number
+}
+
+const initialCountryState: CountryState = {
+    countries: [],
+    loading: false,
+    error: false,
+    search: '',
+    page: 1,
+    size: 10,
+}
+
+@Injectable()
+export class CountryListStateService extends SimpleStore<CountryState> {
     private countryApiService = inject(CountryApiService)
 
-    private reloadTrigger = new BehaviorSubject<void>(undefined)
-    private loadingSubject = new BehaviorSubject<boolean>(false)
-    private errorSubject = new BehaviorSubject<boolean>(false)
+    constructor() {
+        super(initialCountryState)
+    }
 
-    loading$ = this.loadingSubject.asObservable()
-    error$ = this.errorSubject.asObservable()
+    init() {
+        this.loadCountries()
+    }
 
-    country$ = this.reloadTrigger.pipe(
-        tap(() => this.startLoading()),
-        switchMap(() =>
-            this.countryApiService.getCountries().pipe(
-                tap(() => this.stopLoading()),
-                catchError((err) => {
-                    this.stopLoadingWithError()
-                    return throwError(() => err)
-                }),
+    private loadCountries() {
+        combineLatest([
+            this.select('search'),
+            this.select('page'),
+            this.select('size'),
+        ])
+            .pipe(
+                debounceTime(300),
+                tap(() => this.setState({ loading: true, error: false })),
+                switchMap(([search, page, size]) =>
+                    this.countryApiService.findAllCountries({
+                        search,
+                        page,
+                        size,
+                    }),
+                ),
+            )
+            .subscribe({
+                next: (countries) =>
+                    this.setState({ countries, loading: false }),
+                error: () => this.setState({ error: true, loading: false }),
+            })
+    }
+
+    createCountry(country: Country) {
+        this.setState({ loading: true, error: false })
+        return this.countryApiService.createCountry(country).pipe(
+            tap((newCountry) => this.pushCountry(newCountry)),
+            catchError(() => {
+                this.setState({ error: true })
+                return throwError(() => new Error('Failed to create country'))
+            }),
+            finalize(() => this.setState({ loading: false })),
+        )
+    }
+
+    updateCountry(id: string, country: Country) {
+        this.setState({ loading: true, error: false })
+        return this.countryApiService.updateCountry(id, country).pipe(
+            tap((updatedCountry) => this.replaceCountry(updatedCountry)),
+            catchError(() => {
+                this.setState({ error: true })
+                return throwError(() => new Error('Failed to update country'))
+            }),
+            finalize(() => this.setState({ loading: false })),
+        )
+    }
+
+    deleteCountry(id: string) {
+        this.setState({ loading: true, error: false })
+        return this.countryApiService.deleteCountry(id).pipe(
+            tap(() => this.removeCountryFromState(id)),
+            catchError(() => {
+                this.setState({ error: true })
+                return throwError(() => new Error('Failed to delete country'))
+            }),
+            finalize(() => this.setState({ loading: false })),
+        )
+    }
+
+    private pushCountry(country: Country) {
+        this.setState({ countries: [country, ...this.getState().countries] })
+    }
+
+    private replaceCountry(country: Country) {
+        this.setState({
+            countries: this.getState().countries.map((c) =>
+                c.id === country.id ? country : c,
             ),
-        ),
-        shareReplay({ bufferSize: 1, refCount: true }),
-    )
-
-    private startLoading() {
-        this.loadingSubject.next(true)
-        this.errorSubject.next(false)
+        })
     }
 
-    private stopLoadingWithError() {
-        this.loadingSubject.next(false)
-        this.errorSubject.next(true)
-    }
-
-    private stopLoading() {
-        this.loadingSubject.next(false)
-    }
-
-    loadCountry() {
-        this.reload()
-    }
-
-    reload() {
-        this.reloadTrigger.next()
-    }
-    createCountry(data: Partial<Country>): Observable<Country> {
-        this.startLoading()
-        return this.countryApiService.createCountries(data as Country).pipe(
-            tap(() => {
-                this.stopLoading()
-                this.reload()
-            }),
-            catchError((err) => {
-                this.stopLoadingWithError()
-                return throwError(() => err)
-            }),
-        )
-    }
-
-    updateCountry(
-        id: string,
-        updatedData: Partial<Country>,
-    ): Observable<Country> {
-        this.startLoading()
-        return this.countryApiService.updateCountries(id, updatedData).pipe(
-            tap(() => {
-                this.stopLoading()
-                this.reload()
-            }),
-            catchError((err) => {
-                this.stopLoadingWithError()
-                return throwError(() => err)
-            }),
-        )
-    }
-
-    deleteCountry(id: string): Observable<void> {
-        this.startLoading()
-        return this.countryApiService.deleteCountries(id).pipe(
-            tap(() => {
-                this.stopLoading()
-                this.reload()
-            }),
-            catchError((err) => {
-                this.stopLoadingWithError()
-                return throwError(() => err)
-            }),
-        )
+    private removeCountryFromState(id: string) {
+        this.setState({
+            countries: this.getState().countries.filter((c) => c.id !== id),
+        })
     }
 }

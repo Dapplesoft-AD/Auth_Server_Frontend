@@ -11,6 +11,7 @@ export class AreaFormService {
     constructor(private fb: NonNullableFormBuilder) {
         this.form = this.buildForm()
     }
+
     buildForm(): FormGroup {
         const { required, minLength } = Validators
 
@@ -20,17 +21,37 @@ export class AreaFormService {
             districtId: ['', [required, minLength(3)]],
             name: ['', [required, minLength(3)]],
             typeName: ['', [required, minLength(1)]],
-            type: ['', [required, minLength(0)]],
+            type: ['', [required]],
         })
     }
+
     controls(control: string) {
         return this.form.get(control)
     }
 
-    getValue() {
+    getValue(): Area {
         return this.form.getRawValue()
     }
-    patchForm(data: Area) {
-        this.form.patchValue(data)
+
+    patchForm(area: Area) {
+        this.form.patchValue({
+            id: area.id,
+            countryId: area.countryId,
+            districtId: area.districtId,
+            name: area.name,
+            typeName: area.typeName,
+            type: area.type,
+        })
+    }
+
+    resetForm() {
+        this.form.reset({
+            id: null,
+            countryId: '',
+            districtId: '',
+            name: '',
+            typeName: '',
+            type: '',
+        })
     }
 }

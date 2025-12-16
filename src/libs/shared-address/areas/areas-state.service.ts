@@ -1,103 +1,130 @@
 import { Injectable, inject } from '@angular/core'
 import {
-    BehaviorSubject,
     catchError,
-    Observable,
-    shareReplay,
+    combineLatest,
+    debounceTime,
+    finalize,
     switchMap,
     tap,
     throwError,
 } from 'rxjs'
+import { SimpleStore } from '../../store'
 import { Area } from './areas.model'
 import { AreaApiService } from './areas-api.service'
+
+export type AreaState = {
+    areas: Area[]
+    loading: boolean
+    error: boolean
+    search: string
+    page: number
+    size: number
+}
+
+const initialAreaState: AreaState = {
+    areas: [],
+    loading: false,
+    error: false,
+    search: '',
+    page: 1,
+    size: 10,
+}
 
 @Injectable({
     providedIn: 'root',
 })
-export class AreaStateService {
+export class AreaListStateService extends SimpleStore<AreaState> {
     private areaApiService = inject(AreaApiService)
 
-    private reloadTrigger = new BehaviorSubject<void>(undefined)
-    private loadingSubject = new BehaviorSubject<boolean>(false)
-    private errorSubject = new BehaviorSubject<boolean>(false)
+    constructor() {
+        super(initialAreaState)
+    }
 
-    loading$ = this.loadingSubject.asObservable()
-    error$ = this.errorSubject.asObservable()
+    init() {
+        this.loadAreas()
+    }
 
-    area$ = this.reloadTrigger.pipe(
-        tap(() => this.startLoading()),
-        switchMap(() =>
-            this.areaApiService.getAreas().pipe(
-                tap(() => this.stopLoading()),
-                catchError((err) => {
-                    this.stopLoadingWithError()
-                    return throwError(() => err)
-                }),
+    private loadAreas() {
+        combineLatest([
+            this.select('search'),
+            this.select('page'),
+            this.select('size'),
+        ])
+            .pipe(
+                debounceTime(300),
+                tap(() => this.setState({ loading: true, error: false })),
+                switchMap(([search, page, size]) =>
+                    this.areaApiService.findAllAreas({
+                        search,
+                        page,
+                        size,
+                    }),
+                ),
+            )
+            .subscribe({
+                next: (areas) => {
+                    console.log('Log data :', areas)
+                    this.setState({ areas, loading: false })
+                },
+                error: () => {
+                    this.setState({ error: true, loading: false })
+                },
+            })
+    }
+
+    createArea(area: Area) {
+        this.setState({ loading: true, error: false })
+        return this.areaApiService.createArea(area).pipe(
+            tap((area) => this.pushArea(area)),
+            catchError(() => {
+                this.setState({ error: true })
+                return throwError(() => new Error('Failed to create area'))
+            }),
+            finalize(() => this.setState({ loading: false })),
+        )
+    }
+
+    updateArea(id: string, area: Area) {
+        this.setState({ loading: true, error: false })
+        return this.areaApiService.updateArea(id, area).pipe(
+            tap((area) => this.replaceArea(area)),
+            catchError(() => {
+                this.setState({ error: true })
+                return throwError(() => new Error('Failed to update area'))
+            }),
+            finalize(() => this.setState({ loading: false })),
+        )
+    }
+
+    deleteArea(id: string) {
+        this.setState({ loading: true, error: false })
+        return this.areaApiService.deleteArea(id).pipe(
+            tap(() => this.removeAreaFromState(id)),
+            catchError(() => {
+                this.setState({ error: true })
+                return throwError(() => new Error('Failed to delete area'))
+            }),
+            finalize(() => this.setState({ loading: false })),
+        )
+    }
+
+    private pushArea(area: Area) {
+        this.setState({
+            areas: [area, ...this.getState().areas],
+        })
+    }
+
+    private replaceArea(area: Area) {
+        this.setState({
+            areas: this.getState().areas.map((a) =>
+                a.id === area.id ? area : a,
             ),
-        ),
-        shareReplay({ bufferSize: 1, refCount: true }),
-    )
-
-    private startLoading() {
-        this.loadingSubject.next(true)
-        this.errorSubject.next(false)
+        })
     }
 
-    private stopLoadingWithError() {
-        this.loadingSubject.next(false)
-        this.errorSubject.next(true)
-    }
-
-    private stopLoading() {
-        this.loadingSubject.next(false)
-    }
-
-    loadArea() {
-        this.reload()
-    }
-
-    reload() {
-        this.reloadTrigger.next()
-    }
-    createArea(data: Partial<Area>): Observable<Area> {
-        this.startLoading()
-        return this.areaApiService.createAreas(data as Area).pipe(
-            tap(() => {
-                this.stopLoading()
-                this.reload()
-            }),
-            catchError((err) => {
-                this.stopLoadingWithError()
-                return throwError(() => err)
-            }),
-        )
-    }
-
-    updateArea(id: string, updatedData: Partial<Area>): Observable<Area> {
-        this.startLoading()
-        return this.areaApiService.updateAreas(id, updatedData).pipe(
-            tap(() => {
-                this.stopLoading()
-                this.reload()
-            }),
-            catchError((err) => {
-                this.stopLoadingWithError()
-                return throwError(() => err)
-            }),
-        )
-    }
-
-    deleteArea(id: string): Observable<void> {
-        this.startLoading()
-        return this.areaApiService.deleteAreas(id).pipe(
-            tap(() => {
-                this.stopLoading()
-                this.reload()
-            }),
-            catchError((err) => {
-                this.stopLoadingWithError()
-                return throwError(() => err)
-            }),
-        )
+    private removeAreaFromState(id: string) {
+        this.setState({
+            areas: this.getState().areas.filter((a) => a.id !== id),
+        })
     }
 }

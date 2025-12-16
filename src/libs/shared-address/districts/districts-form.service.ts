@@ -11,25 +11,44 @@ export class DistrictFormService {
     constructor(private fb: NonNullableFormBuilder) {
         this.form = this.buildForm()
     }
+
     buildForm(): FormGroup {
-        const { required, minLength, pattern } = Validators
+        const { required, minLength } = Validators
 
         return this.fb.group({
-            id: [null],
+            id: [''],
             countryId: ['', [required, minLength(3)]],
             regionId: ['', [required, minLength(3)]],
             name: ['', [required, minLength(3)]],
             isActive: [true, [required]],
         })
     }
+
     controls(control: string) {
         return this.form.get(control)
     }
 
-    getValue() {
-        return this.form.getRawValue()
+    getValue(): District {
+        return this.form.getRawValue() as District
     }
-    patchForm(data: District) {
-        this.form.patchValue(data)
+
+    patchForm(district: District) {
+        this.form.patchValue({
+            id: district.id,
+            countryId: district.countryId,
+            regionId: district.regionId,
+            name: district.name,
+            isActive: district.isActive,
+        })
+    }
+
+    resetForm() {
+        this.form.reset({
+            id: '',
+            countryId: '',
+            regionId: '',
+            name: '',
+            isActive: true,
+        })
     }
 }

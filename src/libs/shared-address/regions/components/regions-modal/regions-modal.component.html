@@ -1,39 +1,66 @@
-<div class="bg-surface-50 p-4">
+
+ <div class="bg-surface-50 p-4">
     <form
         [formGroup]="regionFormService.form"
-        class="space-y-4"
-        (ngSubmit)="submit($event)">
-               <div>
-            <common-form-input
-                controlName="countryId"
-                label="Country Id"
-                type="text">
-            </common-form-input>
-        </div>
-        <div>
-            <common-form-input
-                controlName="name"
-                label="Name"
-                type="text">
-            </common-form-input>
-        </div>
-            <div>
-            <common-form-input
-                controlName="regionType"
-                label="Region Name"
-                type="text">
-            </common-form-input>
+        class="grid grid-cols-1 gap-6">
+
+
+        <div class="w-full">
+            <label
+                for="countryId"
+                class="text-surface-900 w-full leading-normal font-medium">
+                Country Id
+            </label>
+
+            <input
+                pInputText
+                id="countryId"
+                type="text"
+                placeholder="Enter country id"
+                formControlName="countryId"
+                class="w-full rounded-md px-3 py-2 shadow-sm" />
         </div>
 
-        <p-button
-            [label]="'Update'"
-            [loading]="isLoading()"
-            [disabled]="isLoading() || regionFormService.form.invalid"
-            type="submit" class="mt-8 flex w-full items-center justify-center gap-2 rounded-md py-2">
-            <i pButtonIcon class="pi pi-save"></i>
-        </p-button>
+
+        <div class="w-full">
+            <label
+                for="name"
+                class="text-surface-900 w-full leading-normal font-medium">
+                Name
+            </label>
+
+            <input
+                pInputText
+                id="name"
+                type="text"
+                placeholder="Enter name"
+                formControlName="name"
+                class="w-full rounded-md px-3 py-2 shadow-sm" />
+        </div>
+
+
+        <div class="w-full">
+            <label
+                for="regionType"
+                class="text-surface-900 w-full leading-normal font-medium">
+                Region Name
+            </label>
+
+            <input
+                pInputText
+                id="regionType"
+                type="text"
+                placeholder="Enter region name"
+                formControlName="regionType"
+                class="w-full rounded-md px-3 py-2 shadow-sm" />
+        </div>
     </form>
+
+    <p-button
+        [label]="isEditMode() ? 'Update' : 'Add'"
+        [loading]="isLoading()"
+        [disabled]="isLoading() || regionFormService.form.invalid"
+        class="mt-8 flex w-full items-center justify-center gap-2 rounded-md py-2"
+        (click)="submit($event)">
+    </p-button>
 </div>
-
-
-

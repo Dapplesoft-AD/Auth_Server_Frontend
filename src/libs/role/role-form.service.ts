@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core'
 import { FormGroup, NonNullableFormBuilder, Validators } from '@angular/forms'
-
-import { Role } from './role.model'
+import { Role, RoleDto } from './role.model'
 
 @Injectable({
     providedIn: 'root',
@@ -17,8 +16,7 @@ export class RoleFormService {
         const { required, minLength } = Validators
 
         return this.fb.group({
-            id: [null],
-            roleName: ['', [required, minLength(3)]],
+            roleName: ['', [required, minLength(2)]],
             description: ['', [required, minLength(3)]],
         })
     }
@@ -27,11 +25,21 @@ export class RoleFormService {
         return this.form.get(control)
     }
 
-    getValue() {
+    getValue(): RoleDto {
         return this.form.getRawValue()
     }
 
-    patchForm(data: Role) {
-        this.form.patchValue(data)
+    patchForm(role: Role) {
+        this.form.patchValue({
+            roleName: role.roleName,
+            description: role.description,
+        })
+    }
+
+    resetForm() {
+        this.form.reset({
+            roleName: '',
+            description: '',
+        })
     }
 }

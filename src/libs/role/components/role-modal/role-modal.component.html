@@ -1,0 +1,43 @@
+<div class="bg-surface-50 p-4">
+    <form [formGroup]="roleFormService.form" class="grid grid-cols-1 gap-6">
+        <div class="w-full">
+            <label
+                for="roleName"
+                class="text-surface-900 w-full leading-normal font-medium">
+                Role Name
+            </label>
+
+            <input
+                pInputText
+                id="roleName"
+                type="text"
+                placeholder="Enter role name"
+                formControlName="roleName"
+                class="w-full rounded-md px-3 py-2 shadow-sm" />
+        </div>
+
+        <div class="w-full">
+            <label
+                for="description"
+                class="text-surface-900 w-full leading-normal font-medium">
+                Description
+            </label>
+
+            <input
+                pInputText
+                id="description"
+                type="text"
+                placeholder="Enter role description"
+                formControlName="description"
+                class="w-full rounded-md px-3 py-2 shadow-sm" />
+        </div>
+    </form>
+
+    <p-button
+        [label]="isEditMode() ? 'Update Role' : 'Add Role'"
+        [loading]="isLoading()"
+        [disabled]="isLoading() || roleFormService.form.invalid"
+        class="mt-8 flex w-full items-center justify-center gap-2 rounded-md py-2"
+        (click)="submit($event)">
+    </p-button>
+</div>
