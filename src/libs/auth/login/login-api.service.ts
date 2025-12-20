@@ -1,5 +1,6 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http'
 import { Injectable, inject } from '@angular/core'
+import { ActivatedRoute, Router } from '@angular/router'
 import { catchError, Observable, tap, throwError } from 'rxjs'
 import { environment } from '../../../environments/environment'
 import { AuthService } from '../service/auth.service'
@@ -12,17 +13,20 @@ import { LoginRequest, LoginResponse } from './login.model'
 })
 export class LoginApiService {
     // Modern dependency injection
+    private router = inject(Router)
+    private route = inject(ActivatedRoute)
     private http = inject(HttpClient)
     private tokenStorageService = inject(TokenStorageService)
     private contextUserIdStorageService = inject(ContextUserStorageService)
     private authService = inject(AuthService)
-    private authApiUrl = `${environment.authApiUrl}`
+    private apiUrl = `${environment.apiUrl}`
 
     login(payload: LoginRequest): Observable<LoginResponse | string> {
         return this.http
             .post<LoginResponse | string>(
-                `${this.authApiUrl}/users/login`,
+                `${this.apiUrl}/user/signin`,
                 payload,
+                { withCredentials: true }, // cookies
             )
             .pipe(
                 tap((response) => this.handleLoginResponse(response)),
@@ -48,6 +52,16 @@ export class LoginApiService {
         }
         if (response?.user?.id) {
             this.contextUserIdStorageService.saveContextUserId(response.user.id)
+        }
+
+        const returnUrl = this.route.snapshot.queryParams['ReturnUrl']
+        // Or 'returnUrl' (lowercase) depending on how you read it
+
+        if (returnUrl && returnUrl.startsWith('/')) {
+            const baseUrl = this.apiUrl.replace(/\/api$/, '')
+            window.location.href = baseUrl + returnUrl
+        } else {
+            this.router.navigate(['/admin/user']) // Default fallback
         }
     }
 
