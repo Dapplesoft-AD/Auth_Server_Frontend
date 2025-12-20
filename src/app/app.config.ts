@@ -25,7 +25,7 @@ import Aura from '@primeuix/themes/aura'
 import { ConfirmationService, MessageService } from 'primeng/api'
 import { providePrimeNG } from 'primeng/config'
 import { DialogService } from 'primeng/dynamicdialog'
-import { environment } from '../environments/environment.prod'
+import { environment } from '../environments/environment'
 import {
     ACCESS_TOKEN_KEY,
     AUTH_API_URL,
