@@ -1,0 +1,125 @@
+<!-- libs/smtp-config/components/smtp-config-table/smtp-config-table.component.html -->
+<div class="space-y-6">
+  <!-- Add Button at the top -->
+  <div class="flex justify-end mb-4">
+    <p-button 
+      label="Add SMTP Configuration" 
+      icon="pi pi-plus"
+      (click)="addConfig()"
+      styleClass="p-button-sm">
+    </p-button>
+  </div>
+
+  <!-- Loading State -->
+  @if (loading$ | async) {
+    <div class="flex items-center justify-center py-12">
+      <i class="pi pi-spin pi-spinner text-3xl text-primary-600"></i>
+    </div>
+  }
+
+  <!-- Data Table -->
+  @else {
+    @let state = state$ | async;
+    @let configs = state?.configs || [];
+    
+    @if (configs.length) {
+      <div class="rounded-md border border-gray-200 overflow-hidden">
+        <p-table
+          [value]="configs"
+          [paginator]="true"
+          [rows]="10"
+          [rowsPerPageOptions]="[5, 10, 20]"
+          [tableStyle]="{ 'min-width': '60rem' }"
+          [globalFilterFields]="['host', 'username', 'senderEmail']"
+          stripedRows="true">
+          
+          <ng-template #header>
+            <tr>
+              <th pSortableColumn="host">SMTP Host <p-sortIcon field="host" /></th>
+              <th pSortableColumn="port">Port <p-sortIcon field="port" /></th>
+              <th>Username</th>
+              <th>Sender Email</th>
+              <th>SSL/TLS</th>
+              <th>Actions</th>
+            </tr>
+          </ng-template>
+
+          <ng-template #body let-config>
+            <tr>
+              <td class="font-medium">{{ config.host }}</td>
+              <td>{{ config.port }}</td>
+              <td>{{ config.username }}</td>
+              <td>{{ config.senderEmail }}</td>
+              <td>
+                @if (config.enableSsl) {
+                  <span class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs">
+                    Enabled
+                  </span>
+                } @else {
+                  <span class="px-2 py-1 bg-red-100 text-red-800 rounded-full text-xs">
+                    Disabled
+                  </span>
+                }
+              </td>
+              <td class="flex items-center justify-start gap-2">
+                <!-- Test Email Button -->
+                <p-button
+                  icon="pi pi-send"
+                  size="small"
+                  severity="info"
+                  rounded="true"
+                  text="true"
+                  (click)="sendTestEmail(config)" />
+                
+                <!-- Edit Button -->
+                <p-button
+                  icon="pi pi-pen-to-square"
+                  size="small"
+                  rounded="true"
+                  text="true"
+                  (click)="editConfig(config)" />
+                
+                <!-- Delete Button -->
+                <p-button
+                  severity="warn"
+                  icon="pi pi-trash"
+                  size="small"
+                  [rounded]="true"
+                  [text]="true"
+                  (click)="deleteConfig(config)" />
+              </td>
+            </tr>
+          </ng-template>
+
+          <ng-template #emptymessage>
+            <tr>
+              <td colspan="6" class="text-center py-8">
+                <div class="flex flex-col items-center justify-center">
+                  <i class="pi pi-inbox text-4xl text-gray-400 mb-3"></i>
+                  <span class="text-lg font-medium text-gray-500">No configurations found</span>
+                  <span class="text-sm text-gray-400 mt-1">
+                    Click "Add SMTP Configuration" button to create one
+                  </span>
+                </div>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+    } @else {
+      <div class="flex flex-col items-center justify-center py-12 bg-gray-50 rounded-lg border border-dashed">
+        <i class="pi pi-server text-5xl text-gray-400 mb-4"></i>
+        <h3 class="text-xl font-semibold text-gray-600 mb-2">No SMTP Configurations</h3>
+        <p class="text-gray-500 mb-6 text-center max-w-md">
+          You haven't set up any SMTP configurations yet. <br>
+          Add your first configuration to start sending emails.
+        </p>
+        <p-button 
+          label="Add SMTP Configuration" 
+          icon="pi pi-plus"
+          (click)="addConfig()">
+        </p-button>
+      </div>
+    }
+  }
+</div>

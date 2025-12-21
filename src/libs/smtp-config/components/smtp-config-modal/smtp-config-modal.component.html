@@ -1,0 +1,132 @@
+<div class="bg-surface-50 p-6">
+  <h3 class="text-xl font-semibold mb-4">{{ modalTitle }}</h3>
+  
+  <form [formGroup]="smtpConfigFormService.form" class="grid grid-cols-1 gap-4">
+    <!-- Host -->
+    <div class="w-full">
+      <label for="host" class="text-surface-900 w-full leading-normal font-medium block mb-2">
+        SMTP Host *
+      </label>
+      <input
+        pInputText
+        id="host"
+        type="text"
+        placeholder="smtp.gmail.com"
+        formControlName="host"
+        class="w-full rounded-md px-3 py-2 shadow-sm border" />
+      @if (smtpConfigFormService.controls('host')?.invalid && 
+           smtpConfigFormService.controls('host')?.touched) {
+        <small class="text-red-500">Host is required</small>
+      }
+    </div>
+
+    <!-- Port -->
+    <div class="w-full">
+      <label for="port" class="text-surface-900 w-full leading-normal font-medium block mb-2">
+        Port *
+      </label>
+      <input
+        pInputText
+        id="port"
+        type="number"
+        placeholder="587"
+        formControlName="port"
+        class="w-full rounded-md px-3 py-2 shadow-sm border" />
+      @if (smtpConfigFormService.controls('port')?.invalid && 
+           smtpConfigFormService.controls('port')?.touched) {
+        <small class="text-red-500">Port must be between 1 and 65535</small>
+      }
+    </div>
+
+    <!-- Username -->
+    <div class="w-full">
+      <label for="username" class="text-surface-900 w-full leading-normal font-medium block mb-2">
+        Username (Email) *
+      </label>
+      <input
+        pInputText
+        id="username"
+        type="email"
+        placeholder="your-email@gmail.com"
+        formControlName="username"
+        class="w-full rounded-md px-3 py-2 shadow-sm border" />
+      @if (smtpConfigFormService.controls('username')?.invalid && 
+           smtpConfigFormService.controls('username')?.touched) {
+        <small class="text-red-500">Valid email is required</small>
+      }
+    </div>
+
+    <!-- Password -->
+    <div class="w-full">
+      <label for="password" class="text-surface-900 w-full leading-normal font-medium block mb-2">
+        App Password *
+      </label>
+      <p-password 
+        [toggleMask]="true" 
+        [feedback]="false"
+        formControlName="password"
+        styleClass="w-full"
+        placeholder="Enter app password">
+      </p-password>
+      @if (smtpConfigFormService.controls('password')?.invalid && 
+           smtpConfigFormService.controls('password')?.touched) {
+        <small class="text-red-500">Password must be at least 6 characters</small>
+      }
+      <small class="text-gray-500 block mt-1">
+        For Gmail, use App Password from Google Account settings
+      </small>
+    </div>
+
+    <!-- Sender Email -->
+    <div class="w-full">
+      <label for="senderEmail" class="text-surface-900 w-full leading-normal font-medium block mb-2">
+        Sender Email *
+      </label>
+      <input
+        pInputText
+        id="senderEmail"
+        type="email"
+        placeholder="sender@example.com"
+        formControlName="senderEmail"
+        class="w-full rounded-md px-3 py-2 shadow-sm border" />
+      @if (smtpConfigFormService.controls('senderEmail')?.invalid && 
+           smtpConfigFormService.controls('senderEmail')?.touched) {
+        <small class="text-red-500">Valid email is required</small>
+      }
+    </div>
+
+    <!-- SSL Toggle -->
+    <div class="w-full">
+      <p-checkbox 
+        formControlName="enableSsl" 
+        [binary]="true"
+        label="Enable SSL/TLS">
+      </p-checkbox>
+    </div>
+  </form>
+
+  <!-- Action Buttons -->
+  <div class="flex flex-col gap-3 mt-6">
+    <!-- Save Button -->
+    <p-button
+      [label]="isEditMode ? 'Update Configuration' : 'Save Configuration'"
+      [loading]="isLoading()"
+      [disabled]="isLoading() || smtpConfigFormService.form.invalid"
+      icon="pi pi-save"
+      styleClass="w-full"
+      (click)="submit($event)">
+    </p-button>
+
+    <!-- Test Buttons -->
+    
+      <p-button
+        label="Send Test Email"
+        [loading]="isTesting()"
+        [disabled]="smtpConfigFormService.form.invalid || isTesting()"
+        icon="pi pi-send"
+        severity="info"
+        styleClass="flex-1"
+        (click)="sendTestEmail()">
+      </p-button>
+    </div>
+  </div>

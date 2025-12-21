@@ -11,6 +11,7 @@ export type DashboardRoutes = {
     tokens: Route
     passwordResets: Route
     auditLogs: Route
+    smtpconfig: Route
 }
 
 export const dashboardRoutes: DashboardRoutes = {
@@ -27,6 +28,14 @@ export const dashboardRoutes: DashboardRoutes = {
         loadComponent: () =>
             import('./page-user-history/page-user-history.component').then(
                 (m) => m.PageUserHistoryComponent,
+            ),
+        resolve: { layout: setLayout(PageLayout.Dashboard) },
+    },
+    smtpconfig: {
+        path: 'admin/smtpconfig',
+        loadComponent: () =>
+            import('./page-smtp-config/page-smtp-config.component').then(
+                (m) => m.PageSmtpConfigComponent,
             ),
         resolve: { layout: setLayout(PageLayout.Dashboard) },
     },

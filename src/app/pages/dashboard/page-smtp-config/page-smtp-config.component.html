@@ -1,0 +1,105 @@
+<!-- src/app/pages/dashboard/page-smtp-config/page-smtp-config.component.html -->
+<div class="container mx-auto px-4 py-8">
+  <!-- Header Section -->
+  <div class="mb-8">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 mt-8">
+      <div>
+        <h1 class="text-3xl font-bold text-gray-900">SMTP Configurations</h1>
+        <p class="text-gray-600 mt-2">Manage your email server settings and test email delivery</p>
+      </div>
+      <div class="flex gap-3">
+        <p-button 
+          icon="pi pi-refresh" 
+          [rounded]="true" 
+          [text]="true"
+          title="Refresh"
+          (click)="refresh()">
+        </p-button>
+      </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      <div class="bg-white rounded-lg shadow p-6">
+        <div class="flex items-center">
+          <div class="p-3 rounded-full bg-blue-100 text-blue-600 mr-4">
+            <i class="pi pi-server text-xl"></i>
+          </div>
+          <div>
+            <p class="text-sm font-medium text-gray-600">Total Configurations</p>
+            <p class="text-2xl font-bold text-gray-900">{{ stats.totalConfigs }}</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="bg-white rounded-lg shadow p-6">
+        <div class="flex items-center">
+          <div class="p-3 rounded-full bg-green-100 text-green-600 mr-4">
+            <i class="pi pi-check-circle text-xl"></i>
+          </div>
+          <div>
+            <p class="text-sm font-medium text-gray-600">Active Configurations</p>
+            <p class="text-2xl font-bold text-gray-900">{{ stats.activeConfigs }}</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="bg-white rounded-lg shadow p-6">
+        <div class="flex items-center">
+          <div class="p-3 rounded-full bg-purple-100 text-purple-600 mr-4">
+            <i class="pi pi-send text-xl"></i>
+          </div>
+          <div>
+            <p class="text-sm font-medium text-gray-600">Last Test Status</p>
+            <p class="text-2xl font-bold text-gray-900">{{ stats.lastTestStatus }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Info Card -->
+    <div class="bg-blue-50 border border-blue-100 rounded-xl p-6 mb-8">
+      <div class="flex items-start gap-4">
+        <div class="bg-blue-100 p-3 rounded-lg">
+          <i class="pi pi-info-circle text-blue-600 text-xl"></i>
+        </div>
+        <div class="flex-1">
+          <h4 class="font-semibold text-blue-900 text-lg mb-2">Setup Instructions</h4>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="space-y-2">
+              <div class="flex items-center gap-2">
+                <i class="pi pi-check-circle text-blue-600 text-sm"></i>
+                <span class="text-blue-800 text-sm">Use "smtp.gmail.com" as host for Gmail</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <i class="pi pi-check-circle text-blue-600 text-sm"></i>
+                <span class="text-blue-800 text-sm">Port should be 587 (TLS) or 465 (SSL)</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <i class="pi pi-check-circle text-blue-600 text-sm"></i>
+                <span class="text-blue-800 text-sm">Enable 2-Step Verification in Google Account</span>
+              </div>
+            </div>
+            <div class="space-y-2">
+              <div class="flex items-center gap-2">
+                <i class="pi pi-check-circle text-blue-600 text-sm"></i>
+                <span class="text-blue-800 text-sm">Generate App Password from Google Security</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <i class="pi pi-check-circle text-blue-600 text-sm"></i>
+                <span class="text-blue-800 text-sm">Use App Password in password field</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <i class="pi pi-check-circle text-blue-600 text-sm"></i>
+                <span class="text-blue-800 text-sm">Test connection before saving</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content - Table Component -->
+  <app-smtp-config-table />
+</div>
