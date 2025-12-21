@@ -84,8 +84,7 @@
                     </p>
                 }
             </div>
-            <pre>{{ signUpFormService.form.value  | json }}</pre>
-            <div *ngIf="signUpFormService.form.invalid && !loading" class="mb-2 text-red-600 font-semibold text-center"> The form contains errors. Please review and correct them before signing up. </div>
+            
             @if (!loading) {
                 <button
                     pButton
