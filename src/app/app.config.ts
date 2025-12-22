@@ -29,7 +29,7 @@ import { environment } from '../environments/environment'
 import {
     ACCESS_TOKEN_KEY,
     AUTH_API_URL,
-    AuthHeaderInterceptorFn,
+    AuthInterceptorFn,
     CONTEXT_USER_ID,
     REFRESH_TOKEN_KEY,
 } from '../libs/auth'
@@ -55,7 +55,7 @@ export const appConfig: ApplicationConfig = {
         provideHttpClient(
             withXsrfConfiguration({}),
             withJsonpSupport(),
-            withInterceptors([AuthHeaderInterceptorFn]),
+            withInterceptors([AuthInterceptorFn]),
             withInterceptorsFromDi(),
         ),
         {
