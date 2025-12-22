@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common'
-import { Component, OnInit } from '@angular/core'
+import { Component, inject, OnInit } from '@angular/core'
 import { FormsModule } from '@angular/forms'
 import { ConfirmationService, MessageService } from 'primeng/api'
 import { ButtonModule } from 'primeng/button'
@@ -11,7 +11,7 @@ import { PaginatorModule } from 'primeng/paginator'
 import { TableModule } from 'primeng/table'
 import { ToastModule } from 'primeng/toast'
 import { UserTableComponent } from '../../../../libs/user/components/user-table/user-table.component'
-import { UserStateService } from '../../../../libs/user/user-state.service'
+import { UserListStateService } from '../../../../libs/user/user-state.service'
 
 @Component({
     selector: 'app-page-user',
@@ -31,12 +31,12 @@ import { UserStateService } from '../../../../libs/user/user-state.service'
     ],
     templateUrl: './page-user.component.html',
     styleUrls: ['./page-user.component.css'],
-    providers: [MessageService, ConfirmationService],
+    providers: [MessageService, ConfirmationService, UserListStateService],
 })
 export class PageUserComponent implements OnInit {
-    constructor(private userState: UserStateService) {}
+    protected userState = inject(UserListStateService)
 
     ngOnInit(): void {
-        this.userState.loadUsers()
+        this.userState.init()
     }
 }

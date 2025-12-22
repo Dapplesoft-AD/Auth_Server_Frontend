@@ -1,10 +1,5 @@
 import { CommonModule } from '@angular/common'
-import {
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Component,
-    inject,
-} from '@angular/core'
+import { Component, inject } from '@angular/core'
 import { ConfirmationService } from 'primeng/api'
 import { ButtonModule } from 'primeng/button'
 import { ConfirmDialogModule } from 'primeng/confirmdialog'
@@ -15,7 +10,7 @@ import { InputTextModule } from 'primeng/inputtext'
 import { TableModule } from 'primeng/table'
 import { AlertService } from '../../../common-service/lib/alert.service'
 import { User } from '../../user.model'
-import { UserStateService } from '../../user-state.service'
+import { UserListStateService } from '../../user-state.service'
 import { EditUserModalComponent } from '../edit-user-modal/edit-user-modal.component'
 
 @Component({
@@ -29,60 +24,41 @@ import { EditUserModalComponent } from '../edit-user-modal/edit-user-modal.compo
         InputTextModule,
         ConfirmDialogModule,
     ],
-    standalone: true,
     templateUrl: './user-table.component.html',
     styleUrl: './user-table.component.css',
-    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserTableComponent {
-    users: User[] = []
+    protected userListStateService = inject(UserListStateService)
+    private confirmationService = inject(ConfirmationService)
     private dialogService = inject(DialogService)
     private alertService = inject(AlertService)
-    selectedUser: User = {} as User
 
-    isLoading = false
-    errorMessage: string | null = null
-
-    constructor(
-        private userState: UserStateService,
-        private confirmationService: ConfirmationService,
-        private cdr: ChangeDetectorRef,
-    ) {}
-
-    ngOnInit(): void {
-        this.isLoading = true
-        this.userState.users$.subscribe({
-            next: (data) => {
-                this.users = data
-                console.log(data)
-                this.isLoading = false
-                this.cdr.markForCheck() // Manually trigger change detection
-            },
-            error: (error) => {
-                this.isLoading = false
-                this.errorMessage = 'Error loading users'
-                console.error('Error:', error)
-            },
-        })
-        this.userState.loadUsers()
+    editUser(todo: any) {
+        this.userListStateService.updateUser(todo.id, todo)
     }
 
     openEditDialog(user: User) {
-        this.dialogService.open(EditUserModalComponent, {
+        const ref = this.dialogService.open(EditUserModalComponent, {
             header: 'Edit: ' + user.fullName,
             data: { user },
             width: '50%',
             closable: true,
             baseZIndex: 10000,
         })
+
+        ref?.onClose.subscribe((user) => {
+            if (user) {
+                this.userListStateService.pushUser(user)
+            }
+        })
     }
 
-    deleteUser(user: User) {
+    confirmDeleteUser(user: User) {
         this.confirmationService.confirm({
             header: 'Delete Confirmation',
             message: `Are you sure you want to delete ${user.fullName}?`,
             accept: () => {
-                this.userState.deleteUser(user).subscribe({
+                this.userListStateService.deleteUser(user.id).subscribe({
                     next: () => {
                         this.alertService.success(
                             `User ${user.fullName} deleted successfully`,

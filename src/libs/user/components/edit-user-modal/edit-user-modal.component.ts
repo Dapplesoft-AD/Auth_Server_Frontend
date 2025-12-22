@@ -9,7 +9,7 @@ import { FormInputComponent } from '../../../common-components/form/form-input/f
 import { AlertService } from '../../../common-service/lib/alert.service'
 import { UserFormService } from '../../user.form.service'
 import { User } from '../../user.model'
-import { UserStateService } from '../../user-state.service'
+import { UserListStateService } from '../../user-state.service'
 
 @Component({
     selector: 'app-edit-user-modal',
@@ -21,14 +21,14 @@ import { UserStateService } from '../../user-state.service'
         InputTextModule,
         FormInputComponent,
     ],
+    providers: [UserListStateService],
     templateUrl: './edit-user-modal.component.html',
     styleUrl: './edit-user-modal.component.css',
 })
 export class EditUserModalComponent {
     public userFormService = inject(UserFormService)
-    private userState = inject(UserStateService)
+    private userState = inject(UserListStateService)
     private alertService = inject(AlertService)
-    private ref = inject(DynamicDialogRef)
     private config = inject(DynamicDialogConfig)
 
     isLoading = signal<boolean>(false)
@@ -44,30 +44,34 @@ export class EditUserModalComponent {
     submit(event: Event) {
         this.isLoading.set(true)
         event.preventDefault()
+
         const selectedUser = this.config.data?.user
         const formValue = this.userFormService.getValue()
 
-        const userData: Partial<User> = {
-            ...formValue,
-            id: selectedUser.id,
+        // Merge existing user with form values
+        const userData: User = {
+            ...selectedUser, // keep all existing fields
+            ...formValue, // overwrite with updated form fields
+            id: selectedUser.id, // ensure id is preserved
         }
 
         this.updateUser(userData)
     }
 
-    updateUser(userData: Partial<User>) {
-        this.userState.updateUser(userData.id!, userData).subscribe({
-            next: (res) => {
-                this.userFormService.form.reset()
+    updateUser(user: User) {
+        const ref = this.userState.updateUser(user.id, user).subscribe({
+            next: (updatedUser) => {
                 this.isLoading.set(false)
+                this.isError.set(false)
                 this.alertService.success('User updated successfully')
-                this.ref.close(userData)
+                ref.closed
             },
-            error: () => {
+            error: (err) => {
                 this.isLoading.set(false)
                 this.isError.set(true)
-                this.alertService.error('Failed to update user')
-                this.ref.close()
+                //console.error('Update user failed:', err)
+                this.alertService.error('Update user failed')
+                ref.closed
             },
         })
     }

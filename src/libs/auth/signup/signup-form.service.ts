@@ -46,7 +46,6 @@ export class SignUpFormService {
                     ],
                 ],
                 confirmPassword: ['', [required, minLength(8)]],
-                acceptTerms: [false, requiredTrue],
             },
             {
                 validators: passwordMatchValidator(),

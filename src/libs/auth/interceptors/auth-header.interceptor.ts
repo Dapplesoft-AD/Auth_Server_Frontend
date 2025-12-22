@@ -17,10 +17,13 @@ export const AuthHeaderInterceptorFn: HttpInterceptorFn = (
     let changedRequest = request
     if (accessToken) {
         changedRequest = request.clone({
-            setHeaders: {
-                Authorization: `Bearer ${accessToken}`,
-            },
+            // setHeaders: {
+            //     Authorization: `Bearer ${accessToken}`,
+            // },
+            withCredentials: true,
         })
+    } else {
+        changedRequest = request.clone({ withCredentials: true })
     }
 
     return next(changedRequest)

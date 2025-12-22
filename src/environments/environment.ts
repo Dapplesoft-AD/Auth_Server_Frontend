@@ -4,8 +4,8 @@ export const environment: EnvironmentConfig = {
     BaseUrl: 'http://localhost:4200',
     appName: 'Auth-server',
     production: false,
-    apiUrl: 'https://authapi.dapplesoft.com/api',
-    authApiUrl: 'https://authapi.dapplesoft.com/api',
+    apiUrl: 'https://localhost:5001/api',
+    authApiUrl: 'https://localhost:5001/auth',
 }
 
 // export const environment: EnvironmentConfig = {
@@ -13,5 +13,5 @@ export const environment: EnvironmentConfig = {
 //     appName: 'Auth-server',
 //     production: false,
 //     apiUrl: 'http://localhost:5000',
-//     authApiUrl: 'http://localhost:5000/api',
+//     authApiUrl: 'http://localhost:5000/auth',
 // }

@@ -45,7 +45,9 @@ export class PageSignupComponent {
         public signUpFormService: SignUpFormService,
         private messageService: MessageService,
     ) {}
-
+    getValue() {
+        return this.signUpFormService.getValue()
+    }
     onSubmit() {
         this.loading = true
         if (!this.signUpFormService.form.valid) {

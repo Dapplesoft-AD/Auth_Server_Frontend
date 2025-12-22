@@ -1,4 +1,4 @@
-export interface User {
+export interface UserDto {
     id: string
     email: string
     fullName: string
@@ -10,3 +10,5 @@ export interface User {
     updatedAt: string
     role?: number
 }
+
+export interface User extends UserDto {}

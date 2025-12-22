@@ -35,8 +35,15 @@ export class ApiService<T, DtoT> implements AbstractApiService<T> {
         return this.http.post<ApiResponse<T>>(this.apiUrl, dto)
     }
 
-    update(id: string, body: DtoT | Partial<T>): Observable<ApiResponse<T>> {
+    updateWithPatch(
+        id: string,
+        body: DtoT | Partial<T>,
+    ): Observable<ApiResponse<T>> {
         return this.http.patch<ApiResponse<T>>(`${this.apiUrl}/${id}`, body)
+    }
+
+    update(id: string, body: DtoT | Partial<T>): Observable<ApiResponse<T>> {
+        return this.http.put<ApiResponse<T>>(`${this.apiUrl}/${id}`, body)
     }
 
     delete(id: string): Observable<ApiResponse<unknown>> {
