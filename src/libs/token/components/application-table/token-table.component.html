@@ -1,0 +1,85 @@
+@let state = tokenListStateService.selectAll() | async;
+@let loading = tokenListStateService.select('loading') | async;
+@let applications = state?.tokens ?? [];
+@let selectedApps = state?.selectedTokens ?? [];
+
+<div class="max-h-[70vh] rounded-md">
+
+    <p-table
+        #dt2
+        [value]="applications"
+        dataKey="id"
+        [paginator]="true"
+        [scrollable]="true"
+        [rows]="10"
+        [loading]="loading"
+        [selection]="selectedApps"
+        (selectionChange)="tokenListStateService.setSelectedUsers($event)"
+        [globalFilterFields]="['id', 'status']"
+        class="p-datatable-striped p-datatable-gridlines">
+        <ng-template #caption>
+            <div class="flex">
+                <p-iconfield iconPosition="left" class="ml-auto">
+                    <p-inputicon>
+                        <i class="pi pi-search"></i>
+                    </p-inputicon>
+                    <input
+                        pInputText
+                        type="text"
+                        (input)="
+                            dt2.filterGlobal(
+                                $any($event.target).value,
+                                'contains'
+                            )
+                        "
+                        placeholder="Search keyword" />
+                </p-iconfield>
+            </div>
+        </ng-template>
+        <ng-template pTemplate="header">
+            <tr class="bg-gray-800 text-white">
+                <th style="width: 2rem"><p-tableHeaderCheckbox /></th>
+                <th>Id</th>
+                <th>Subject</th>
+                <th>Application Id</th>
+                <th>Authorization Id</th>
+                <th>Concurrency Token</th>
+                <th>Type</th>
+                <th>Creation</th>
+                <th>Expiration</th>
+                <th pSortableColumn="status">
+                    <div class="flex items-center gap-2">
+                        Status
+                        <p-sortIcon field="createdAt" />
+                    </div>
+                </th>
+                <th pFrozenColumn alignFrozen="right">Actions</th>
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-data>
+            <tr class="transition hover:bg-gray-50">
+                <td>
+                    <p-tableCheckbox [value]="data" />
+                </td>
+                <td>{{ data.id }}</td>
+                <td>{{ data.subject }}</td>
+                <td>{{ data.applicationId }}</td>
+                <td>{{ data.authorizationId }}</td>
+                <td>{{ data.concurrencyToken }}</td>
+                <td>{{ data.type }}</td>
+                <td>{{ data.creationDate | date: 'yyyy-MM-dd HH:mm:ss' }}</td>
+                <td>{{ data.expirationDate | date: 'yyyy-MM-dd HH:mm:ss' }}</td>
+                <td>{{ data.status }}</td>
+                <td alignFrozen="right" pFrozenColumn>
+                    <p-button
+                        icon="pi pi-trash"
+                        severity="danger"
+                        [rounded]="true"
+                        [outlined]="true"
+                        (click)="confirmDelete(data)" />
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>

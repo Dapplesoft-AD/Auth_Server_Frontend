@@ -1,41 +1,19 @@
-import { CommonModule } from '@angular/common'
-import { Component, OnInit } from '@angular/core'
-import { ButtonModule } from 'primeng/button'
-import { TableModule } from 'primeng/table'
-import { Token } from '../../../../libs/token/token.model'
-import { TokenStateService } from '../../../../libs/token/token-state.service'
+import { Component, inject, OnInit } from '@angular/core'
+import { TokenListStateService } from '../../../../libs/token'
+import { TokenTableComponent } from '../../../../libs/token/components/application-table/token-table.component'
 
 @Component({
     selector: 'app-page-tokens',
     standalone: true,
-    imports: [
-        CommonModule,
-
-        TableModule,
-        ButtonModule,
-    ],
+    imports: [TokenTableComponent],
     templateUrl: './page-tokens.component.html',
     styleUrls: ['./page-tokens.component.css'],
+    providers: [TokenListStateService],
 })
 export class PageTokensComponent implements OnInit {
-    tokens: Token[] = []
-
-    constructor(private tokenState: TokenStateService) {}
+    private tokenListStateService = inject(TokenListStateService)
 
     ngOnInit(): void {
-        this.loadTokens()
-        this.tokenState.loadTokens()
-    }
-
-    loadTokens() {
-        this.tokenState.tokens$.subscribe({
-            next: (data) => {
-                this.tokens = data
-            },
-        })
-    }
-
-    revokeToken(id: bigint): void {
-        this.tokenState.revokeToken(id)
+        this.tokenListStateService.init()
     }
 }
