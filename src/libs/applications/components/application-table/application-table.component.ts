@@ -14,20 +14,20 @@ import { ApplicationModalComponent } from '../application-modal/application-moda
     styleUrl: './application-table.component.css',
 })
 export class ApplicationTableComponent {
-    protected applicationListStateService = inject(ApplicationListStateService)
+    protected appListStateService = inject(ApplicationListStateService)
     private dialogService = inject(DialogService)
     private alertService = inject(AlertService)
 
     addApplication() {
         const ref = this.dialogService.open(ApplicationModalComponent, {
-            header: 'Add project',
+            header: 'Add Application',
             width: '50%',
             closable: true,
         })
 
         ref?.onClose.subscribe((application) => {
             if (application) {
-                this.applicationListStateService.init()
+                this.appListStateService.init()
             }
         })
     }
@@ -42,14 +42,14 @@ export class ApplicationTableComponent {
 
         ref?.onClose.subscribe((updatedApplication) => {
             if (updatedApplication) {
-                this.applicationListStateService.init()
+                this.appListStateService.init()
             }
         })
     }
 
     confirmDelete(application: Application) {
-        this.applicationListStateService
-            .deleteApplication(application.id)
+        this.appListStateService
+            .deleteApplication(application.clientId)
             .subscribe({
                 next: () => {
                     this.alertService.success(

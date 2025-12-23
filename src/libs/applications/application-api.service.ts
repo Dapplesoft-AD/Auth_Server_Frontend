@@ -16,7 +16,7 @@ export class ApplicationApiService extends ApiService<
         @Inject(ENVIRONMENT)
         private env: EnvironmentConfig,
     ) {
-        super(inject(HttpClient), `${env.apiUrl}/applications`)
+        super(inject(HttpClient), `${env.apiUrl}/client-apps`)
     }
 
     findAllApplications(query?: {

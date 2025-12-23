@@ -1,10 +1,12 @@
-export interface Token {
-    id: bigint
-    user_id: bigint
-    app_id: bigint
-    access_token: string
-    refresh_token: string
-    issued_at: string
-    expires_at: string
-    revoked: boolean
+export interface TokenDto {
+    id: string
+    subject: string
+    applicationId: string
+    authorizationId: string
+    concurrencyToken: string
+    type: string
+    creationDate: string
+    expirationDate: string
+    status: string
 }
+export interface Token extends TokenDto {}

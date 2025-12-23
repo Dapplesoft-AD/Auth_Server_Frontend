@@ -1,0 +1,95 @@
+@let state = appListStateService.selectAll() | async;
+@let loading = appListStateService.select('loading') | async;
+@let applications = state?.applications ?? [];
+@let selectedApps = state?.selectedApps ?? [];
+
+<div class="max-h-[70vh] rounded-md">
+    <div
+        class="mb-4 flex flex-col items-center justify-between gap-4 md:flex-row">
+        <h2 class="text-xl font-bold">Project Page</h2>
+
+        <div class="flex w-full items-center gap-2 md:w-auto">
+            <p-button
+                label="Add Project"
+                icon="pi pi-plus"
+                (click)="addApplication()"
+                class="p-button-success rounded">
+            </p-button>
+        </div>
+    </div>
+
+    <p-table
+        #dt2
+        [value]="applications"
+        dataKey="id"
+        [paginator]="true"
+        [scrollable]="true"
+        [rows]="10"
+        [loading]="loading"
+        [selection]="selectedApps"
+        (selectionChange)="appListStateService.setSelectedUsers($event)"
+        [globalFilterFields]="['clientID', 'displayName', 'redirectUris']"
+        class="p-datatable-striped p-datatable-gridlines">
+        <ng-template #caption>
+            <div class="flex">
+                <p-iconfield iconPosition="left" class="ml-auto">
+                    <p-inputicon>
+                        <i class="pi pi-search"></i>
+                    </p-inputicon>
+                    <input
+                        pInputText
+                        type="text"
+                        (input)="
+                            dt2.filterGlobal(
+                                $any($event.target).value,
+                                'contains'
+                            )
+                        "
+                        placeholder="Search keyword" />
+                </p-iconfield>
+            </div>
+        </ng-template>
+        <ng-template pTemplate="header">
+            <tr class="bg-gray-800 text-white">
+                <th style="width: 2rem"><p-tableHeaderCheckbox /></th>
+                <th pSortableColumn="fullName">
+                    <div class="flex items-center gap-2">
+                        App Name
+                        <p-sortIcon field="displayName" />
+                    </div>
+                </th>
+                <th pSortableColumn="clientId">
+                    <div class="flex items-center gap-2">
+                        Client Id
+                        <p-sortIcon field="createdAt" />
+                    </div>
+                </th>
+                <th>Client Type</th>
+                <th>Redirect URLs</th>
+                <th>Grant Types</th>
+                <th pFrozenColumn alignFrozen="right">Actions</th>
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-data>
+            <tr class="transition hover:bg-gray-50">
+                <td>
+                    <p-tableCheckbox [value]="data" />
+                </td>
+                <td>{{ data.displayName }}</td>
+                <td>{{ data.clientId }}</td>
+                <td>{{ data.clientType }}</td>
+                <td>{{ data.redirectUris }}</td>
+                <td>{{ data.grantTypes }}</td>
+                <td alignFrozen="right" pFrozenColumn>
+                    <p-button
+                        icon="pi pi-trash"
+                        severity="danger"
+                        [rounded]="true"
+                        [outlined]="true"
+                        (click)="confirmDelete(data)" />
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>

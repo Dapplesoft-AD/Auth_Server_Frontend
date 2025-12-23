@@ -26,6 +26,7 @@ import { InputType } from './types'
 export class FormInputComponent {
     @Input() label!: string
     @Input() controlName!: string
+    @Input() placeHolder?: string = ''
     @Input() type: InputType = 'text'
 
     private container = inject(ControlContainer)

@@ -14,6 +14,7 @@ import { ApplicationApiService } from './application-api.service'
 
 export type ApplicationState = {
     applications: Application[]
+    selectedApps: Application[]
     loading: boolean
     error: boolean
     search: string
@@ -23,6 +24,7 @@ export type ApplicationState = {
 
 const initialApplicationState: ApplicationState = {
     applications: [],
+    selectedApps: [],
     loading: false,
     error: false,
     search: '',
@@ -52,11 +54,7 @@ export class ApplicationListStateService extends SimpleStore<ApplicationState> {
                 debounceTime(300),
                 tap(() => this.setState({ loading: true, error: false })),
                 switchMap(([search, page, size]) =>
-                    this.applicationApiService.findAllApplications({
-                        search,
-                        page,
-                        size,
-                    }),
+                    this.applicationApiService.findAllApplications({}),
                 ),
             )
             .subscribe({
@@ -118,7 +116,7 @@ export class ApplicationListStateService extends SimpleStore<ApplicationState> {
     private replaceApplication(application: Application) {
         this.setState({
             applications: this.getState().applications.map((a) =>
-                a.id === application.id ? application : a,
+                a.clientId === application.clientId ? application : a,
             ),
         })
     }
@@ -126,8 +124,12 @@ export class ApplicationListStateService extends SimpleStore<ApplicationState> {
     private removeApplicationFromState(id: string) {
         this.setState({
             applications: this.getState().applications.filter(
-                (a) => a.id !== id,
+                (a) => a.clientId !== id,
             ),
         })
+    }
+
+    setSelectedUsers(apps: Application[]) {
+        this.setState({ selectedApps: [...apps] })
     }
 }
