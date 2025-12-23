@@ -16,12 +16,10 @@ export class ApplicationFormService {
         const { required, minLength } = Validators
 
         return this.fb.group({
-            name: ['', [required, minLength(2)]],
+            displayName: ['', [required, minLength(2)]],
             clientId: ['', [required, minLength(2)]],
             clientSecret: ['', [required, minLength(2)]],
-            redirectUri: ['', [required]],
-            apiBaseUrl: ['', [required]],
-            status: [1, [required]],
+            redirectUris: ['', [required]],
         })
     }
 
@@ -30,21 +28,20 @@ export class ApplicationFormService {
     }
 
     getValue(): ApplicationDto & {
+        displayName: string
         clientId: string
         clientSecret: string
-        status: number
+        redirectUris: string
     } {
         return this.form.getRawValue()
     }
 
     patchForm(application: Application) {
         this.form.patchValue({
-            name: application.name,
+            displayName: application.displayName,
             clientId: application.clientId,
             clientSecret: application.clientSecret,
-            redirectUri: application.redirectUri,
-            apiBaseUrl: application.apiBaseUrl,
-            status: application.status,
+            redirectUri: application.redirectUris,
         })
     }
 
@@ -53,9 +50,7 @@ export class ApplicationFormService {
             name: '',
             clientId: '',
             clientSecret: '',
-            redirectUri: '',
-            apiBaseUrl: '',
-            status: 1,
+            redirectUri: [],
         })
     }
 }
