@@ -2,7 +2,7 @@ import { Component, inject, OnInit } from '@angular/core'
 import {
     ApplicationListStateService,
     ApplicationTableComponent,
-} from '../../../../libs/aplications'
+} from '../../../../libs/applications'
 import { PrimeModules } from '../../../../libs/prime-modules'
 
 @Component({
