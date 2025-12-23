@@ -1,13 +1,11 @@
 export interface ApplicationDto {
-    name: string
-    redirectUri: string
-    apiBaseUrl: string
+    clientId: string
+    clientSecret: string
+    displayName: string
+    redirectUris: string[]
 }
 
 export interface Application extends ApplicationDto {
-    id: string
-    clientId: string
-    clientSecret: string
-    status: number
-    statusName: string
+    grantTypes: string
+    clientType: string
 }
