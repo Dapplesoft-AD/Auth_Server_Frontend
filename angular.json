@@ -73,7 +73,16 @@
                             "outputHashing": "all"
                         }
                     },
-                    "defaultConfiguration": "production"
+                    "defaultConfiguration": "production",
+                    "docker": {
+                        "extends": "production",
+                        "budgets": [
+                            {
+                                "type": "initial",
+                                "maximumError": "3mb"
+                            }
+                        ]
+                    }
                 },
                 "serve": {
                     "builder": "@angular/build:dev-server",
