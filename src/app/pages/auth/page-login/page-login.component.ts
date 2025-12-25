@@ -9,6 +9,7 @@ import { InputTextModule } from 'primeng/inputtext'
 import { PasswordModule } from 'primeng/password'
 import { ProgressSpinnerModule } from 'primeng/progressspinner'
 import { ToastModule } from 'primeng/toast'
+import { environment } from '../../../../environments/environment'
 import { LoginFormService, TokenStorageService } from '../../../../libs/auth'
 import { LoginApiService } from '../../../../libs/auth/login/login-api.service'
 import { dashboardRoutes } from '../../dashboard/dashboard.route'
@@ -32,6 +33,7 @@ import { dashboardRoutes } from '../../dashboard/dashboard.route'
 export class PageLoginComponent {
     showPassword = false
     loading = false
+    baseUrl = `${environment.BaseUrl}`
 
     constructor(
         public loginFormService: LoginFormService,

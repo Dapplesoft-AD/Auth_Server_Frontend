@@ -27,7 +27,7 @@ export class ForgotPasswordApiService {
 
     sendOtp(email: string): Observable<OtpResponse> {
         return this.http.post<OtpResponse>(
-            `${this.env.apiUrl}/CommonOtp/SendOtp`,
+            `${this.env.apiUrl}/otp-request`,
             { input: email },
             { headers: { 'Content-Type': 'application/json' } },
         )
@@ -38,7 +38,7 @@ export class ForgotPasswordApiService {
         otpToken: string,
     ): Observable<OtpVerificationResponse> {
         return this.http.post<OtpVerificationResponse>(
-            `${this.env.apiUrl}/Otp/Verify`,
+            `${this.env.apiUrl}/otp-verify`,
             {
                 input: email,
                 otpToken: otpToken,
