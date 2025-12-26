@@ -30,7 +30,7 @@
         [loading]="loading"
         [selection]="selectedAuditLogs"
         (selectionChange)="auditListStateService.setSelectedAuditLogs($event)"
-        [globalFilterFields]="['userId', 'businessId', 'action', 'createdAt']"
+        [globalFilterFields]="['id', 'userId', 'businessId', 'action', 'createdAt']"
         class="p-datatable-striped p-datatable-gridlines">
         <ng-template #caption>
             <div class="flex">
