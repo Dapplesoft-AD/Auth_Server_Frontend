@@ -20,7 +20,7 @@ RUN pnpm i --frozen-lockfile --ignore-scripts
 COPY . .
 
 # Build the application for production (using docker configuration with relaxed budgets)
-RUN pnpm build --configuration docker
+RUN pnpm build --configuration production --verbose
 
 # Stage 2: Serve with Node.js
 FROM node:22-alpine
@@ -32,7 +32,7 @@ WORKDIR /app
 RUN npm install -g serve
 
 # Copy built application from builder stage
-COPY --from=builder /app/dist/dosi-bridge/browser ./dist
+COPY --from=builder /app/dist/auth-server/browser ./dist
 
 # Expose port 4200 (Angular default port)
 EXPOSE 4200
