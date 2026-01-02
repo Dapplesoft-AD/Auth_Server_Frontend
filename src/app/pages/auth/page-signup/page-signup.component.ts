@@ -10,6 +10,7 @@ import { InputTextModule } from 'primeng/inputtext'
 import { PasswordModule } from 'primeng/password'
 import { ProgressSpinner } from 'primeng/progressspinner'
 import { ToastModule } from 'primeng/toast'
+import { environment } from '../../../../environments/environment'
 import { LoginApiService } from '../../../../libs/auth/login/login-api.service'
 import { SignupApiService } from '../../../../libs/auth/signup/signup-api.service'
 import { SignUpFormService } from '../../../../libs/auth/signup/signup-form.service'
@@ -40,6 +41,7 @@ export class PageSignupComponent {
     private router = inject(Router)
     private loginApiService = inject(LoginApiService)
     private signupApiService = inject(SignupApiService)
+    baseUrl = `${environment.BaseUrl}`
 
     constructor(
         public signUpFormService: SignUpFormService,

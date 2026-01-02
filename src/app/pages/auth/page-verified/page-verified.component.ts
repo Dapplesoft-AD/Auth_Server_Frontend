@@ -11,7 +11,9 @@ import { Router } from '@angular/router'
 import { MessageService } from 'primeng/api'
 import { ButtonModule } from 'primeng/button'
 import { FloatLabelModule } from 'primeng/floatlabel'
+import { InputText } from 'primeng/inputtext'
 import { ToastModule } from 'primeng/toast'
+import { environment } from '../../../../environments/environment'
 import { OtpStateService } from '../../../../libs/otp/otp-state.service'
 
 @Component({
@@ -22,6 +24,7 @@ import { OtpStateService } from '../../../../libs/otp/otp-state.service'
         ReactiveFormsModule,
         ButtonModule,
         ToastModule,
+        InputText,
         FloatLabelModule,
     ],
     templateUrl: './page-verified.component.html', //  Correct template
@@ -31,6 +34,7 @@ export class PageVerifiedComponent implements OnInit {
     form: FormGroup
     submitted = false
     loading = false
+    baseUrl = `${environment.BaseUrl}`
 
     private otpStateService = inject(OtpStateService)
 

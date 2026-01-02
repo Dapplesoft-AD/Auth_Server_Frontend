@@ -18,7 +18,7 @@ export class SmtpConfigApiService extends ApiService<
         @Inject(ENVIRONMENT)
         private env: EnvironmentConfig,
     ) {
-        super(inject(HttpClient), `${env.apiUrl}/SmtpConfig`)
+        super(inject(HttpClient), `${env.apiUrl}/smtp-config`)
     }
 
     createSmtpConfig(config: SmtpConfigDto): Observable<SmtpConfig> {

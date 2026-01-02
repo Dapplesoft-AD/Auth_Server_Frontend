@@ -1,10 +1,23 @@
 @let state = userListStateService.selectAll() | async;
 @let loading = this.userListStateService.select('loading') | async;
-@let users = state?.users?? [];
+@let users = state?.users ?? [];
 @let selectedUsers = state?.selectedUsers ?? [];
 
 <p-confirmdialog></p-confirmdialog>
 <div class="card rounded border border-gray-300 bg-white shadow">
+    @if (selectedUsers && selectedUsers.length > 0) {
+        <p-toolbar class="mb-6">
+            <ng-template #start>
+                <p-button
+                    severity="danger"
+                    label="Delete"
+                    icon="pi pi-trash"
+                    outlined
+                    (onClick)="confirmDeleteSelectUsers(selectedUsers)" />
+            </ng-template>
+        </p-toolbar>
+    }
+
     <p-table
         #dt2
         [value]="users"
@@ -34,7 +47,10 @@
                         pInputText
                         type="text"
                         (input)="
-                            dt2.filterGlobal($any($event.target).value, 'contains')
+                            dt2.filterGlobal(
+                                $any($event.target).value,
+                                'contains'
+                            )
                         "
                         placeholder="Search keyword" />
                 </p-iconfield>
@@ -43,7 +59,7 @@
         <ng-template pTemplate="header">
             <tr class="bg-gray-800 text-white">
                 <th style="width: 2rem"><p-tableHeaderCheckbox /></th>
-                <th>ID</th>
+                <th>SL.</th>
                 <th pSortableColumn="fullName">
                     <div class="flex items-center gap-2">
                         Full Name
@@ -70,12 +86,12 @@
             </tr>
         </ng-template>
 
-        <ng-template pTemplate="body" let-user>
+        <ng-template pTemplate="body" let-user let-index="rowIndex">
             <tr class="transition hover:bg-gray-50">
                 <td>
                     <p-tableCheckbox [value]="user" />
                 </td>
-                <td>{{ user.id }}</td>
+                <td>{{ index + 1 }}</td>
                 <td>{{ user.fullName }}</td>
                 <td>{{ user.email }}</td>
                 <td>{{ user.phone }}</td>
@@ -92,11 +108,15 @@
                                 !user.role || user.role === 3,
                         }">
                         {{
-                            (user.role === 1 )? 'Admin'
-                                : (user.role === 2) ? 'Moderator'
-                                : (user.role === 3) ? 'Editor'
-                                : (user.role === 4) ? 'User'
-                                : 'User'
+                            user.role === 1
+                                ? 'Admin'
+                                : user.role === 2
+                                  ? 'Moderator'
+                                  : user.role === 3
+                                    ? 'Editor'
+                                    : user.role === 4
+                                      ? 'User'
+                                      : 'User'
                         }}
                     </span>
                 </td>

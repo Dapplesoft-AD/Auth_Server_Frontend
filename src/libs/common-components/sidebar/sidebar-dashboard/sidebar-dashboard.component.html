@@ -1,159 +1,94 @@
 <aside
     id="sidebar"
-    class="fixed top-0 left-0 z-40 h-screen w-56 -translate-x-full pt-14 transition-transform sm:translate-x-0"
-    aria-label="Sidenav">
-    <div
-        class="h-full overflow-y-auto border-r border-gray-200 bg-white dark:bg-gray-800">
-        <ul class="space-y-2">
-            <ul class="mt-5 space-y-1 border-gray-200 p-2 pt-5">
-                <li>
+    aria-label="Sidebar Navigation"
+    class="fixed top-0 left-0 z-40 h-screen w-56 border-r border-gray-200 bg-white pt-16 transition-transform duration-300 dark:border-gray-700 dark:bg-gray-800"
+    [ngClass]="{
+        'translate-x-0': sidebarService.isSidebarOpen(),
+        '-translate-x-full': !sidebarService.isSidebarOpen(),
+    }">
+    <div class="flex h-full flex-col justify-between overflow-y-auto">
+        <!-- Toggle Button (inside sidebar, mobile + desktop) -->
+        <div class="absolute top-4 right-4 z-50">
+            <button
+                (click)="toggleSidebar()"
+                class="rounded-full bg-gray-100 p-2 text-gray-700 shadow transition hover:bg-gray-200 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600"
+                aria-label="Toggle Sidebar">
+                <!-- Arrow Left (collapse) -->
+                <svg
+                    *ngIf="sidebarService.isSidebarOpen()"
+                    class="h-5 w-5"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    viewBox="0 0 24 24">
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M15 19l-7-7 7-7" />
+                </svg>
+
+                <!-- Arrow Right (expand) -->
+                <svg
+                    *ngIf="!sidebarService.isSidebarOpen()"
+                    class="h-5 w-5"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    viewBox="0 0 24 24">
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M9 5l7 7-7 7" />
+                </svg>
+            </button>
+        </div>
+        <!-- Navigation List -->
+        <nav class="flex-1 space-y-1 px-3 py-4">
+            <ul class="space-y-1">
+                <li *ngFor="let item of navItems">
                     <a
-                        [routerLink]="['/admin/user']"
-                        class="group flex items-center rounded-lg p-2 text-base font-normal text-gray-900 transition duration-75 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">
-                        <i class="pi pi-user"></i>
-                        <span class="ml-3">User</span>
-                    </a>
-                </li>
-                <li>
-                    <a
-                        [routerLink]="['/admin/smtpconfig']"
-                        class="group flex items-center rounded-lg p-2 text-base font-normal text-gray-900 transition duration-75 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">
-                        <i class="pi pi-user"></i>
-                        <span class="ml-3">SMTP Config</span>
-                    </a>
-                </li>
-                <li>
-                    <a
-                        [routerLink]="['/admin/userhistory']"
-                        class="group flex items-center rounded-lg p-2 text-base font-normal text-gray-900 transition duration-75 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">
-                        <i class="pi pi-history"></i>
-                        <span class="ml-3">User Login History</span>
+                        [routerLink]="item.routerLink"
+                        (click)="handleLinkClick()"
+                        class="flex items-center gap-3 rounded-md px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700">
+                        <i [class]="item.icon"></i>
+                        <span>{{ item.label }}</span>
                     </a>
                 </li>
 
+                <!-- Centralized Table Menu -->
                 <li>
-                    <a
-                        [routerLink]="['admin/roles']"
-                        class="group flex items-center rounded-lg p-2 text-base font-normal text-gray-900 transition duration-75 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">
-                        <i class="pi pi-verified"></i>
-                        <span class="ml-3">Roles</span>
-                    </a>
-                </li>
-
-                <li>
-                    <a
-                        [routerLink]="['admin/permissions']"
-                        class="group flex items-center rounded-lg p-2 text-base font-normal text-gray-900 transition duration-75 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">
-                        <i class="pi pi-lock"></i>
-                        <span class="ml-3">Permissions</span>
-                    </a>
-                </li>
-
-                <li>
-                    <a
-                        [routerLink]="['admin/rolepermissions']"
-                        class="group flex items-center rounded-lg p-2 text-base font-normal text-gray-900 transition duration-75 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">
-                        <i class="pi pi-shield"></i>
-                        <span class="ml-3">RolePermissions</span>
-                    </a>
-                </li>
-
-                <li>
-                    <a
-                        [routerLink]="['admin/applications']"
-                        class="group flex items-center rounded-lg p-2 text-base font-normal text-gray-900 transition duration-75 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">
-                        <i class="pi pi-th-large"></i>
-                        <span class="ml-3">Applications</span>
-                    </a>
-                </li>
-
-                <li>
-                    <a
-                        [routerLink]="['admin/tokens']"
-                        class="group flex items-center rounded-lg p-2 text-base font-normal text-gray-900 transition duration-75 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">
-                        <i class="pi pi-key"></i>
-                        <span class="ml-3">Tokens</span>
-                    </a>
-                </li>
-
-                <li>
-                    <a
-                        [routerLink]="['admin/passwordresets']"
-                        class="group flex items-center rounded-lg p-2 text-base font-normal text-gray-900 transition duration-75 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">
-                        <i class="pi pi-key"></i>
-                        <span class="ml-3">PasswordResets</span>
-                    </a>
-                </li>
-
-                <li>
-                    <a
-                        [routerLink]="['admin/auditlogs']"
-                        class="group flex items-center rounded-lg p-2 text-base font-normal text-gray-900 transition duration-75 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">
-                        <i class="pi pi-list"></i>
-                        <span class="ml-3">Audit Logs</span>
-                    </a>
-                </li>
-
-                <li class="select-none">
                     <button
                         (click)="toggleCentralizedMenu()"
-                        class="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-gray-800 transition-all duration-200 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700">
-                        <span class="font-bold">Centralized Table</span>
-
+                        class="flex w-full items-center gap-3 rounded-md px-4 py-2 text-sm font-semibold text-gray-800 transition-colors hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700">
+                        Centralized Table
                         <i
-                            class="pi pi-chevron-down ml-auto text-gray-500 transition-all duration-300"
+                            class="pi pi-chevron-down ml-auto transform text-gray-500 transition-transform duration-200"
                             [class.rotate-180]="isCentralizedOpen"></i>
                     </button>
 
-                    <!-- Submenu -->
                     <ul
                         *ngIf="isCentralizedOpen"
-                        class="mt-2 space-y-1 border-l pl-6 dark:border-gray-700">
-                        <li>
+                        class="mt-2 space-y-1 border-l border-gray-200 pl-6 dark:border-gray-700">
+                        <li *ngFor="let link of centralizedLinks">
                             <a
-                                [routerLink]="['admin/country']"
-                                class="block rounded-md px-3 py-2 text-sm text-gray-700 transition hover:bg-gray-200 dark:text-gray-300 dark:hover:bg-gray-600">
-                                Country
-                            </a>
-                        </li>
-
-                        <li>
-                            <a
-                                [routerLink]="['admin/region']"
-                                class="block rounded-md px-3 py-2 text-sm text-gray-700 transition hover:bg-gray-200 dark:text-gray-300 dark:hover:bg-gray-600">
-                                Region
-                            </a>
-                        </li>
-                        <li>
-                            <a
-                                [routerLink]="['admin/district']"
-                                class="block rounded-md px-3 py-2 text-sm text-gray-700 transition hover:bg-gray-200 dark:text-gray-300 dark:hover:bg-gray-600">
-                                District
-                            </a>
-                        </li>
-                        <li>
-                            <a
-                                [routerLink]="['admin/area']"
-                                class="block rounded-md px-3 py-2 text-sm text-gray-700 transition hover:bg-gray-200 dark:text-gray-300 dark:hover:bg-gray-600">
-                                Area
-                            </a>
-                        </li>
-                        <li>
-                            <a
-                                [routerLink]="['admin/localitie']"
-                                class="block rounded-md px-3 py-2 text-sm text-gray-700 transition hover:bg-gray-200 dark:text-gray-300 dark:hover:bg-gray-600">
-                                Localitie
+                                [routerLink]="['admin', link]"
+                                (click)="handleLinkClick()"
+                                class="block rounded-md px-3 py-2 text-sm text-gray-600 transition hover:bg-gray-200 dark:text-gray-300 dark:hover:bg-gray-600">
+                                {{ link | titlecase }}
                             </a>
                         </li>
                     </ul>
                 </li>
             </ul>
-        </ul>
+        </nav>
+
+        <!-- Logout Button -->
         <div class="p-3">
             <button
                 (click)="logOut()"
-                class="flex w-full items-center justify-center rounded-lg bg-red-500 px-4 py-2 font-medium text-white transition-transform duration-150 ease-in-out hover:bg-red-600 active:scale-95">
-                <i class="pi pi-sign-out text-lg"></i> Logout
+                class="flex w-full items-center justify-center gap-2 rounded-md bg-red-500 px-4 py-2 font-medium text-white transition hover:bg-red-600 active:scale-95">
+                <i class="pi pi-sign-out text-lg"></i>
+                <span>Logout</span>
             </button>
         </div>
     </div>

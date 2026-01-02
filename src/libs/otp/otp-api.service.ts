@@ -16,7 +16,7 @@ export class OtpApiService {
 
     sendOtp(emailOrPhone: string): Observable<string> {
         return this.http.post<string>(
-            `${this.env.apiUrl}/CommonOtp/SendOtp`,
+            `${this.env.apiUrl}/otp-request`,
             { input: emailOrPhone },
             {
                 headers: new HttpHeaders({

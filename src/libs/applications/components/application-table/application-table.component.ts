@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common'
 import { Component, inject } from '@angular/core'
+import { ConfirmationService } from 'primeng/api'
 import { DialogService } from 'primeng/dynamicdialog'
 import { AlertService } from '../../../common-service/lib/alert.service'
 import { PrimeModules } from '../../../prime-modules'
@@ -16,6 +17,7 @@ import { ApplicationModalComponent } from '../application-modal/application-moda
 export class ApplicationTableComponent {
     protected appListStateService = inject(ApplicationListStateService)
     private dialogService = inject(DialogService)
+    private confirmationService = inject(ConfirmationService)
     private alertService = inject(AlertService)
 
     addApplication() {
@@ -24,7 +26,6 @@ export class ApplicationTableComponent {
             width: '50%',
             closable: true,
         })
-
         ref?.onClose.subscribe((application) => {
             if (application) {
                 this.appListStateService.init()
@@ -47,18 +48,25 @@ export class ApplicationTableComponent {
         })
     }
 
-    confirmDelete(application: Application) {
-        this.appListStateService
-            .deleteApplication(application.clientId)
-            .subscribe({
-                next: () => {
-                    this.alertService.success(
-                        'Application deleted successfully',
-                    )
-                },
-                error: () => {
-                    this.alertService.error('Failed to delete application')
-                },
-            })
+    confirmDeleteApplication(application: Application) {
+        this.confirmationService.confirm({
+            header: 'Delete Confirmation',
+            message: `Are you sure you want to delete '${application.displayName}'?`,
+            accept: () => {
+                this.appListStateService
+                    .deleteApplication(application.clientId)
+                    .subscribe({
+                        next: () => {
+                            this.alertService.success(
+                                `Application '${application.displayName}' deleted successfully`,
+                            )
+                        },
+                        error: (err) => {
+                            console.error('Delete user failed:', err)
+                            this.alertService.error('Delete user failed')
+                        },
+                    })
+            },
+        })
     }
 }

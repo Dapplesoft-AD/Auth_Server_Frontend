@@ -1,9 +1,11 @@
 import { CommonModule } from '@angular/common'
 import { Component, inject, OnInit } from '@angular/core'
 import {
+    AbstractControl,
     FormBuilder,
     FormGroup,
     ReactiveFormsModule,
+    ValidationErrors,
     Validators,
 } from '@angular/forms'
 import { Router, RouterModule } from '@angular/router'
@@ -11,6 +13,7 @@ import { MessageService } from 'primeng/api'
 import { ButtonModule } from 'primeng/button'
 import { PasswordModule } from 'primeng/password'
 import { ToastModule } from 'primeng/toast'
+import { passwordMatchValidator } from '../../../../libs/common-service/lib/password-match.validator'
 import { ForgotPasswordStateService } from '../../../../libs/forgot-password/forgot-password-state.service'
 import { OtpStateService } from '../../../../libs/otp/otp-state.service'
 
@@ -44,7 +47,7 @@ export class PageResetComponent implements OnInit {
                 password: ['', [Validators.required, Validators.minLength(8)]],
                 confirmPassword: ['', Validators.required],
             },
-            { validators: this.passwordMatchValidator },
+            { validators: passwordMatchValidator() },
         )
     }
 
@@ -97,12 +100,6 @@ export class PageResetComponent implements OnInit {
     private markOtpAsVerified() {
         // Use the public method from ForgotPasswordStateService
         this.forgotPasswordStateService.markOtpAsVerified()
-    }
-
-    passwordMatchValidator(group: FormGroup) {
-        const pass = group.get('password')?.value
-        const confirm = group.get('confirmPassword')?.value
-        return pass === confirm ? null : { mismatch: true }
     }
 
     onSubmit() {
@@ -166,7 +163,7 @@ export class PageResetComponent implements OnInit {
                 detail: 'Password must be at least 8 characters',
                 life: 2000,
             })
-        } else if (this.resetForm.hasError('mismatch')) {
+        } else if (this.resetForm.hasError('passwordMismatch')) {
             this.messageService.add({
                 severity: 'error',
                 summary: 'Error',

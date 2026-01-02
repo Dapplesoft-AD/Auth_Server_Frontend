@@ -85,17 +85,19 @@ export class ApplicationModalComponent {
     }
 
     private createApplication(application: ApplicationDto) {
+        this.isLoading.set(false)
         this.appApiService.createApplication(application).subscribe({
             next: (res) => {
                 this.isLoading.set(false)
                 this.ref.close(res)
-                this.alertService.success('Project created successfully')
+                this.alertService.success('Application updated successfully')
             },
             error: () => {
                 this.isLoading.set(false)
-                this.alertService.error('Failed to create project')
+                this.alertService.error('Failed to create Application')
             },
         })
+        this.ref.close({ data: application, mode: 'create' })
     }
 
     private updateApplication(application: ApplicationDto) {
@@ -114,5 +116,20 @@ export class ApplicationModalComponent {
                     this.alertService.error('Failed to update project')
                 },
             })
+    }
+
+    generateSecret(length = 30) {
+        const charset =
+            'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#%&*-'
+        let result = ''
+        for (let i = 0; i < length; i++) {
+            const randomIndex = Math.floor(Math.random() * charset.length)
+            result += charset[randomIndex]
+        }
+        this.appFormService.form.get('clientSecret')?.setValue(result)
+        // Keep Copy
+        navigator.clipboard.writeText(result).then(() => {
+            console.log('Secret copied to clipboard!')
+        })
     }
 }

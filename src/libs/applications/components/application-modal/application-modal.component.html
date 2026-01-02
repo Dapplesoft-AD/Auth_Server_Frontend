@@ -1,44 +1,64 @@
 <div class="bg-surface-50 p-4">
-  <form
-      [formGroup]="appFormService.form"
-      class="space-y-4"
-      (ngSubmit)="submit($event)">
-      <div>
-          <common-form-input
-              controlName="displayName"
-              label="App Name"
-              type="text">
-          </common-form-input>
-      </div>
-      <div>
-          <common-form-input
-              controlName="clientId"
-              label="Client Id"
-              type="text">
-          </common-form-input>
-      </div>
-      <div>
-          <common-form-input
-              controlName="clientSecret"
-              label="Client Secret"
-              type="text">
-          </common-form-input>
-      </div>
-      <div>
-          <common-form-input
-              controlName="redirectUris"
-              label="Redirect URls"
-              placeHolder="eg. http://example.com, http://example2.com"
-              type="text">
-          </common-form-input>
-      </div>
-      <p-button
-          [label]="'Create'"
-          [loading]="isLoading()"
-          [disabled]="isLoading() || appFormService.form.invalid"
-          type="submit"
-          class="mt-8 flex w-full items-center justify-center gap-2 rounded-md py-2">
-          <i pButtonIcon class="pi pi-user text-base! leading-normal!"></i>
-      </p-button>
-  </form>
+    <form
+        [formGroup]="appFormService.form"
+        class="space-y-4"
+        (ngSubmit)="submit($event)">
+        <div>
+            <common-form-input
+                controlName="displayName"
+                label="App Name"
+                type="text">
+            </common-form-input>
+        </div>
+        <div>
+            <common-form-input
+                controlName="clientId"
+                label="Client Id"
+                type="text">
+            </common-form-input>
+        </div>
+
+        <div class="flex items-end gap-2">
+            <div class="flex-grow">
+                <p-floatLabel class="w-full" variant="on">
+                    <input
+                        pInputText
+                        id="clientSecret"
+                        formControlName="clientSecret"
+                        readonly
+                        class="w-full" />
+                    <label for="clientSecret"
+                        >Client Secret (Note: Keep Copy)</label
+                    >
+                </p-floatLabel>
+            </div>
+
+            <p-button
+                icon="pi pi-refresh"
+                severity="help"
+                [rounded]="true"
+                [raised]="true"
+                type="button"
+                label="Generate"
+                (onClick)="generateSecret()"
+                class="whitespace-nowrap">
+            </p-button>
+        </div>
+        <div>
+            <common-form-input
+                controlName="redirectUris"
+                label="Client's Backend URLs"
+                placeHolder="eg. https://localhost:3333.com, https://example.com"
+                type="text">
+            </common-form-input>
+        </div>
+        <p-button
+            [label]="'Create'"
+            [loading]="isLoading()"
+            [disabled]="isLoading() || appFormService.form.invalid"
+            type="submit"
+            class="mt-8 flex w-full items-center justify-center gap-2 rounded-md py-2">
+            <i pButtonIcon class="pi pi-user text-base! leading-normal!"></i>
+        </p-button>
+    </form>
 </div>

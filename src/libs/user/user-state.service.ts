@@ -152,4 +152,8 @@ export class UserListStateService extends SimpleStore<userState> {
     setSelectedUsers(users: User[]) {
         this.setState({ selectedUsers: [...users] })
     }
+
+    resetSelectedUsers() {
+        this.setState({ selectedUsers: [] })
+    }
 }

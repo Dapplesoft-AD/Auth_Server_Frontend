@@ -4,7 +4,9 @@
     class="flex min-h-screen items-center justify-center bg-gray-100 px-6 py-10">
     <div class="w-full max-w-md rounded bg-white p-10 shadow-2xl">
         <div class="mb-8 flex justify-center">
-            <img src="../../../../assets/images/image.png" class="h-10" />
+            <a [href]="baseUrl">
+                <img src="../../../../assets/images/image.png" class="h-10" />
+            </a>
         </div>
 
         <h2 class="mb-5 text-xl font-extrabold text-gray-900">Sign up</h2>
@@ -83,8 +85,16 @@
                         {{ msg }}
                     </p>
                 }
+                @if (
+                    signUpFormService.form.hasError('passwordMismatch') &&
+                    signUpFormService.form.get('confirmPassword')?.touched
+                ) {
+                    <p class="mt-1 text-sm text-red-500">
+                        Passwords do not match.
+                    </p>
+                }
             </div>
-            
+
             @if (!loading) {
                 <button
                     pButton

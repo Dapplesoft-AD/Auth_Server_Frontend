@@ -1,11 +1,11 @@
 export interface AuditLogDto {
-    user_name: string
-    business_name: string
+    userId: string
+    businessId: string
     action: string
     description: string
+    createdAt: string
 }
 
 export interface AuditLog extends AuditLogDto {
-    id: number
-    created_at: string
+    id: string
 }

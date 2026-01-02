@@ -8,6 +8,8 @@ import { IconFieldModule } from 'primeng/iconfield'
 import { InputIconModule } from 'primeng/inputicon'
 import { InputTextModule } from 'primeng/inputtext'
 import { TableModule } from 'primeng/table'
+import { Toolbar } from 'primeng/toolbar'
+import { forkJoin } from 'rxjs'
 import { AlertService } from '../../../common-service/lib/alert.service'
 import { User } from '../../user.model'
 import { UserListStateService } from '../../user-state.service'
@@ -23,6 +25,7 @@ import { EditUserModalComponent } from '../edit-user-modal/edit-user-modal.compo
         InputIconModule,
         InputTextModule,
         ConfirmDialogModule,
+        Toolbar,
     ],
     templateUrl: './user-table.component.html',
     styleUrl: './user-table.component.css',
@@ -47,9 +50,7 @@ export class UserTableComponent {
         })
 
         ref?.onClose.subscribe((user) => {
-            if (user) {
-                this.userListStateService.pushUser(user)
-            }
+            this.userListStateService.replaceUser(user)
         })
     }
 
@@ -67,6 +68,33 @@ export class UserTableComponent {
                     error: (err) => {
                         console.error('Delete user failed:', err)
                         this.alertService.error('Delete user failed')
+                    },
+                })
+            },
+        })
+    }
+
+    confirmDeleteSelectUsers(users: User[]) {
+        this.confirmationService.confirm({
+            header: 'Delete Confirmation',
+            message: `Are you sure, you want to delete ${users.length} users?`,
+            accept: () => {
+                const deleteRequests = users.map((user) =>
+                    this.userListStateService.deleteUser(user.id),
+                )
+                forkJoin(deleteRequests).subscribe({
+                    next: () => {
+                        // forkJoin waits for all to complete, so success should be here after all are deleted.
+                    },
+                    error: (err) => {
+                        console.error('Delete user failed:', err)
+                        this.alertService.error('Delete user failed')
+                    },
+                    complete: () => {
+                        // Show success message after all deletions have completed
+                        this.alertService.success(
+                            `${users.length} users deleted successfully`,
+                        )
                     },
                 })
             },

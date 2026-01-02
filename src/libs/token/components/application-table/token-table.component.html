@@ -4,7 +4,6 @@
 @let selectedApps = state?.selectedTokens ?? [];
 
 <div class="max-h-[70vh] rounded-md">
-
     <p-table
         #dt2
         [value]="applications"
@@ -43,7 +42,6 @@
                 <th>Subject</th>
                 <th>Application Id</th>
                 <th>Authorization Id</th>
-                <th>Concurrency Token</th>
                 <th>Type</th>
                 <th>Creation</th>
                 <th>Expiration</th>
@@ -66,7 +64,6 @@
                 <td>{{ data.subject }}</td>
                 <td>{{ data.applicationId }}</td>
                 <td>{{ data.authorizationId }}</td>
-                <td>{{ data.concurrencyToken }}</td>
                 <td>{{ data.type }}</td>
                 <td>{{ data.creationDate | date: 'yyyy-MM-dd HH:mm:ss' }}</td>
                 <td>{{ data.expirationDate | date: 'yyyy-MM-dd HH:mm:ss' }}</td>

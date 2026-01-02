@@ -30,6 +30,7 @@ export class EditUserModalComponent {
     private userState = inject(UserListStateService)
     private alertService = inject(AlertService)
     private config = inject(DynamicDialogConfig)
+    private dialogRef = inject(DynamicDialogRef)
 
     isLoading = signal<boolean>(false)
     isError = signal<boolean>(false)
@@ -64,14 +65,14 @@ export class EditUserModalComponent {
                 this.isLoading.set(false)
                 this.isError.set(false)
                 this.alertService.success('User updated successfully')
-                ref.closed
+                this.dialogRef.close(user)
             },
             error: (err) => {
                 this.isLoading.set(false)
                 this.isError.set(true)
                 //console.error('Update user failed:', err)
                 this.alertService.error('Update user failed')
-                ref.closed
+                this.dialogRef.close(user)
             },
         })
     }

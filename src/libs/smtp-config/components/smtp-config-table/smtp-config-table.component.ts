@@ -13,7 +13,7 @@ import { SmtpConfigModalComponent } from '../smtp-config-modal/smtp-config-modal
     imports: [CommonModule, PrimeModules], // Remove TooltipModule if not used
     templateUrl: './smtp-config-table.component.html',
 })
-export class SmtpConfigTableComponent implements OnInit, OnDestroy {
+export class SmtpConfigTableComponent {
     private smtpConfigStateService = inject(SmtpConfigStateService)
     private dialogService = inject(DialogService)
     private confirmationService = inject(ConfirmationService)
@@ -25,10 +25,6 @@ export class SmtpConfigTableComponent implements OnInit, OnDestroy {
     ngOnInit() {
         console.log('SmtpConfigTableComponent: Initializing...')
         this.loadConfigs()
-    }
-
-    ngOnDestroy() {
-        this.smtpConfigStateService.clearTestResult()
     }
 
     loadConfigs() {
@@ -53,10 +49,6 @@ export class SmtpConfigTableComponent implements OnInit, OnDestroy {
     addConfig() {
         console.log('SmtpConfigTableComponent: addConfig() called')
 
-        // Simple test first
-        alert('Add Config button clicked! If you see this, the button works.')
-
-        // Then try opening the dialog
         try {
             console.log('Opening SmtpConfigModalComponent...')
             const ref = this.dialogService.open(SmtpConfigModalComponent, {

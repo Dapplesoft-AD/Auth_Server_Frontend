@@ -107,7 +107,7 @@ export class ApplicationListStateService extends SimpleStore<ApplicationState> {
         )
     }
 
-    private pushApplication(application: Application) {
+    pushApplication(application: Application) {
         this.setState({
             applications: [application, ...this.getState().applications],
         })

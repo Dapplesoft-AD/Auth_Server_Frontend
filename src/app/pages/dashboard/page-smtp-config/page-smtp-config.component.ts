@@ -15,50 +15,11 @@ import {
 export class PageSmtpConfigComponent implements OnInit {
     private smtpConfigStateService = inject(SmtpConfigStateService)
 
-    // Observables for template
-    state$ = this.smtpConfigStateService.selectAll()
-    loading$ = this.smtpConfigStateService.select('loading')
-
-    // Stats for dashboard
-    stats = {
-        totalConfigs: 0,
-        activeConfigs: 0,
-        lastTestStatus: 'Not Tested',
-    }
-
     ngOnInit() {
-        // Load configurations on init
-        this.loadConfigs()
-
-        // Subscribe to state changes
-        this.state$.subscribe((state) => {
-            this.updateStats(state)
-        })
+        this.smtpConfigStateService.init()
     }
-
-    loadConfigs() {
-        this.smtpConfigStateService.loadConfigs().subscribe({
-            error: (error) => {
-                console.error('Failed to load SMTP configurations:', error)
-            },
-        })
-    }
-
-    updateStats(state: any) {
-        const configs = state.configs || []
-
-        this.stats = {
-            totalConfigs: configs.length,
-            activeConfigs: configs.filter((c: any) => c.isActive).length,
-            lastTestStatus:
-                configs.length > 0 && configs[0].lastTested
-                    ? 'Success'
-                    : 'Not Tested',
-        }
-    }
-
     // Refresh data
     refresh() {
-        this.loadConfigs()
+        this.smtpConfigStateService.loadConfigs()
     }
 }

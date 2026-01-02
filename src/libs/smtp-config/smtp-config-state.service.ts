@@ -31,6 +31,11 @@ export class SmtpConfigStateService extends SimpleStore<SmtpConfigState> {
         super(initialState)
     }
 
+    init() {
+        // if (this.initialized()) return
+        this.loadConfigs()
+        // this.initialized.set(true)
+    }
     loadConfigs() {
         this.setState({ loading: true })
         return this.smtpConfigApiService.getAllConfigs().pipe(

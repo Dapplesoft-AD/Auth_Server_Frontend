@@ -3,13 +3,11 @@ import { PageLayout, setLayout } from '../../../libs/common-components'
 
 export type DashboardRoutes = {
     user: Route
-    userLoginHistory: Route
     roles: Route
     permissions: Route
     rolePermissions: Route
     applications: Route
     tokens: Route
-    passwordResets: Route
     auditLogs: Route
     smtpconfig: Route
 }
@@ -20,14 +18,6 @@ export const dashboardRoutes: DashboardRoutes = {
         loadComponent: () =>
             import('./page-user/page-user.component').then(
                 (m) => m.PageUserComponent,
-            ),
-        resolve: { layout: setLayout(PageLayout.Dashboard) },
-    },
-    userLoginHistory: {
-        path: 'admin/user-Login-history',
-        loadComponent: () =>
-            import('./page-user-history/page-user-history.component').then(
-                (m) => m.PageUserHistoryComponent,
             ),
         resolve: { layout: setLayout(PageLayout.Dashboard) },
     },
@@ -80,19 +70,11 @@ export const dashboardRoutes: DashboardRoutes = {
             ),
         resolve: { layout: setLayout(PageLayout.Dashboard) },
     },
-    passwordResets: {
-        path: 'admin/password-resets',
-        loadComponent: () =>
-            import('./page-passwordResets/page-passwordResets.component').then(
-                (m) => m.PagePasswordResetsComponent,
-            ),
-        resolve: { layout: setLayout(PageLayout.Dashboard) },
-    },
     auditLogs: {
         path: 'admin/audit-logs',
         loadComponent: () =>
             import('./page-auditLogs/page-auditLogs.component').then(
-                (m) => m.PageAuditLogsRoutesComponent,
+                (m) => m.PageAuditLogsComponent,
             ),
         resolve: { layout: setLayout(PageLayout.Dashboard) },
     },
