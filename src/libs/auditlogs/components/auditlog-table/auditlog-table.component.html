@@ -56,7 +56,6 @@
                 <th style="width: 2rem"><p-tableHeaderCheckbox /></th>
                 <th>SL.</th>
                 <th>User Id</th>
-                <th>Business Id</th>
                 <th>Action</th>
                 <th>Created on</th>
                 <th pFrozenColumn alignFrozen="right">Actions</th>
@@ -70,7 +69,6 @@
                 </td>
                 <td>{{ index + 1 }}</td>
                 <td>{{ auditLog.userId }}</td>
-                <td>{{ auditLog.businessId }}</td>
                 <td>{{ auditLog.action }}</td>
                 <td>{{ auditLog.createdAt | date: 'yyyy-MM-dd HH:mm:ss' }}</td>
                 <td alignFrozen="right" pFrozenColumn>
