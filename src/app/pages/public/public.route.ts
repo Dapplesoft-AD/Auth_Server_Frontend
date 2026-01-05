@@ -1,5 +1,8 @@
 import { Route } from '@angular/router'
-import { PageLayout, setLayout } from '../../../libs/common-components'
+import {
+    PageLayout,
+    setLayout,
+} from '../../../libs/common-components/layouts/layouts-helper'
 
 export type PublicRoutes = {
     user_profile: Route
