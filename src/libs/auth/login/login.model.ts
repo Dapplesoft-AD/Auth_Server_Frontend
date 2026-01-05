@@ -8,5 +8,6 @@ export interface LoginResponse {
     refreshToken?: string
     user?: {
         id: string
+        roleCode: string
     }
 }

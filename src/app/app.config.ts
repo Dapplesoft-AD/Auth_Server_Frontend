@@ -31,6 +31,7 @@ import {
     AUTH_API_URL,
     AuthInterceptorFn,
     CONTEXT_USER_ID,
+    CONTEXT_USER_ROLE,
     REFRESH_TOKEN_KEY,
 } from '../libs/auth'
 import { appInitializerFn, ENVIRONMENT } from '../libs/core'
@@ -41,6 +42,7 @@ export const appConfig: ApplicationConfig = {
         { provide: ENVIRONMENT, useValue: environment },
         { provide: AUTH_API_URL, useValue: environment.authApiUrl },
         { provide: CONTEXT_USER_ID, useValue: 'contextUserId' },
+        { provide: CONTEXT_USER_ROLE, useValue: 'contextUserRole' },
         { provide: ACCESS_TOKEN_KEY, useValue: 'accessToken' },
         { provide: REFRESH_TOKEN_KEY, useValue: 'refreshToken' },
         provideAppInitializer(appInitializerFn),
