@@ -4,10 +4,9 @@
             pInputText
             [id]="controlName"
             [formControlName]="controlName"
-            [placeholder]="placeHolder"
             [type]="type"
             class="w-full" />
-        <label [for]="controlName">{{ label }}</label>
+        <label [for]="controlName">{{ label! }}</label>
     </p-floatLabel>
 
     @if (control?.touched && getErrorMsg) {

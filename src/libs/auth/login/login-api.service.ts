@@ -2,6 +2,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http'
 import { Injectable, inject } from '@angular/core'
 import { ActivatedRoute, Router } from '@angular/router'
 import { catchError, Observable, tap, throwError } from 'rxjs'
+import { dashboardRoutes } from '../../../app/pages/dashboard/dashboard.route'
 import { environment } from '../../../environments/environment'
 import { AuthService } from '../service/auth.service'
 import { ContextUserStorageService } from '../service/contextUser-storage.service'
@@ -17,7 +18,7 @@ export class LoginApiService {
     private route = inject(ActivatedRoute)
     private http = inject(HttpClient)
     private tokenStorageService = inject(TokenStorageService)
-    private contextUserIdStorageService = inject(ContextUserStorageService)
+    private contextUserStorageService = inject(ContextUserStorageService)
     private authService = inject(AuthService)
     private apiUrl = `${environment.apiUrl}`
 
@@ -52,7 +53,12 @@ export class LoginApiService {
             this.tokenStorageService.saveRefreshToken(response.refreshToken)
         }
         if (response?.user?.id) {
-            this.contextUserIdStorageService.saveContextUserId(response.user.id)
+            this.contextUserStorageService.saveContextUserId(response.user.id)
+        }
+        if (response?.user?.roleCode) {
+            this.contextUserStorageService.saveContextUserRole(
+                response.user.roleCode,
+            )
         }
 
         const returnUrl = this.route.snapshot.queryParams['ReturnUrl']
@@ -61,7 +67,7 @@ export class LoginApiService {
             const baseUrl = this.apiUrl.replace(/\/api$/, '')
             window.location.href = baseUrl + returnUrl
         } else {
-            this.router.navigate(['/admin/user']) // Default fallback
+            this.router.navigate([dashboardRoutes.user]) // Default fallback
         }
     }
 
