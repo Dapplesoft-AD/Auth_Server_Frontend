@@ -20,6 +20,9 @@ export const AuthInterceptorFn: HttpInterceptorFn = (request, next) => {
             if (err.status === 401 && !isAuthApiCall) {
                 auth.handleUnauthorized()
             }
+            if (err.status === 403 && !isAuthApiCall) {
+                auth.handleForbidden()
+            }
 
             return throwError(() => err)
         }),
