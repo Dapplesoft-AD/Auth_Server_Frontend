@@ -8,11 +8,11 @@ import { SignUpRequest } from './signup.model'
 export class SignUpFormService {
     private fb = inject(NonNullableFormBuilder)
     private formError = inject(FormValidationErrorsService)
+
     form = this.buildForm()
 
     buildForm(): FormGroup {
-        const { required, email, minLength, pattern, maxLength, requiredTrue } =
-            Validators
+        const { required, minLength, pattern } = Validators
 
         return this.fb.group(
             {
@@ -24,27 +24,15 @@ export class SignUpFormService {
                         pattern(/^[A-Za-z]+(?: [A-Za-z]+)*$/),
                     ],
                 ],
-                phone: [
-                    '',
-                    [
-                        required,
-                        minLength(11),
-                        maxLength(13),
-                        pattern(/^[0-9]+$/),
-                    ],
-                ],
-                email: ['', [required, email]],
-                password: [
-                    '',
-                    [
-                        required,
-                        minLength(8),
-                        // pattern(/[A-Z]/),  // at least one uppercase
-                        // pattern(/[a-z]/), // at least one lowercase
-                        // pattern(/[0-9]/), // at least one number
-                        // pattern(/[^A-Za-z0-9]/), // at least one special char
-                    ],
-                ],
+
+                // ✅ SINGLE input for email OR phone
+                identifier: ['', [required, this.emailOrPhoneValidator]],
+
+                // ❌ NOT required anymore
+                email: [''],
+                phone: [''],
+
+                password: ['', [required, minLength(8)]],
                 confirmPassword: ['', [required, minLength(8)]],
             },
             {
@@ -53,8 +41,20 @@ export class SignUpFormService {
         )
     }
 
-    controls(control: string) {
-        return this.form.get(control)
+    private emailOrPhoneValidator(control: any) {
+        const v = String(control.value ?? '').trim()
+        if (!v) return null
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+        const phoneRegex = /^(?:\+?88)?01[3-9]\d{8}$/ // BD phone
+
+        return emailRegex.test(v) || phoneRegex.test(v)
+            ? null
+            : { invalidFormat: true }
+    }
+
+    controls(name: string) {
+        return this.form.get(name)
     }
 
     getValue() {
