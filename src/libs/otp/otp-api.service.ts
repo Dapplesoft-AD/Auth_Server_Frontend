@@ -2,6 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http'
 import { Inject, Injectable, inject } from '@angular/core'
 import { Observable } from 'rxjs'
 import { ENVIRONMENT, EnvironmentConfig } from '../core'
+import { OtpType } from './otpType.enum'
 
 @Injectable({
     providedIn: 'root',
@@ -14,10 +15,13 @@ export class OtpApiService {
         private env: EnvironmentConfig,
     ) {}
 
-    sendOtp(emailOrPhone: string): Observable<string> {
+    sendOtp(emailOrPhone: string, OtpType: OtpType): Observable<string> {
         return this.http.post<string>(
-            `${this.env.apiUrl}/otp-request`,
-            { input: emailOrPhone },
+            `${this.env.apiUrl}/req-otp-verify`,
+            {
+                destination: emailOrPhone,
+                OtpType: OtpType,
+            },
             {
                 headers: new HttpHeaders({
                     'Content-Type': 'application/json',
@@ -26,12 +30,17 @@ export class OtpApiService {
         )
     }
 
-    verifyOtp(emailOrPhone: string, otpToken: string): Observable<boolean> {
+    verifyOtp(
+        destination: string,
+        otpCode: string,
+        otpType: OtpType,
+    ): Observable<boolean> {
         return this.http.post<boolean>(
-            `${this.env.apiUrl}/Otp/Verify`,
+            `${this.env.apiUrl}/verify-account-otp`,
             {
-                input: emailOrPhone,
-                otpToken: otpToken,
+                destination,
+                otpCode,
+                otpType,
             },
             {
                 headers: new HttpHeaders({

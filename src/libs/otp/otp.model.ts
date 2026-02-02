@@ -1,5 +1,6 @@
 export interface SendOtpRequest {
     input: string // Email or phone number
+    OtpType: string // Type of OTP (e.g., 'Passwordreset')
 }
 
 export interface SendOtpResponse {

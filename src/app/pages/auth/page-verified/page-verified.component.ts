@@ -15,6 +15,7 @@ import { InputText } from 'primeng/inputtext'
 import { ToastModule } from 'primeng/toast'
 import { environment } from '../../../../environments/environment'
 import { OtpStateService } from '../../../../libs/otp/otp-state.service'
+import { OtpType } from '../../../../libs/otp/otpType.enum'
 
 @Component({
     selector: 'app-verified',
@@ -27,11 +28,11 @@ import { OtpStateService } from '../../../../libs/otp/otp-state.service'
         InputText,
         FloatLabelModule,
     ],
-    templateUrl: './page-verified.component.html', //  Correct template
+    templateUrl: './page-verified.component.html',
     providers: [MessageService],
 })
 export class PageVerifiedComponent implements OnInit {
-    form: FormGroup
+    form!: FormGroup
     submitted = false
     loading = false
     baseUrl = `${environment.BaseUrl}`
@@ -42,17 +43,19 @@ export class PageVerifiedComponent implements OnInit {
         private fb: FormBuilder,
         private messageService: MessageService,
         private router: Router,
-    ) {
+    ) {}
+
+    ngOnInit(): void {
+        console.log('[OTP] PageVerifiedComponent init')
+
         this.form = this.fb.group({
             identifier: ['', [Validators.required, this.emailOrPhoneValidator]],
         })
+
+        this.resetOtpFlow()
     }
 
-    ngOnInit() {
-        // Optional: Clear previous state when component initializes
-        this.otpStateService.clearOtpState()
-    }
-
+    // ---------- VALIDATOR ----------
     emailOrPhoneValidator(control: AbstractControl) {
         const value = control.value
         if (!value) return null
@@ -60,20 +63,32 @@ export class PageVerifiedComponent implements OnInit {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
         const phoneRegex = /^[0-9]{11}$/
 
-        if (emailRegex.test(value) || phoneRegex.test(value)) {
-            return null
-        }
-
-        return { invalidFormat: true }
+        return emailRegex.test(value) || phoneRegex.test(value)
+            ? null
+            : { invalidFormat: true }
     }
 
-    //  This getter must exist for the template
     get f() {
         return this.form.controls
     }
 
-    onSubmit() {
+    // ---------- RESET ----------
+    private resetOtpFlow(): void {
+        console.log('[OTP] Resetting OTP state + form')
+
+        this.submitted = false
+        this.loading = false
+        this.form?.reset()
+
+        this.otpStateService.clearOtpState()
+    }
+
+    // ---------- SUBMIT ----------
+    onSubmit(): void {
         this.submitted = true
+
+        console.log('[OTP] Submit clicked')
+        console.log('[OTP] Form value:', this.form.value)
 
         if (this.form.invalid) {
             this.messageService.add({
@@ -84,18 +99,27 @@ export class PageVerifiedComponent implements OnInit {
             return
         }
 
-        const identifier = this.form.value.identifier
+        const identifier = this.form.value.identifier as string
+
         this.loading = true
 
-        // Store identifier in state service
+        // 🔑 EXPLICIT OTP TYPE
+        this.otpStateService.setOtpType(OtpType.PasswordReset)
         this.otpStateService.setIdentifier(identifier)
 
-        // Call Send OTP API through state service
+        console.log(
+            '[OTP] Sending OTP with state:',
+            this.otpStateService.getState(),
+        )
+
         this.otpStateService.sendOtp().subscribe({
             next: () => {
                 this.loading = false
-                const state = this.otpStateService.getState()
-                const method = state.method
+
+                const { method, otpType } = this.otpStateService.getState()
+
+                console.log('[OTP] OTP sent successfully')
+                console.log('[OTP] Method:', method, 'Type:', otpType)
 
                 this.messageService.add({
                     severity: 'success',
@@ -105,20 +129,24 @@ export class PageVerifiedComponent implements OnInit {
 
                 setTimeout(() => {
                     this.router.navigate(['/verifiedotp'])
-                }, 1500)
+                }, 1200)
             },
-            error: (error) => {
+
+            error: (err) => {
                 this.loading = false
-                const state = this.otpStateService.getState()
-                const errorMessage =
-                    state.errorMessage ||
-                    'Failed to send OTP. Please try again.'
-                console.error('Error sending OTP:', error)
+
+                console.error('[OTP] Send OTP failed', err)
+
+                const { errorMessage } = this.otpStateService.getState()
+
                 this.messageService.add({
                     severity: 'error',
                     summary: 'Error',
-                    detail: errorMessage,
+                    detail: errorMessage ?? 'Failed to send OTP',
                 })
+
+                // ✅ allow retry
+                this.submitted = false
             },
         })
     }

@@ -2,11 +2,13 @@ import { Injectable, inject } from '@angular/core'
 import { catchError, finalize, tap, throwError } from 'rxjs'
 import { SimpleStore } from '../store'
 import { OtpApiService } from './otp-api.service'
+import { OtpType } from './otpType.enum'
 
 export type OtpState = {
     identifier: string
     method: 'email' | 'phone'
     otpToken: string
+    otpType: OtpType
     loading: boolean
     error: boolean
     errorMessage: string | null
@@ -20,6 +22,7 @@ const initialOtpState: OtpState = {
     identifier: '',
     method: 'email',
     otpToken: '',
+    otpType: OtpType.Verification,
     loading: false,
     error: false,
     errorMessage: null,
@@ -44,6 +47,7 @@ export class OtpStateService extends SimpleStore<OtpState> {
     }
 
     // Set identifier and determine method (email/phone)
+
     setIdentifier(identifier: string) {
         const method = identifier.includes('@') ? 'email' : 'phone'
         this.setState({
@@ -53,6 +57,9 @@ export class OtpStateService extends SimpleStore<OtpState> {
             errorMessage: null,
         })
     }
+    setOtpType(type: OtpType) {
+        this.setState({ otpType: type })
+    }
 
     // Set OTP code from user input
     setOtpCode(otpCode: string) {
@@ -61,7 +68,7 @@ export class OtpStateService extends SimpleStore<OtpState> {
 
     // Send OTP to the provided identifier
     sendOtp() {
-        const { identifier } = this.getState()
+        const { identifier, otpType } = this.getState()
 
         if (!identifier) {
             this.setState({
@@ -78,24 +85,19 @@ export class OtpStateService extends SimpleStore<OtpState> {
             verificationStatus: 'idle',
         })
 
-        return this.otpApiService.sendOtp(identifier).pipe(
+        return this.otpApiService.sendOtp(identifier, otpType).pipe(
             tap((response) => {
                 const expiresAt = Date.now() + this.OTP_DURATION
-
                 this.setState({
-                    loading: false,
                     otpToken: response,
                     verificationStatus: 'sent',
-                    expiresAt: expiresAt,
+                    expiresAt,
                     timeRemaining: this.OTP_DURATION_SECONDS,
                 })
-
-                // Start the countdown timer
                 this.startCountdown()
             }),
             catchError((error) => {
                 this.setState({
-                    loading: false,
                     error: true,
                     errorMessage: error.message || 'Failed to send OTP',
                     verificationStatus: 'failed',
@@ -104,16 +106,19 @@ export class OtpStateService extends SimpleStore<OtpState> {
                 })
                 return throwError(() => error)
             }),
-            finalize(() => {
-                this.setState({ loading: false })
-            }),
+            finalize(() => this.setState({ loading: false })),
         )
     }
 
     // Verify the entered OTP code
     verifyOtp() {
-        const { identifier, otpCode, verificationStatus, timeRemaining } =
-            this.getState()
+        const {
+            identifier,
+            otpCode,
+            otpType,
+            verificationStatus,
+            timeRemaining,
+        } = this.getState()
 
         // Check if OTP is expired
         if (verificationStatus === 'expired' || timeRemaining <= 0) {
@@ -140,7 +145,7 @@ export class OtpStateService extends SimpleStore<OtpState> {
             errorMessage: null,
         })
 
-        return this.otpApiService.verifyOtp(identifier, otpCode).pipe(
+        return this.otpApiService.verifyOtp(identifier, otpCode, otpType).pipe(
             tap((isValid) => {
                 this.stopCountdown() // Stop timer after verification attempt
 
